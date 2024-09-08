@@ -1,6 +1,6 @@
 My digital playground! 🌐✨ This repository is the heart of my online universe, where circuits meet creativity. Explore, enjoy, and let's connect the dots of innovation together!
 
-# 🌟 [Your Name] - Electrical Engineering & Business Informatics Student
+# 🌟 Braian Plaku - Electrical Engineering & Business Informatics Student
 
 ![Profile Picture](profile-picture-url)
 
