@@ -219,6 +219,17 @@ document.getElementById('nextTrack').onclick = () => {
 
 // Check for authentication
 window.onload = () => {
+    console.log('Window loaded, checking authentication...');
+    
+    // Check for error in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+    if (error) {
+        console.error('Authentication error:', error);
+        showError(`Authentication error: ${error}`);
+        return;
+    }
+
     const hash = window.location.hash
         .substring(1)
         .split('&')
@@ -230,10 +241,14 @@ window.onload = () => {
             return initial;
         }, {});
 
+    console.log('Hash contents:', hash);
+
     if (hash.access_token) {
+        console.log('Access token found, initializing player...');
         token = hash.access_token;
         loadPlaylists();
     } else {
+        console.log('No access token, redirecting to Spotify login...');
         // Redirect to Spotify login
         const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private';
         const state = generateRandomString(16);
@@ -249,8 +264,9 @@ window.onload = () => {
             show_dialog: true
         };
         
-        authUrl.search = new URLSearchParams(params).toString();
-        window.location.href = authUrl.toString();
+        const finalUrl = authUrl.toString() + '?' + new URLSearchParams(params).toString();
+        console.log('Redirecting to:', finalUrl);
+        window.location.href = finalUrl;
     }
 };
 
