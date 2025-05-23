@@ -10,6 +10,17 @@ const USER_ID = 'kg78o2lmqe4af77s3morbt5eq'; // Your Spotify user ID
 
 // Initialize the Spotify Web Playback SDK
 window.onSpotifyWebPlaybackSDKReady = () => {
+    console.log('Spotify SDK Ready');
+    if (!token) {
+        console.log('No token available, waiting for authentication...');
+        return;
+    }
+    
+    initializePlayer();
+};
+
+function initializePlayer() {
+    console.log('Initializing player with token');
     player = new Spotify.Player({
         name: 'SwimmingBrain Player',
         getOAuthToken: cb => { cb(token); },
@@ -24,10 +35,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     player.addListener('authentication_error', ({ message }) => { 
         console.error('Authentication Error:', message);
         showError('Authentication failed. Please try logging in again.');
-        // Clear token and redirect to login
-        localStorage.removeItem('spotify_token');
-        localStorage.removeItem('spotify_auth_state');
-        window.location.href = getAuthUrl();
+        handleAuthError();
     });
     player.addListener('account_error', ({ message }) => { 
         console.error('Account Error:', message);
@@ -53,10 +61,19 @@ window.onSpotifyWebPlaybackSDKReady = () => {
 
     // Connect to the player
     player.connect();
-};
+}
+
+function handleAuthError() {
+    console.log('Handling auth error');
+    localStorage.removeItem('spotify_token');
+    localStorage.removeItem('spotify_auth_state');
+    // Don't redirect immediately to prevent loops
+    showError('Please click here to login again', true);
+}
 
 // Get authentication URL
 function getAuthUrl() {
+    console.log('Generating auth URL');
     const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private';
     const state = generateRandomString(16);
     localStorage.setItem('spotify_auth_state', state);
@@ -70,14 +87,24 @@ function getAuthUrl() {
         show_dialog: true
     });
     
-    return `https://accounts.spotify.com/authorize?${params.toString()}`;
+    const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
+    console.log('Auth URL generated:', authUrl);
+    return authUrl;
 }
 
 // Show error message to user
-function showError(message) {
+function showError(message, isLoginError = false) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     errorDiv.textContent = message;
+    
+    if (isLoginError) {
+        errorDiv.style.cursor = 'pointer';
+        errorDiv.onclick = () => {
+            window.location.href = getAuthUrl();
+        };
+    }
+    
     document.querySelector('.spotify-container').prepend(errorDiv);
     setTimeout(() => errorDiv.remove(), 5000);
 }
@@ -249,10 +276,8 @@ window.onload = () => {
     if (error) {
         console.error('Authentication error:', error);
         showError(`Authentication error: ${error}`);
-        // Clear any stored tokens and state
         localStorage.removeItem('spotify_token');
         localStorage.removeItem('spotify_auth_state');
-        // Prevent immediate redirect to break the loop
         return;
     }
 
@@ -281,25 +306,29 @@ window.onload = () => {
     }
 
     if (hash.access_token) {
-        console.log('Access token found, initializing player...');
+        console.log('Access token found in hash');
         token = hash.access_token;
         localStorage.setItem('spotify_token', token);
         // Remove hash from URL to prevent refresh loop
         window.history.replaceState({}, document.title, window.location.pathname);
+        
+        if (window.Spotify) {
+            initializePlayer();
+        }
         loadPlaylists();
     } else {
         // Check if we have a stored token
         const storedToken = localStorage.getItem('spotify_token');
         if (storedToken) {
-            console.log('Using stored token...');
+            console.log('Using stored token');
             token = storedToken;
+            if (window.Spotify) {
+                initializePlayer();
+            }
             loadPlaylists();
         } else {
-            console.log('No token found, redirecting to Spotify login...');
-            // Add a small delay to prevent rapid redirects
-            setTimeout(() => {
-                window.location.href = getAuthUrl();
-            }, 1000);
+            console.log('No token found, showing login button');
+            showError('Click here to login to Spotify', true);
         }
     }
 };
