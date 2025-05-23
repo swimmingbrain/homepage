@@ -6,8 +6,12 @@
     <meta name="description" content="Braian's music vibes - Curated playlists and favorite tracks">
     <meta name="keywords" content="music, spotify, playlists, tracks">
     <meta name="author" content="Braian">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://sdk.scdn.co https://api.spotify.com; script-src 'self' https://sdk.scdn.co 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.spotify.com https://accounts.spotify.com; media-src 'self' https://*.spotify.com;">
-    <meta http-equiv="Permissions-Policy" content="autoplay=*, encrypted-media=*">
+    <meta http-equiv="Content-Security-Policy" 
+          content="default-src 'self'; 
+                   script-src 'self' https://sdk.scdn.co; 
+                   style-src 'self' 'unsafe-inline'; 
+                   img-src 'self' data: https: i.scdn.co; 
+                   connect-src 'self' https://sdk.scdn.co https://accounts.spotify.com https://api.spotify.com https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow2;">
     <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
     <title>Music Vibes - Braian</title>
     <link rel="stylesheet" href="assets/css/style.css">
@@ -35,14 +39,12 @@
 
         <div class="spotify-container">
             <div class="playlist-grid" id="playlistGrid">
-                <!-- Playlists will be loaded here dynamically -->
-            </div>
+                </div>
 
             <div class="player-container" id="playerContainer">
                 <div class="now-playing">
                     <div class="track-info">
-                        <img id="albumArt" src="" alt="Album Art">
-                        <div class="track-details">
+                        <img id="albumArt" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="Album Art"> <div class="track-details">
                             <h3 id="trackName">Select a track to play</h3>
                             <p id="artistName">-</p>
                         </div>
@@ -52,12 +54,14 @@
                         <button id="playPause" class="control-btn">▶</button>
                         <button id="nextTrack" class="control-btn">⏭</button>
                     </div>
-                    <div class="progress-bar">
-                        <div class="progress" id="progress"></div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar">
+                            <div class="progress" id="progress"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
 
         <footer class="footer">
             <p>© 2025 SwimmingBrain.dev - Where ideas float and code flows 🌊</p>
@@ -66,4 +70,4 @@
 
     <script src="assets/js/spotify.js"></script>
 </body>
-</html> 
+</html>
