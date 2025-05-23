@@ -108,8 +108,84 @@ function handleAuthError() {
 }
 
 function showLogin() {
-    document.getElementById('login-container').style.display = 'block';
+    const loginContainer = document.getElementById('login-container');
+    loginContainer.style.display = 'block';
+    loginContainer.innerHTML = `
+        <div class="login-content">
+            <h2>Welcome to Spotify Player</h2>
+            <p>Connect your Spotify account to start playing your favorite music.</p>
+            <button onclick="login()" class="spotify-login-btn">
+                <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                </svg>
+                Connect with Spotify
+            </button>
+        </div>
+    `;
     document.getElementById('player-container').style.display = 'none';
+}
+
+// Add CSS styles for the login page
+function addLoginStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .login-content {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--background-secondary);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-content h2 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .login-content p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .spotify-login-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #1DB954;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .spotify-login-btn:hover {
+            background: #1ed760;
+            transform: translateY(-2px);
+        }
+
+        .spotify-login-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        #login-container {
+            padding: 2rem;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 function showPlayer() {
@@ -248,16 +324,46 @@ function updatePlayerUI(state) {
     const track = state.track_window.current_track;
     const isPlaying = !state.paused;
     
-    document.getElementById('albumArt').src = track.album.images[0]?.url || '';
-    document.getElementById('trackName').textContent = track.name;
-    document.getElementById('artistName').textContent = track.artists.map(artist => artist.name).join(', ');
+    // Update album art
+    const albumArt = document.getElementById('albumArt');
+    if (albumArt) {
+        albumArt.src = track.album.images[0]?.url || '';
+    }
+    
+    // Update track name
+    const trackName = document.getElementById('trackName');
+    if (trackName) {
+        trackName.textContent = track.name;
+    }
+    
+    // Update artist name
+    const artistName = document.getElementById('artistName');
+    if (artistName) {
+        artistName.textContent = track.artists.map(artist => artist.name).join(', ');
+    }
     
     // Update play/pause button
-    document.getElementById('playPause').textContent = isPlaying ? '⏸' : '▶';
+    const playPause = document.getElementById('playPause');
+    if (playPause) {
+        playPause.textContent = isPlaying ? '⏸' : '▶';
+    }
     
     // Update progress bar
-    const progress = (state.position / state.duration) * 100;
-    document.getElementById('progress').style.width = `${progress}%`;
+    const progress = document.getElementById('progress');
+    if (progress) {
+        const progressPercent = (state.position / state.duration) * 100;
+        progress.style.width = `${progressPercent}%`;
+    }
+    
+    // Update current time and duration
+    const currentTime = document.getElementById('currentTime');
+    const duration = document.getElementById('duration');
+    if (currentTime) {
+        currentTime.textContent = formatDuration(state.position);
+    }
+    if (duration) {
+        duration.textContent = formatDuration(state.duration);
+    }
 }
 
 // Load user's public playlists
@@ -363,6 +469,12 @@ function displayTracks(tracks) {
     const container = document.createElement('div');
     container.className = 'track-list';
     container.id = 'track-list-container';
+    
+    // Add a header to the track list
+    const header = document.createElement('div');
+    header.className = 'track-list-header';
+    header.innerHTML = '<h2>Playlist Tracks</h2>';
+    container.appendChild(header);
     
     tracks.forEach(item => {
         if (!item.track || item.track.is_local) return; // Skip local files
@@ -474,6 +586,9 @@ function setupPlayerControls() {
 // Check for authentication when page loads
 window.onload = () => {
     console.log('Window loaded, checking authentication...');
+    
+    // Add login styles
+    addLoginStyles();
     
     // Setup player controls
     setupPlayerControls();
