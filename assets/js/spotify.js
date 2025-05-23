@@ -60,16 +60,18 @@ function getAuthUrl() {
     const state = generateRandomString(16);
     localStorage.setItem('spotify_auth_state', state);
     
-    const params = new URLSearchParams({
+    const authUrl = new URL('https://accounts.spotify.com/authorize');
+    const params = {
         client_id: CLIENT_ID,
         response_type: 'token',
         redirect_uri: REDIRECT_URI,
         state: state,
         scope: scope,
         show_dialog: true
-    });
+    };
     
-    return `https://accounts.spotify.com/authorize?${params.toString()}`;
+    authUrl.search = new URLSearchParams(params).toString();
+    return authUrl.toString();
 }
 
 // Show error message to user
@@ -248,6 +250,13 @@ window.onload = () => {
     if (error) {
         console.error('Authentication error:', error);
         showError(`Authentication error: ${error}`);
+        // Clear any stored tokens and state
+        localStorage.removeItem('spotify_token');
+        localStorage.removeItem('spotify_auth_state');
+        // Wait a moment before redirecting to prevent rapid refresh
+        setTimeout(() => {
+            window.location.href = getAuthUrl();
+        }, 2000);
         return;
     }
 
@@ -281,7 +290,10 @@ window.onload = () => {
             loadPlaylists();
         } else {
             console.log('No token found, redirecting to Spotify login...');
-            window.location.href = getAuthUrl();
+            // Wait a moment before redirecting to prevent rapid refresh
+            setTimeout(() => {
+                window.location.href = getAuthUrl();
+            }, 1000);
         }
     }
 };
