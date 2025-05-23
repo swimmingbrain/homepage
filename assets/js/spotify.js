@@ -359,6 +359,7 @@ async function loadPlaylistTracks(playlistId) {
 function displayTracks(tracks) {
     const container = document.createElement('div');
     container.className = 'track-list';
+    container.id = 'track-list-container';
     
     tracks.forEach(item => {
         if (!item.track || item.track.is_local) return; // Skip local files
@@ -379,12 +380,18 @@ function displayTracks(tracks) {
         container.appendChild(trackElement);
     });
 
-    // Replace existing track list
-    const existingList = document.querySelector('.track-list');
+    // Remove existing track list if it exists
+    const existingList = document.getElementById('track-list-container');
     if (existingList) {
         existingList.remove();
     }
-    document.querySelector('.spotify-container').appendChild(container);
+
+    // Insert the track list at the top of the container
+    const spotifyContainer = document.querySelector('.spotify-container');
+    spotifyContainer.insertBefore(container, spotifyContainer.firstChild);
+
+    // Scroll to the track list with smooth animation
+    container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // Format track duration
