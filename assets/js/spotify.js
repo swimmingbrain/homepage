@@ -236,7 +236,30 @@ window.onload = () => {
     } else {
         // Redirect to Spotify login
         const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private';
-        const authUrl = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${encodeURIComponent(scope)}`;
-        window.location.href = authUrl;
+        const state = generateRandomString(16);
+        localStorage.setItem('spotify_auth_state', state);
+        
+        const authUrl = new URL('https://accounts.spotify.com/authorize');
+        const params = {
+            client_id: CLIENT_ID,
+            response_type: 'token',
+            redirect_uri: REDIRECT_URI,
+            state: state,
+            scope: scope,
+            show_dialog: true
+        };
+        
+        authUrl.search = new URLSearchParams(params).toString();
+        window.location.href = authUrl.toString();
     }
-}; 
+};
+
+// Generate random string for state parameter
+function generateRandomString(length) {
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let text = '';
+    for (let i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+} 
