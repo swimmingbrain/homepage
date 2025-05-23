@@ -5,7 +5,7 @@ let deviceId;
 
 // Replace with your Spotify Client ID
 const CLIENT_ID = 'bf45e9aa56e64d4c924c7136bc358631';
-const REDIRECT_URI = window.location.origin + '/spotify.html';
+const REDIRECT_URI = 'https://swimmingbrain.dev/spotify.html';
 const USER_ID = 'kg78o2lmqe4af77s3morbt5eq'; // Your Spotify user ID
 
 // Initialize the Spotify Web Playback SDK
