@@ -26,6 +26,7 @@ window.onSpotifyWebPlaybackSDKReady = () => {
         showError('Authentication failed. Please try logging in again.');
         // Clear token and redirect to login
         localStorage.removeItem('spotify_token');
+        localStorage.removeItem('spotify_auth_state');
         window.location.href = getAuthUrl();
     });
     player.addListener('account_error', ({ message }) => { 
@@ -60,18 +61,16 @@ function getAuthUrl() {
     const state = generateRandomString(16);
     localStorage.setItem('spotify_auth_state', state);
     
-    const authUrl = new URL('https://accounts.spotify.com/authorize');
-    const params = {
+    const params = new URLSearchParams({
         client_id: CLIENT_ID,
         response_type: 'token',
         redirect_uri: REDIRECT_URI,
         state: state,
         scope: scope,
         show_dialog: true
-    };
+    });
     
-    authUrl.search = new URLSearchParams(params).toString();
-    return authUrl.toString();
+    return `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
 
 // Show error message to user
@@ -253,10 +252,7 @@ window.onload = () => {
         // Clear any stored tokens and state
         localStorage.removeItem('spotify_token');
         localStorage.removeItem('spotify_auth_state');
-        // Wait a moment before redirecting to prevent rapid refresh
-        setTimeout(() => {
-            window.location.href = getAuthUrl();
-        }, 2000);
+        // Prevent immediate redirect to break the loop
         return;
     }
 
@@ -274,6 +270,16 @@ window.onload = () => {
 
     console.log('Hash contents:', hash);
 
+    // Validate state parameter
+    const storedState = localStorage.getItem('spotify_auth_state');
+    if (hash.state && hash.state !== storedState) {
+        console.error('State mismatch');
+        showError('Invalid state parameter. Please try again.');
+        localStorage.removeItem('spotify_token');
+        localStorage.removeItem('spotify_auth_state');
+        return;
+    }
+
     if (hash.access_token) {
         console.log('Access token found, initializing player...');
         token = hash.access_token;
@@ -290,7 +296,7 @@ window.onload = () => {
             loadPlaylists();
         } else {
             console.log('No token found, redirecting to Spotify login...');
-            // Wait a moment before redirecting to prevent rapid refresh
+            // Add a small delay to prevent rapid redirects
             setTimeout(() => {
                 window.location.href = getAuthUrl();
             }, 1000);
