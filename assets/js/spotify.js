@@ -1,19 +1,39 @@
-// Spotify Web Playback SDK setup
+// Spotify Web Playback SDK with Authorization Code + PKCE Flow
 let player;
 let token;
 let deviceId;
 
-// Replace with your Spotify Client ID
+// Your Spotify App credentials
 const CLIENT_ID = 'bf45e9aa56e64d4c924c7136bc358631';
 const REDIRECT_URI = 'https://swimmingbrain.dev/spotify.html';
-const USER_ID = 'kg78o2lmqe4af77s3morbt5eq'; // Your Spotify user ID
+const USER_ID = 'kg78o2lmqe4af77s3morbt5eq';
+const SCOPES = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private streaming user-read-recently-played';
 
-// Initialize the Spotify Web Playback SDK
+// PKCE helper functions
+function generateRandomString(length) {
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let text = '';
+    for (let i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
+
+async function generateCodeChallenge(codeVerifier) {
+    const data = new TextEncoder().encode(codeVerifier);
+    const digest = await window.crypto.subtle.digest('SHA-256', data);
+    return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+}
+
+// Initialize Spotify Web Playback SDK
 window.onSpotifyWebPlaybackSDKReady = () => {
     console.log('Spotify SDK Ready');
     if (!token) {
-        console.log('No token available, redirecting to login...');
-        window.location.href = '/spotify-login.html';
+        console.log('No token available, showing login...');
+        showLogin();
         return;
     }
     
@@ -33,15 +53,18 @@ function initializePlayer() {
         console.error('Initialization Error:', message);
         showError('Failed to initialize player. Please try refreshing the page.');
     });
+    
     player.addListener('authentication_error', ({ message }) => { 
         console.error('Authentication Error:', message);
         showError('Authentication failed. Please try logging in again.');
         handleAuthError();
     });
+    
     player.addListener('account_error', ({ message }) => { 
         console.error('Account Error:', message);
-        showError('Account error. Please check your Spotify account status.');
+        showError('Account error. Please check your Spotify Premium subscription.');
     });
+    
     player.addListener('playback_error', ({ message }) => { 
         console.error('Playback Error:', message);
         showError('Playback error. Please try again.');
@@ -58,41 +81,42 @@ function initializePlayer() {
     player.addListener('ready', ({ device_id }) => {
         deviceId = device_id;
         console.log('Ready with Device ID', device_id);
+        showPlayer();
+        loadPlaylists();
+    });
+
+    // Not Ready
+    player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
     });
 
     // Connect to the player
-    player.connect();
+    player.connect().then(success => {
+        if (success) {
+            console.log('Successfully connected to Spotify!');
+        }
+    });
 }
 
 function handleAuthError() {
     console.log('Handling auth error');
     localStorage.removeItem('spotify_token');
+    localStorage.removeItem('spotify_refresh_token');
+    localStorage.removeItem('spotify_code_verifier');
     localStorage.removeItem('spotify_auth_state');
-    window.location.href = '/spotify-login.html';
+    showLogin();
 }
 
-// Get authentication URL
-function getAuthUrl() {
-    console.log('Generating auth URL');
-    const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private';
-    const state = generateRandomString(16);
-    localStorage.setItem('spotify_auth_state', state);
-    
-    const params = new URLSearchParams({
-        client_id: CLIENT_ID,
-        response_type: 'token',
-        redirect_uri: REDIRECT_URI,
-        state: state,
-        scope: scope,
-        show_dialog: true
-    });
-    
-    const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
-    console.log('Auth URL generated:', authUrl);
-    return authUrl;
+function showLogin() {
+    document.getElementById('login-container').style.display = 'block';
+    document.getElementById('player-container').style.display = 'none';
 }
 
-// Show error message to user
+function showPlayer() {
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('player-container').style.display = 'block';
+}
+
 function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
@@ -101,12 +125,135 @@ function showError(message) {
     setTimeout(() => errorDiv.remove(), 5000);
 }
 
+// Authorization Code + PKCE login
+async function login() {
+    try {
+        // Generate PKCE parameters
+        const codeVerifier = generateRandomString(128);
+        const codeChallenge = await generateCodeChallenge(codeVerifier);
+        const state = generateRandomString(16);
+        
+        // Store verifier and state for later use
+        localStorage.setItem('spotify_code_verifier', codeVerifier);
+        localStorage.setItem('spotify_auth_state', state);
+        
+        // Build authorization URL
+        const params = new URLSearchParams({
+            client_id: CLIENT_ID,
+            response_type: 'code',
+            redirect_uri: REDIRECT_URI,
+            state: state,
+            scope: SCOPES,
+            code_challenge_method: 'S256',
+            code_challenge: codeChallenge,
+            show_dialog: 'true'
+        });
+        
+        const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
+        console.log('Redirecting to:', authUrl);
+        
+        // Redirect to Spotify login
+        window.location.href = authUrl;
+    } catch (error) {
+        console.error('Error during login:', error);
+        showError('Failed to initiate login. Please try again.');
+    }
+}
+
+// Exchange authorization code for access token
+async function exchangeCodeForToken(code) {
+    const codeVerifier = localStorage.getItem('spotify_code_verifier');
+    
+    if (!codeVerifier) {
+        throw new Error('Code verifier not found');
+    }
+    
+    const params = new URLSearchParams({
+        client_id: CLIENT_ID,
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: REDIRECT_URI,
+        code_verifier: codeVerifier
+    });
+    
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString()
+    });
+    
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Token exchange failed: ${errorData.error_description || errorData.error}`);
+    }
+    
+    const data = await response.json();
+    
+    // Store tokens
+    token = data.access_token;
+    localStorage.setItem('spotify_token', token);
+    if (data.refresh_token) {
+        localStorage.setItem('spotify_refresh_token', data.refresh_token);
+    }
+    
+    // Clean up PKCE parameters
+    localStorage.removeItem('spotify_code_verifier');
+    localStorage.removeItem('spotify_auth_state');
+    
+    return data;
+}
+
+// Refresh access token
+async function refreshAccessToken() {
+    const refreshToken = localStorage.getItem('spotify_refresh_token');
+    
+    if (!refreshToken) {
+        throw new Error('No refresh token available');
+    }
+    
+    const params = new URLSearchParams({
+        client_id: CLIENT_ID,
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken
+    });
+    
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString()
+    });
+    
+    if (!response.ok) {
+        throw new Error('Failed to refresh token');
+    }
+    
+    const data = await response.json();
+    
+    token = data.access_token;
+    localStorage.setItem('spotify_token', token);
+    
+    if (data.refresh_token) {
+        localStorage.setItem('spotify_refresh_token', data.refresh_token);
+    }
+    
+    return data;
+}
+
 // Update the player UI with current track info
 function updatePlayerUI(state) {
     const track = state.track_window.current_track;
-    document.getElementById('albumArt').src = track.album.images[0].url;
+    const isPlaying = !state.paused;
+    
+    document.getElementById('albumArt').src = track.album.images[0]?.url || '';
     document.getElementById('trackName').textContent = track.name;
     document.getElementById('artistName').textContent = track.artists.map(artist => artist.name).join(', ');
+    
+    // Update play/pause button
+    document.getElementById('playPause').textContent = isPlaying ? '⏸' : '▶';
     
     // Update progress bar
     const progress = (state.position / state.duration) * 100;
@@ -116,11 +263,23 @@ function updatePlayerUI(state) {
 // Load user's public playlists
 async function loadPlaylists() {
     try {
-        const response = await fetch(`https://api.spotify.com/v1/users/${USER_ID}/playlists`, {
+        const response = await fetch(`https://api.spotify.com/v1/users/${USER_ID}/playlists?limit=50`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
+        
+        if (response.status === 401) {
+            // Token expired, try to refresh
+            try {
+                await refreshAccessToken();
+                return loadPlaylists(); // Retry
+            } catch (refreshError) {
+                console.error('Token refresh failed:', refreshError);
+                handleAuthError();
+                return;
+            }
+        }
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -147,7 +306,7 @@ function displayPlaylists(playlists) {
         const card = document.createElement('div');
         card.className = 'playlist-card';
         card.innerHTML = `
-            <img src="${playlist.images[0]?.url || 'default-playlist-cover.jpg'}" 
+            <img src="${playlist.images[0]?.url || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGMkU4Ii8+Cjx0ZXh0IHg9IjEwMCIgeT0iMTAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0iY2VudHJhbCIgZmlsbD0iIzZCOUI3RiIgZm9udC1zaXplPSI0MCI+8J+OtTwvdGV4dD4KPC9zdmc+'}" 
                  alt="${playlist.name}" 
                  class="playlist-cover">
             <div class="playlist-info">
@@ -163,11 +322,22 @@ function displayPlaylists(playlists) {
 // Load tracks for a specific playlist
 async function loadPlaylistTracks(playlistId) {
     try {
-        const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+        const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=50`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
+        
+        if (response.status === 401) {
+            try {
+                await refreshAccessToken();
+                return loadPlaylistTracks(playlistId); // Retry
+            } catch (refreshError) {
+                console.error('Token refresh failed:', refreshError);
+                handleAuthError();
+                return;
+            }
+        }
         
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -191,11 +361,13 @@ function displayTracks(tracks) {
     container.className = 'track-list';
     
     tracks.forEach(item => {
+        if (!item.track || item.track.is_local) return; // Skip local files
+        
         const track = item.track;
         const trackElement = document.createElement('div');
         trackElement.className = 'track-item';
         trackElement.innerHTML = `
-            <img src="${track.album.images[2]?.url || 'default-track-cover.jpg'}" 
+            <img src="${track.album.images[2]?.url || track.album.images[0]?.url || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjVGMkU4Ii8+Cjx0ZXh0IHg9IjIwIiB5PSIyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9ImNlbnRyYWwiIGZpbGw9IiM2QjlCN0YiIGZvbnQtc2l6ZT0iMTYiPvCfjpU8L3RleHQ+Cjwvc3ZnPg=='}" 
                  alt="${track.name}">
             <div class="track-item-info">
                 <h4>${track.name}</h4>
@@ -224,6 +396,11 @@ function formatDuration(ms) {
 
 // Play a specific track
 async function playTrack(uri) {
+    if (!deviceId) {
+        showError('Player not ready. Please wait a moment and try again.');
+        return;
+    }
+    
     try {
         const response = await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
             method: 'PUT',
@@ -236,8 +413,26 @@ async function playTrack(uri) {
             })
         });
         
+        if (response.status === 401) {
+            try {
+                await refreshAccessToken();
+                return playTrack(uri); // Retry
+            } catch (refreshError) {
+                console.error('Token refresh failed:', refreshError);
+                handleAuthError();
+                return;
+            }
+        }
+        
+        if (response.status === 404) {
+            showError('Player not found. Please make sure Spotify is open and try again.');
+            return;
+        }
+        
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorData = await response.text();
+            console.error('Play error:', errorData);
+            showError('Failed to play track. Please try again.');
         }
     } catch (error) {
         console.error('Error playing track:', error);
@@ -246,70 +441,88 @@ async function playTrack(uri) {
 }
 
 // Player controls
-document.getElementById('playPause').onclick = () => {
-    player.togglePlay();
-};
+function setupPlayerControls() {
+    document.getElementById('playPause').onclick = () => {
+        if (player) {
+            player.togglePlay();
+        }
+    };
 
-document.getElementById('prevTrack').onclick = () => {
-    player.previousTrack();
-};
+    document.getElementById('prevTrack').onclick = () => {
+        if (player) {
+            player.previousTrack();
+        }
+    };
 
-document.getElementById('nextTrack').onclick = () => {
-    player.nextTrack();
-};
+    document.getElementById('nextTrack').onclick = () => {
+        if (player) {
+            player.nextTrack();
+        }
+    };
+}
 
-// Check for authentication
+// Check for authentication when page loads
 window.onload = () => {
     console.log('Window loaded, checking authentication...');
     
-    // Check for error in URL
+    // Setup player controls
+    setupPlayerControls();
+    
+    // Check for authorization code in URL
     const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const state = urlParams.get('state');
     const error = urlParams.get('error');
+    
     if (error) {
         console.error('Authentication error:', error);
         showError(`Authentication error: ${error}`);
         localStorage.removeItem('spotify_token');
+        localStorage.removeItem('spotify_refresh_token');
+        localStorage.removeItem('spotify_code_verifier');
         localStorage.removeItem('spotify_auth_state');
-        window.location.href = '/spotify-login.html';
-        return;
-    }
-
-    // Check for token in URL hash
-    const hash = window.location.hash
-        .substring(1)
-        .split('&')
-        .reduce((initial, item) => {
-            if (item) {
-                const parts = item.split('=');
-                initial[parts[0]] = decodeURIComponent(parts[1]);
-            }
-            return initial;
-        }, {});
-
-    console.log('Hash contents:', hash);
-
-    // Validate state parameter
-    const storedState = localStorage.getItem('spotify_auth_state');
-    if (hash.state && hash.state !== storedState) {
-        console.error('State mismatch');
-        showError('Invalid state parameter. Please try again.');
-        localStorage.removeItem('spotify_token');
-        localStorage.removeItem('spotify_auth_state');
-        window.location.href = '/spotify-login.html';
-        return;
-    }
-
-    if (hash.access_token) {
-        console.log('Access token found in hash');
-        token = hash.access_token;
-        localStorage.setItem('spotify_token', token);
-        // Remove hash from URL to prevent refresh loop
+        showLogin();
+        // Clean URL
         window.history.replaceState({}, document.title, window.location.pathname);
+        return;
+    }
+    
+    if (code && state) {
+        console.log('Authorization code found, exchanging for token...');
         
-        if (window.Spotify) {
-            initializePlayer();
+        // Validate state parameter
+        const storedState = localStorage.getItem('spotify_auth_state');
+        if (state !== storedState) {
+            console.error('State mismatch');
+            showError('Invalid state parameter. Please try again.');
+            localStorage.removeItem('spotify_token');
+            localStorage.removeItem('spotify_refresh_token');
+            localStorage.removeItem('spotify_code_verifier');
+            localStorage.removeItem('spotify_auth_state');
+            showLogin();
+            window.history.replaceState({}, document.title, window.location.pathname);
+            return;
         }
-        loadPlaylists();
+        
+        // Exchange code for token
+        exchangeCodeForToken(code)
+            .then(tokenData => {
+                console.log('Token exchange successful');
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+                
+                if (window.Spotify) {
+                    initializePlayer();
+                } else {
+                    console.log('Waiting for Spotify SDK...');
+                }
+            })
+            .catch(error => {
+                console.error('Token exchange failed:', error);
+                showError('Failed to complete authentication. Please try again.');
+                showLogin();
+                window.history.replaceState({}, document.title, window.location.pathname);
+            });
     } else {
         // Check if we have a stored token
         const storedToken = localStorage.getItem('spotify_token');
@@ -318,21 +531,12 @@ window.onload = () => {
             token = storedToken;
             if (window.Spotify) {
                 initializePlayer();
+            } else {
+                console.log('Waiting for Spotify SDK...');
             }
-            loadPlaylists();
         } else {
-            console.log('No token found, redirecting to login page');
-            window.location.href = '/spotify-login.html';
+            console.log('No token found, showing login');
+            showLogin();
         }
     }
 };
-
-// Generate random string for state parameter
-function generateRandomString(length) {
-    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let text = '';
-    for (let i = 0; i < length; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-} 
