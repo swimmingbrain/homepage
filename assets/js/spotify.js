@@ -286,11 +286,14 @@ async function loadPlaylists() {
         }
         
         const data = await response.json();
-        if (data.items.length === 0) {
+        // Filter for public playlists only
+        const publicPlaylists = data.items.filter(playlist => playlist.public);
+        
+        if (publicPlaylists.length === 0) {
             showError('No public playlists found.');
             return;
         }
-        displayPlaylists(data.items);
+        displayPlaylists(publicPlaylists);
     } catch (error) {
         console.error('Error loading playlists:', error);
         showError('Failed to load playlists. Please try again later.');
