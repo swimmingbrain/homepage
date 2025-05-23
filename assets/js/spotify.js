@@ -274,56 +274,31 @@ window.onload = () => {
         return;
     }
 
-    // Check for token in URL hash
-    const hash = window.location.hash
-        .substring(1)
-        .split('&')
-        .reduce((initial, item) => {
-            if (item) {
-                const parts = item.split('=');
-                initial[parts[0]] = decodeURIComponent(parts[1]);
-            }
-            return initial;
-        }, {});
-
-    console.log('Hash contents:', hash);
-
-    // Validate state parameter
-    const storedState = localStorage.getItem('spotify_auth_state');
-    if (hash.state && hash.state !== storedState) {
-        console.error('State mismatch');
-        showError('Invalid state parameter. Please try again.');
-        localStorage.removeItem('spotify_token');
-        localStorage.removeItem('spotify_auth_state');
+    // Check for authorization code
+    const code = urlParams.get('code');
+    if (code) {
+        console.log('Authorization code received');
+        // Store the code temporarily
+        localStorage.setItem('spotify_auth_code', code);
+        // Remove code from URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+        // Redirect to login page to handle the code
         window.location.href = '/spotify-login.html';
         return;
     }
 
-    if (hash.access_token) {
-        console.log('Access token found in hash');
-        token = hash.access_token;
-        localStorage.setItem('spotify_token', token);
-        // Remove hash from URL to prevent refresh loop
-        window.history.replaceState({}, document.title, window.location.pathname);
-        
+    // Check if we have a stored token
+    const storedToken = localStorage.getItem('spotify_token');
+    if (storedToken) {
+        console.log('Using stored token');
+        token = storedToken;
         if (window.Spotify) {
             initializePlayer();
         }
         loadPlaylists();
     } else {
-        // Check if we have a stored token
-        const storedToken = localStorage.getItem('spotify_token');
-        if (storedToken) {
-            console.log('Using stored token');
-            token = storedToken;
-            if (window.Spotify) {
-                initializePlayer();
-            }
-            loadPlaylists();
-        } else {
-            console.log('No token found, redirecting to login page');
-            window.location.href = '/spotify-login.html';
-        }
+        console.log('No token found, redirecting to login page');
+        window.location.href = '/spotify-login.html';
     }
 };
 
