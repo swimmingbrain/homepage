@@ -35,6 +35,13 @@
         .login-button:hover {
             transform: scale(1.05);
         }
+        .error-message {
+            color: #ff4444;
+            margin-top: 1rem;
+            padding: 0.5rem;
+            border-radius: 5px;
+            background: rgba(255, 68, 68, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -42,11 +49,20 @@
         <h1>Welcome to Music Vibes</h1>
         <p>Please login with your Spotify account to continue</p>
         <button class="login-button" onclick="login()">Login with Spotify</button>
+        <div id="error" class="error-message" style="display: none;"></div>
     </div>
 
     <script>
         const CLIENT_ID = 'bf45e9aa56e64d4c924c7136bc358631';
         const REDIRECT_URI = 'https://swimmingbrain.dev/spotify.html';
+        
+        // Check for errors in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        if (error) {
+            document.getElementById('error').textContent = `Error: ${error}`;
+            document.getElementById('error').style.display = 'block';
+        }
         
         function login() {
             const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private';
@@ -55,14 +71,16 @@
             
             const params = new URLSearchParams({
                 client_id: CLIENT_ID,
-                response_type: 'code',
+                response_type: 'token',
                 redirect_uri: REDIRECT_URI,
                 state: state,
                 scope: scope,
                 show_dialog: true
             });
             
-            window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
+            const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
+            console.log('Redirecting to:', authUrl);
+            window.location.href = authUrl;
         }
 
         function generateRandomString(length) {
