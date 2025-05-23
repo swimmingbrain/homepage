@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Login - Braian</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+        .login-container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        .login-button {
+            background: #1DB954;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .login-button:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Welcome to Music Vibes</h1>
+        <p>Please login with your Spotify account to continue</p>
+        <button class="login-button" onclick="login()">Login with Spotify</button>
+    </div>
+
+    <script>
+        const CLIENT_ID = 'bf45e9aa56e64d4c924c7136bc358631';
+        const REDIRECT_URI = 'https://swimmingbrain.dev/spotify.html';
+        
+        function login() {
+            const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private';
+            const state = generateRandomString(16);
+            localStorage.setItem('spotify_auth_state', state);
+            
+            const params = new URLSearchParams({
+                client_id: CLIENT_ID,
+                response_type: 'token',
+                redirect_uri: REDIRECT_URI,
+                state: state,
+                scope: scope,
+                show_dialog: true
+            });
+            
+            window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
+        }
+
+        function generateRandomString(length) {
+            const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let text = '';
+            for (let i = 0; i < length; i++) {
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            return text;
+        }
+    </script>
+</body>
+</html> 

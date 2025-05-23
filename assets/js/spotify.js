@@ -67,13 +67,23 @@ function handleAuthError() {
     console.log('Handling auth error');
     localStorage.removeItem('spotify_token');
     localStorage.removeItem('spotify_auth_state');
-    // Don't redirect immediately to prevent loops
-    showError('Please click here to login again', true);
+    showLoginButton();
 }
 
-// Get authentication URL
-function getAuthUrl() {
-    console.log('Generating auth URL');
+function showLoginButton() {
+    const container = document.querySelector('.spotify-container');
+    const loginDiv = document.createElement('div');
+    loginDiv.className = 'login-message';
+    loginDiv.innerHTML = `
+        <h2>Authentication Required</h2>
+        <p>Please login to continue</p>
+        <button onclick="startAuth()" class="login-button">Login with Spotify</button>
+    `;
+    container.innerHTML = '';
+    container.appendChild(loginDiv);
+}
+
+function startAuth() {
     const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private';
     const state = generateRandomString(16);
     localStorage.setItem('spotify_auth_state', state);
@@ -87,24 +97,14 @@ function getAuthUrl() {
         show_dialog: true
     });
     
-    const authUrl = `https://accounts.spotify.com/authorize?${params.toString()}`;
-    console.log('Auth URL generated:', authUrl);
-    return authUrl;
+    window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
 }
 
 // Show error message to user
-function showError(message, isLoginError = false) {
+function showError(message) {
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     errorDiv.textContent = message;
-    
-    if (isLoginError) {
-        errorDiv.style.cursor = 'pointer';
-        errorDiv.onclick = () => {
-            window.location.href = getAuthUrl();
-        };
-    }
-    
     document.querySelector('.spotify-container').prepend(errorDiv);
     setTimeout(() => errorDiv.remove(), 5000);
 }
@@ -278,6 +278,7 @@ window.onload = () => {
         showError(`Authentication error: ${error}`);
         localStorage.removeItem('spotify_token');
         localStorage.removeItem('spotify_auth_state');
+        showLoginButton();
         return;
     }
 
@@ -302,6 +303,7 @@ window.onload = () => {
         showError('Invalid state parameter. Please try again.');
         localStorage.removeItem('spotify_token');
         localStorage.removeItem('spotify_auth_state');
+        showLoginButton();
         return;
     }
 
@@ -328,7 +330,7 @@ window.onload = () => {
             loadPlaylists();
         } else {
             console.log('No token found, showing login button');
-            showError('Click here to login to Spotify', true);
+            showLoginButton();
         }
     }
 };
