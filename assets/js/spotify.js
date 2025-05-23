@@ -24,6 +24,9 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     player.addListener('authentication_error', ({ message }) => { 
         console.error('Authentication Error:', message);
         showError('Authentication failed. Please try logging in again.');
+        // Clear token and redirect to login
+        localStorage.removeItem('spotify_token');
+        window.location.href = getAuthUrl();
     });
     player.addListener('account_error', ({ message }) => { 
         console.error('Account Error:', message);
@@ -50,6 +53,24 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     // Connect to the player
     player.connect();
 };
+
+// Get authentication URL
+function getAuthUrl() {
+    const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private';
+    const state = generateRandomString(16);
+    localStorage.setItem('spotify_auth_state', state);
+    
+    const params = new URLSearchParams({
+        client_id: CLIENT_ID,
+        response_type: 'token',
+        redirect_uri: REDIRECT_URI,
+        state: state,
+        scope: scope,
+        show_dialog: true
+    });
+    
+    return `https://accounts.spotify.com/authorize?${params.toString()}`;
+}
 
 // Show error message to user
 function showError(message) {
@@ -230,6 +251,7 @@ window.onload = () => {
         return;
     }
 
+    // Check for token in URL hash
     const hash = window.location.hash
         .substring(1)
         .split('&')
@@ -246,27 +268,21 @@ window.onload = () => {
     if (hash.access_token) {
         console.log('Access token found, initializing player...');
         token = hash.access_token;
+        localStorage.setItem('spotify_token', token);
+        // Remove hash from URL to prevent refresh loop
+        window.history.replaceState({}, document.title, window.location.pathname);
         loadPlaylists();
     } else {
-        console.log('No access token, redirecting to Spotify login...');
-        // Redirect to Spotify login
-        const scope = 'user-read-private user-read-email user-read-playback-state user-modify-playback-state user-read-currently-playing playlist-read-private';
-        const state = generateRandomString(16);
-        localStorage.setItem('spotify_auth_state', state);
-        
-        const authUrl = new URL('https://accounts.spotify.com/authorize');
-        const params = {
-            client_id: CLIENT_ID,
-            response_type: 'token',
-            redirect_uri: REDIRECT_URI,
-            state: state,
-            scope: scope,
-            show_dialog: true
-        };
-        
-        const finalUrl = authUrl.toString() + '?' + new URLSearchParams(params).toString();
-        console.log('Redirecting to:', finalUrl);
-        window.location.href = finalUrl;
+        // Check if we have a stored token
+        const storedToken = localStorage.getItem('spotify_token');
+        if (storedToken) {
+            console.log('Using stored token...');
+            token = storedToken;
+            loadPlaylists();
+        } else {
+            console.log('No token found, redirecting to Spotify login...');
+            window.location.href = getAuthUrl();
+        }
     }
 };
 
