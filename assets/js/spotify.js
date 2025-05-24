@@ -62,7 +62,7 @@ function initializePlayer() {
     
     player.addListener('account_error', ({ message }) => { 
         console.error('Account Error:', message);
-        showError('Account error. Please check your Spotify Premium subscription.');
+        showPremiumRequired();
     });
     
     player.addListener('playback_error', ({ message }) => { 
@@ -199,6 +199,25 @@ function showError(message) {
     errorDiv.textContent = message;
     document.querySelector('.spotify-container').prepend(errorDiv);
     setTimeout(() => errorDiv.remove(), 5000);
+}
+
+// Show premium required message
+function showPremiumRequired() {
+    const playerContainer = document.getElementById('player-container');
+    playerContainer.innerHTML = `
+        <div class="premium-required">
+            <h2>Spotify Premium Required</h2>
+            <p>To use the full player features, you need a Spotify Premium account.</p>
+            <div class="premium-options">
+                <a href="https://www.spotify.com/premium" target="_blank" class="premium-button">
+                    Upgrade to Premium
+                </a>
+                <p class="premium-note">Don't have Premium? You can still browse playlists and open tracks in Spotify!</p>
+            </div>
+        </div>
+    `;
+    document.getElementById('login-container').style.display = 'none';
+    playerContainer.style.display = 'block';
 }
 
 // Authorization Code + PKCE login
@@ -519,10 +538,11 @@ function formatDuration(ms) {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
-// Play a specific track
+// Modify playTrack function to handle non-Premium users
 async function playTrack(uri) {
     if (!deviceId) {
-        showError('Player not ready. Please wait a moment and try again.');
+        // If no device ID (non-Premium user), open in Spotify
+        window.open(`https://open.spotify.com/track/${uri.split(':').pop()}`, '_blank');
         return;
     }
     
@@ -705,12 +725,70 @@ function initializePlayerBar() {
     document.body.appendChild(playerBar);
 }
 
-// Call addPlayerStyles and initializePlayerBar when the page loads
+// Add styles for premium required message
+function addPremiumStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .premium-required {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--background-secondary);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .premium-required h2 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .premium-required p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .premium-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .premium-button {
+            background: #1DB954;
+            color: white;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .premium-button:hover {
+            background: #1ed760;
+            transform: translateY(-2px);
+        }
+
+        .premium-note {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Add premium styles to the onload function
 window.onload = () => {
     console.log('Window loaded, checking authentication...');
     
     // Add login styles
     addLoginStyles();
+    
+    // Add premium styles
+    addPremiumStyles();
     
     // Add player styles and initialize player bar
     addPlayerStyles();
