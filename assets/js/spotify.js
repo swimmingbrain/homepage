@@ -505,6 +505,9 @@ function displayTracks(tracks) {
     const spotifyContainer = document.querySelector('.spotify-container');
     spotifyContainer.insertBefore(container, spotifyContainer.firstChild);
 
+    // Add margin after track list
+    container.style.marginBottom = '3rem';
+
     // Scroll to the track list with smooth animation
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
@@ -583,12 +586,135 @@ function setupPlayerControls() {
     };
 }
 
-// Check for authentication when page loads
+// Add styles for the player bar
+function addPlayerStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        .player-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--background-secondary);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .player-bar img {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+        }
+
+        .player-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .player-info h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .player-controls button {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+
+        .player-controls button:hover {
+            background: var(--background-hover);
+        }
+
+        .progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--background-hover);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #1DB954;
+            width: 0;
+            transition: width 0.1s linear;
+        }
+
+        .time-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Initialize player bar HTML
+function initializePlayerBar() {
+    const playerBar = document.createElement('div');
+    playerBar.className = 'player-bar';
+    playerBar.innerHTML = `
+        <div class="progress-container">
+            <div id="progress" class="progress-bar"></div>
+        </div>
+        <img id="albumArt" src="" alt="Album Art">
+        <div class="player-info">
+            <h3 id="trackName">No track playing</h3>
+            <p id="artistName">Select a track to play</p>
+        </div>
+        <div class="player-controls">
+            <button id="prevTrack">⏮</button>
+            <button id="playPause">▶</button>
+            <button id="nextTrack">⏭</button>
+        </div>
+        <div class="time-info">
+            <span id="currentTime">0:00</span>
+            <span>/</span>
+            <span id="duration">0:00</span>
+        </div>
+    `;
+    document.body.appendChild(playerBar);
+}
+
+// Call addPlayerStyles and initializePlayerBar when the page loads
 window.onload = () => {
     console.log('Window loaded, checking authentication...');
     
     // Add login styles
     addLoginStyles();
+    
+    // Add player styles and initialize player bar
+    addPlayerStyles();
+    initializePlayerBar();
     
     // Setup player controls
     setupPlayerControls();
