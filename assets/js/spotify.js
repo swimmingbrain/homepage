@@ -113,7 +113,7 @@ function showLogin() {
     loginContainer.innerHTML = `
         <div class="login-content">
             <h2>Welcome to Spotify Player</h2>
-            <p>Connect your Spotify account to start playing your favorite music.</p>
+            <p>Connect your Spotify account to start playing your favorite music and discover new tracks.</p>
             <button onclick="login()" class="spotify-login-btn">
                 <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
                     <path fill="currentColor" d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
@@ -131,50 +131,66 @@ function addLoginStyles() {
     style.textContent = `
         .login-content {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem;
             max-width: 600px;
             margin: 0 auto;
-            background: var(--background-secondary);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: var(--background-primary);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .login-content h2 {
             color: var(--text-primary);
-            margin-bottom: 1rem;
-            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #1DB954, #1ed760);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .login-content p {
             color: var(--text-secondary);
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-            line-height: 1.5;
+            margin-bottom: 2.5rem;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .spotify-login-btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            background: #1DB954;
+            gap: 0.75rem;
+            background: linear-gradient(45deg, #1DB954, #1ed760);
             color: white;
             border: none;
-            padding: 0.8rem 1.5rem;
+            padding: 1rem 2rem;
             border-radius: 50px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.2);
         }
 
         .spotify-login-btn:hover {
-            background: #1ed760;
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(29, 185, 84, 0.3);
+        }
+
+        .spotify-login-btn:active {
+            transform: translateY(0);
         }
 
         .spotify-login-btn svg {
-            width: 24px;
-            height: 24px;
+            width: 28px;
+            height: 28px;
         }
 
         #login-container {
@@ -183,6 +199,28 @@ function addLoginStyles() {
             display: flex;
             align-items: center;
             justify-content: center;
+            background: var(--background-gradient);
+        }
+
+        @media (max-width: 768px) {
+            .login-content {
+                padding: 2rem;
+                margin: 1rem;
+            }
+
+            .login-content h2 {
+                font-size: 2rem;
+            }
+
+            .login-content p {
+                font-size: 1.1rem;
+                max-width: 100%;
+            }
+
+            .spotify-login-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
         }
     `;
     document.head.appendChild(style);
