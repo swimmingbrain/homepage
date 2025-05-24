@@ -3,6 +3,15 @@ const GITHUB_USERNAME = 'swimmingbrain';
 const GITHUB_API_URL = `https://api.github.com/users/${GITHUB_USERNAME}`;
 const GITHUB_REPOS_URL = `https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=6`;
 
+// Other GitHub profiles to showcase
+const OTHER_PROFILES = [
+    {
+        username: '1oannis',
+        description: 'Software developer from Germany with Greek roots, passionate about progressive open-source software'
+    }
+    // Add more profiles here
+];
+
 // Fetch GitHub data
 async function fetchGitHubData() {
     try {
@@ -19,6 +28,18 @@ async function fetchGitHubData() {
         return { user: userData, repos: reposData };
     } catch (error) {
         console.error('Error fetching GitHub data:', error);
+        return null;
+    }
+}
+
+// Fetch other profile data
+async function fetchOtherProfile(username) {
+    try {
+        const response = await fetch(`https://api.github.com/users/${username}`);
+        if (!response.ok) throw new Error(`Failed to fetch data for ${username}`);
+        return await response.json();
+    } catch (error) {
+        console.error(`Error fetching data for ${username}:`, error);
         return null;
     }
 }
@@ -62,6 +83,32 @@ function createRepoCard(repo) {
     `;
 }
 
+// Create other profile card
+function createOtherProfileCard(profile) {
+    return `
+        <div class="other-profile-card">
+            <div class="profile-header">
+                <img src="${profile.avatar_url}" alt="${profile.login}'s Avatar" class="profile-avatar">
+                <div class="profile-info">
+                    <h3>${profile.name || profile.login}</h3>
+                    <p class="profile-bio">${profile.bio || OTHER_PROFILES.find(p => p.username === profile.login)?.description || 'No bio provided'}</p>
+                    <div class="profile-stats">
+                        <span>${profile.followers} followers</span>
+                        <span>${profile.following} following</span>
+                        <span>${profile.public_repos} repositories</span>
+                    </div>
+                </div>
+            </div>
+            <a href="${profile.html_url}" target="_blank" class="profile-button">
+                <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="currentColor" d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                Visit GitHub Profile
+            </a>
+        </div>
+    `;
+}
+
 // Create GitHub card
 function createGitHubCard(data) {
     const { user, repos } = data;
@@ -81,12 +128,6 @@ function createGitHubCard(data) {
                 </div>
             </div>
         </div>
-        <div class="github-repos">
-            <h3>Recent Repositories</h3>
-            <div class="repos-grid">
-                ${repos.map(repo => createRepoCard(repo)).join('')}
-            </div>
-        </div>
         <div class="github-cta">
             <a href="${user.html_url}" target="_blank" class="github-button">
                 <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
@@ -94,6 +135,12 @@ function createGitHubCard(data) {
                 </svg>
                 Visit GitHub Profile
             </a>
+        </div>
+        <div class="github-repos">
+            <h3>Recent Repositories</h3>
+            <div class="repos-grid">
+                ${repos.map(repo => createRepoCard(repo)).join('')}
+            </div>
         </div>
     `;
     
@@ -174,6 +221,42 @@ function addGitHubStyles() {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+        }
+
+        .github-cta {
+            text-align: center;
+            margin: 2rem 0;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .github-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(45deg, #6e5494, #c9510c);
+            color: white;
+            text-decoration: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(110, 84, 148, 0.2);
+        }
+
+        .github-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(110, 84, 148, 0.3);
+        }
+
+        .github-button:active {
+            transform: translateY(0);
+        }
+
+        .github-button svg {
+            width: 24px;
+            height: 24px;
         }
 
         .github-repos {
@@ -270,40 +353,154 @@ function addGitHubStyles() {
             background: var(--border-color);
         }
 
-        .github-cta {
-            text-align: center;
-            margin-top: 2rem;
+        .other-profiles {
+            margin-top: 4rem;
             padding-top: 2rem;
             border-top: 1px solid var(--border-color);
         }
 
-        .github-button {
+        .other-profiles h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            background: linear-gradient(45deg, #6e5494, #c9510c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .other-profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .other-profile-card {
+            background: var(--background-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .other-profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #6e5494, #c9510c);
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .other-profile-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .other-profile-card:hover::before {
+            opacity: 1;
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .other-profile-card:hover .profile-avatar {
+            transform: scale(1.05);
+        }
+
+        .profile-info {
+            flex: 1;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .profile-info h3 {
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            margin: 0 0 0.5rem 0;
+            background: none;
+            -webkit-text-fill-color: var(--text-primary);
+            text-align: left;
+            width: 100%;
+        }
+
+        .profile-bio {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0 0 1rem 0;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-align: left;
+            width: 100%;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            justify-content: flex-start;
+        }
+
+        .profile-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .profile-button {
             display: inline-flex;
             align-items: center;
-            gap: 0.75rem;
-            background: linear-gradient(45deg, #6e5494, #c9510c);
-            color: white;
+            gap: 0.5rem;
+            color: var(--text-primary);
             text-decoration: none;
-            padding: 1rem 2rem;
+            padding: 0rem 0.2rem;
             border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 0.9rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(110, 84, 148, 0.2);
+            border: 1px solid var(--border-color);
+            background: transparent;
         }
 
-        .github-button:hover {
+        .profile-button:hover {
+            background: var(--background-hover);
+            border-color: var(--text-primary);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(110, 84, 148, 0.3);
         }
 
-        .github-button:active {
-            transform: translateY(0);
+        .profile-button svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
         }
 
-        .github-button svg {
-            width: 24px;
-            height: 24px;
+        .profile-button:hover svg {
+            transform: translateX(2px);
         }
 
         @media (max-width: 768px) {
@@ -322,8 +519,19 @@ function addGitHubStyles() {
                 padding: 1.5rem;
             }
 
-            .repos-grid {
+            .repos-grid,
+            .other-profiles-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .profile-stats {
+                justify-content: flex-start;
             }
         }
     `;
@@ -339,6 +547,22 @@ async function initGitHubCard() {
         const container = document.querySelector('.github-container');
         if (container) {
             container.appendChild(card);
+
+            // Add other profiles section
+            const otherProfilesSection = document.createElement('div');
+            otherProfilesSection.className = 'other-profiles';
+            otherProfilesSection.innerHTML = '<h3>Cool GitHub Profiles</h3><div class="other-profiles-grid"></div>';
+            container.appendChild(otherProfilesSection);
+
+            // Fetch and add other profiles
+            const otherProfilesGrid = otherProfilesSection.querySelector('.other-profiles-grid');
+            for (const profile of OTHER_PROFILES) {
+                const profileData = await fetchOtherProfile(profile.username);
+                if (profileData) {
+                    const profileCard = createOtherProfileCard(profileData);
+                    otherProfilesGrid.insertAdjacentHTML('beforeend', profileCard);
+                }
+            }
         }
     }
 }
