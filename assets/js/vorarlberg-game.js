@@ -1,4 +1,4 @@
-// Vorarlberg Explorer Game
+// Vorarlberg Explorer Game with Mapillary
 let game = {
     currentRound: 0,
     totalRounds: 5,
@@ -10,143 +10,190 @@ let game = {
     actualMarker: null,
     guessMap: null,
     resultMap: null,
-    guessLatLng: null
+    guessLatLng: null,
+    hasGuessed: false,
+    viewer: null,
+    apiKey: null
 };
 
-// Vorarlberg locations with multiple images per location
+// Vorarlberg locations with Mapillary image keys
+// These are example coordinates - you'll need to find actual Mapillary image keys
 const vorarlbergLocations = [
     {
-        name: "Bregenz Seebühne",
+        name: "Bregenz Hafen",
         lat: 47.5050,
         lng: 9.7472,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Seebuehne_Bregenz.jpg/1920px-Seebuehne_Bregenz.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Bregenzer_Festspiele_2013_Seebuehne.jpg/1920px-Bregenzer_Festspiele_2013_Seebuehne.jpg"
-        ],
-        description: "Famous floating stage on Lake Constance"
+        imageKey: "bregenz_harbor", // Placeholder - replace with actual Mapillary image key
+        hint: "Austria's famous lake-side city, home to the floating stage festival",
+        description: "Harbor area near the famous Bregenz Festival"
     },
     {
-        name: "Schattenburg Feldkirch",
-        lat: 47.2417,
-        lng: 9.5989,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Feldkirch_Schattenburg_01.jpg/1920px-Feldkirch_Schattenburg_01.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Schattenburg_Feldkirch.jpg/1920px-Schattenburg_Feldkirch.jpg"
-        ],
-        description: "Medieval castle overlooking Feldkirch"
+        name: "Feldkirch Marktplatz",
+        lat: 47.2380,
+        lng: 9.5970,
+        imageKey: "feldkirch_market", // Placeholder
+        hint: "Medieval town center with historic buildings, near the border with Liechtenstein",
+        description: "Historic market square in Feldkirch"
     },
     {
-        name: "Lünersee",
-        lat: 47.0428,
-        lng: 9.7894,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Luenersee.jpg/1920px-Luenersee.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1f/L%C3%BCnersee_-_panoramio.jpg/1920px-L%C3%BCnersee_-_panoramio.jpg"
-        ],
-        description: "Beautiful alpine lake in Brandnertal"
+        name: "Dornbirn Zentrum",
+        lat: 47.4125,
+        lng: 9.7438,
+        imageKey: "dornbirn_center", // Placeholder
+        hint: "Vorarlberg's largest city, known for its textile industry heritage",
+        description: "City center of Dornbirn"
     },
     {
-        name: "Piz Buin",
-        lat: 46.8442,
-        lng: 10.1183,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Piz_Buin.jpg/1920px-Piz_Buin.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Piz_Buin_from_Ochsentaler_Glacier.jpg/1920px-Piz_Buin_from_Ochsentaler_Glacier.jpg"
-        ],
-        description: "Highest mountain in Vorarlberg"
+        name: "Hohenems Bahnhof",
+        lat: 47.3658,
+        lng: 9.6860,
+        imageKey: "hohenems_station", // Placeholder
+        hint: "Town known for its Jewish heritage and Renaissance palace",
+        description: "Train station area in Hohenems"
     },
     {
-        name: "Rappenlochschlucht",
-        lat: 47.4008,
-        lng: 9.6889,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Rappenlochschlucht.jpg/1920px-Rappenlochschlucht.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Rappenlochschlucht_Dornbirn.jpg/1920px-Rappenlochschlucht_Dornbirn.jpg"
-        ],
-        description: "Dramatic gorge near Dornbirn"
+        name: "Lustenau Zentrum",
+        lat: 47.4270,
+        lng: 9.6595,
+        imageKey: "lustenau_center", // Placeholder
+        hint: "Border town famous for embroidery, close to Switzerland",
+        description: "Town center of Lustenau"
     },
     {
-        name: "Silvretta Hochalpenstraße",
-        lat: 46.9167,
-        lng: 10.0833,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Silvretta_Hochalpenstra%C3%9Fe.jpg/1920px-Silvretta_Hochalpenstra%C3%9Fe.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Bielerhöhe_Stausee.jpg/1920px-Bielerhöhe_Stausee.jpg"
-        ],
-        description: "High alpine road with stunning views"
+        name: "Rankweil Bahnhof",
+        lat: 47.2734,
+        lng: 9.6397,
+        imageKey: "rankweil_station", // Placeholder
+        hint: "Town with a famous basilica on the hill, important railway junction",
+        description: "Railway station in Rankweil"
     },
     {
-        name: "Hohenems Altstadt",
-        lat: 47.3581,
-        lng: 9.6828,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Hohenems_Palast.jpg/1920px-Hohenems_Palast.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Hohenems_Marktplatz.jpg/1920px-Hohenems_Marktplatz.jpg"
-        ],
-        description: "Historic old town with Renaissance palace"
+        name: "Bludenz Altstadt",
+        lat: 47.1547,
+        lng: 9.8222,
+        imageKey: "bludenz_oldtown", // Placeholder
+        hint: "Alpine town where five valleys meet, gateway to the Arlberg",
+        description: "Old town of Bludenz"
     },
     {
-        name: "Formarinsee",
-        lat: 47.1622,
-        lng: 10.0908,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Formarinsee.jpg/1920px-Formarinsee.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Formarinsee_01.jpg/1920px-Formarinsee_01.jpg"
-        ],
-        description: "Source of the river Lech"
+        name: "Götzis Zentrum",
+        lat: 47.3317,
+        lng: 9.6350,
+        imageKey: "goetzis_center", // Placeholder
+        hint: "Town famous for hosting the Hypo-Meeting athletics event",
+        description: "Town center of Götzis"
     },
     {
-        name: "Damüls",
-        lat: 47.2833,
-        lng: 9.8917,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Dam%C3%BCls_Panorama.jpg/1920px-Dam%C3%BCls_Panorama.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Damuels_Dorf.jpg/1920px-Damuels_Dorf.jpg"
-        ],
-        description: "Snowiest village in the world"
+        name: "Hard Hafen",
+        lat: 47.4897,
+        lng: 9.6897,
+        imageKey: "hard_harbor", // Placeholder
+        hint: "Lake Constance town between Bregenz and the Rhine delta",
+        description: "Harbor area in Hard"
     },
     {
-        name: "Basilika Rankweil",
-        lat: 47.2711,
-        lng: 9.6436,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Basilika_Rankweil.jpg/1920px-Basilika_Rankweil.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Rankweil_Basilika.jpg/1920px-Rankweil_Basilika.jpg"
-        ],
-        description: "Pilgrimage church on Liebfrauenberg"
+        name: "Nenzing Dorfzentrum",
+        lat: 47.1839,
+        lng: 9.7006,
+        imageKey: "nenzing_village", // Placeholder
+        hint: "Village in the Walgau valley, gateway to the Gamperdonatal",
+        description: "Village center of Nenzing"
     },
     {
-        name: "Kanisfluh",
-        lat: 47.3519,
-        lng: 9.9869,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Kanisfluh.jpg/1920px-Kanisfluh.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Kanisfluh_von_Mellau.jpg/1920px-Kanisfluh_von_Mellau.jpg"
-        ],
-        description: "Distinctive mountain in Bregenzerwald"
+        name: "Schruns Zentrum",
+        lat: 47.0769,
+        lng: 9.9194,
+        imageKey: "schruns_center", // Placeholder
+        hint: "Montafon valley town where Ernest Hemingway spent winters",
+        description: "Town center of Schruns"
     },
     {
-        name: "Mohnenfluh Oberlech",
-        lat: 47.2122,
-        lng: 10.1414,
-        images: [
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Mohnenfluh.jpg/1920px-Mohnenfluh.jpg",
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Oberlech_Panorama.jpg/1920px-Oberlech_Panorama.jpg"
-        ],
-        description: "Mountain peak above Lech am Arlberg"
+        name: "Lech am Arlberg",
+        lat: 47.2085,
+        lng: 10.1416,
+        imageKey: "lech_village", // Placeholder
+        hint: "Exclusive ski resort village, one of the snowiest in the Alps",
+        description: "Village center of Lech"
     }
 ];
 
 // Initialize the game
 function init() {
+    // Check for saved API key
+    game.apiKey = localStorage.getItem('mapillary_api_key');
+    
     // Set up event listeners
+    document.getElementById('save-api-key').addEventListener('click', saveApiKey);
     document.getElementById('start-game').addEventListener('click', startGame);
     document.getElementById('make-guess').addEventListener('click', makeGuess);
     document.getElementById('next-round').addEventListener('click', nextRound);
     document.getElementById('play-again').addEventListener('click', resetGame);
+    document.getElementById('hint-toggle').addEventListener('click', toggleHint);
     
     // Initialize maps
     initializeMaps();
+    
+    // Check API key and Mapillary connection
+    checkMapillaryConnection();
+}
+
+// Check Mapillary connection
+function checkMapillaryConnection() {
+    const statusEl = document.getElementById('api-status');
+    
+    if (!game.apiKey) {
+        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> API key required';
+        statusEl.className = 'api-status error';
+        document.getElementById('start-modal').style.display = 'none';
+        document.getElementById('api-key-modal').style.display = 'flex';
+        return;
+    }
+    
+    // Test API key by trying to initialize viewer
+    try {
+        // Initialize a test viewer
+        const testContainer = document.createElement('div');
+        testContainer.style.display = 'none';
+        document.body.appendChild(testContainer);
+        
+        const testViewer = new Mapillary.Viewer({
+            accessToken: game.apiKey,
+            container: testContainer,
+        });
+        
+        // If we get here, API key is valid
+        statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Ready to play!';
+        statusEl.className = 'api-status success';
+        document.getElementById('start-game').disabled = false;
+        
+        // Clean up test viewer
+        testViewer.remove();
+        document.body.removeChild(testContainer);
+        
+    } catch (error) {
+        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid API key';
+        statusEl.className = 'api-status error';
+        document.getElementById('start-modal').style.display = 'none';
+        document.getElementById('api-key-modal').style.display = 'flex';
+    }
+}
+
+// Save API key
+function saveApiKey() {
+    const apiKey = document.getElementById('api-key-input').value.trim();
+    
+    if (!apiKey) {
+        alert('Please enter your Mapillary API key');
+        return;
+    }
+    
+    localStorage.setItem('mapillary_api_key', apiKey);
+    game.apiKey = apiKey;
+    
+    document.getElementById('api-key-modal').style.display = 'none';
+    document.getElementById('start-modal').style.display = 'flex';
+    
+    checkMapillaryConnection();
 }
 
 // Initialize Leaflet maps
@@ -172,7 +219,9 @@ function initializeMaps() {
     
     // Click event for placing guess
     game.guessMap.on('click', function(e) {
-        placeGuessMarker(e.latlng);
+        if (!game.hasGuessed) {
+            placeGuessMarker(e.latlng);
+        }
     });
 }
 
@@ -180,7 +229,44 @@ function initializeMaps() {
 function startGame() {
     document.getElementById('start-modal').classList.remove('show');
     game.locations = shuffleArray([...vorarlbergLocations]).slice(0, game.totalRounds);
+    
+    // Initialize Mapillary viewer
+    initializeMapillaryViewer();
+    
     nextRound();
+}
+
+// Initialize Mapillary viewer
+function initializeMapillaryViewer() {
+    // Remove loading spinner
+    document.getElementById('loading-spinner').style.display = 'none';
+    
+    // Create viewer
+    game.viewer = new Mapillary.Viewer({
+        accessToken: game.apiKey,
+        container: 'mapillary-viewer',
+        component: {
+            cover: false,
+            direction: false,
+            sequence: false,
+            tag: false,
+            zoom: false
+        }
+    });
+    
+    // Add zoom controls
+    document.getElementById('zoom-in').addEventListener('click', () => {
+        game.viewer.setZoom(game.viewer.getZoom() + 0.5);
+    });
+    
+    document.getElementById('zoom-out').addEventListener('click', () => {
+        game.viewer.setZoom(game.viewer.getZoom() - 0.5);
+    });
+    
+    document.getElementById('reset-view').addEventListener('click', () => {
+        game.viewer.setZoom(0);
+        game.viewer.setBearing(0);
+    });
 }
 
 // Load next round
@@ -193,11 +279,14 @@ function nextRound() {
     game.currentRound++;
     game.currentLocation = game.locations[game.currentRound - 1];
     game.guessLatLng = null;
+    game.hasGuessed = false;
     
     // Update UI
     document.getElementById('round-number').textContent = `${game.currentRound}/${game.totalRounds}`;
     document.getElementById('results-modal').classList.remove('show');
     document.getElementById('make-guess').disabled = true;
+    document.getElementById('hint-overlay').style.display = 'none';
+    document.getElementById('hint-toggle').classList.remove('active');
     
     // Clear previous markers
     if (game.guessMarker) {
@@ -205,66 +294,78 @@ function nextRound() {
         game.guessMarker = null;
     }
     
-    // Load location image
-    loadLocationImage();
-}
-
-// Load location image
-function loadLocationImage() {
-    const panoramaView = document.getElementById('panorama-view');
-    const images = game.currentLocation.images;
-    let currentImageIndex = 0;
-    
-    // Create image viewer
-    panoramaView.innerHTML = `
-        <div class="satellite-view">
-            <img id="location-image" src="${images[currentImageIndex]}" alt="Location">
-            <div class="image-navigation">
-                <button class="nav-arrow" id="prev-image" ${images.length === 1 ? 'disabled' : ''}>
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button class="nav-arrow" id="next-image" ${images.length === 1 ? 'disabled' : ''}>
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        </div>
-    `;
-    
-    // Add navigation listeners
-    if (images.length > 1) {
-        document.getElementById('prev-image').addEventListener('click', () => {
-            currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-            document.getElementById('location-image').src = images[currentImageIndex];
-        });
-        
-        document.getElementById('next-image').addEventListener('click', () => {
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            document.getElementById('location-image').src = images[currentImageIndex];
-        });
+    // Destroy previous result map if exists
+    if (game.resultMap) {
+        game.resultMap.remove();
+        game.resultMap = null;
     }
     
-    // Add zoom controls
-    let zoomLevel = 1;
-    const img = document.getElementById('location-image');
+    // Load location in Mapillary
+    loadMapillaryLocation();
+}
+
+// Load Mapillary location
+async function loadMapillaryLocation() {
+    try {
+        // Show loading spinner
+        document.getElementById('loading-spinner').style.display = 'block';
+        
+        // For now, we'll move to the coordinates
+        // In production, you'd search for the nearest image
+        const position = {
+            lat: game.currentLocation.lat,
+            lng: game.currentLocation.lng
+        };
+        
+        // Move viewer to location
+        await game.viewer.moveTo(position)
+            .catch(async () => {
+                // If no image at exact location, find nearest
+                const searchResponse = await fetch(
+                    `https://graph.mapillary.com/images?access_token=${game.apiKey}&fields=id,geometry&bbox=${position.lng-0.01},${position.lat-0.01},${position.lng+0.01},${position.lat+0.01}&limit=1`
+                );
+                
+                if (searchResponse.ok) {
+                    const data = await searchResponse.json();
+                    if (data.data && data.data.length > 0) {
+                        return game.viewer.moveTo(data.data[0].id);
+                    }
+                }
+                
+                // Fallback: show a placeholder message
+                throw new Error('No street view available');
+            });
+        
+        // Hide loading spinner
+        document.getElementById('loading-spinner').style.display = 'none';
+        
+    } catch (error) {
+        console.error('Error loading Mapillary location:', error);
+        // Show error message
+        document.getElementById('mapillary-viewer').innerHTML = `
+            <div class="street-view-fallback">
+                <i class="fas fa-street-view"></i>
+                <h3>No street view available</h3>
+                <p>This location doesn't have street-level imagery yet.</p>
+                <p><strong>Location hint:</strong> ${game.currentLocation.hint}</p>
+            </div>
+        `;
+    }
+}
+
+// Toggle hint
+function toggleHint() {
+    const hintOverlay = document.getElementById('hint-overlay');
+    const hintToggle = document.getElementById('hint-toggle');
     
-    document.getElementById('zoom-in').addEventListener('click', () => {
-        if (zoomLevel < 2) {
-            zoomLevel += 0.2;
-            img.style.transform = `scale(${zoomLevel})`;
-        }
-    });
-    
-    document.getElementById('zoom-out').addEventListener('click', () => {
-        if (zoomLevel > 0.6) {
-            zoomLevel -= 0.2;
-            img.style.transform = `scale(${zoomLevel})`;
-        }
-    });
-    
-    document.getElementById('reset-view').addEventListener('click', () => {
-        zoomLevel = 1;
-        img.style.transform = 'scale(1)';
-    });
+    if (hintOverlay.style.display === 'none') {
+        document.getElementById('hint-text').textContent = game.currentLocation.hint;
+        hintOverlay.style.display = 'flex';
+        hintToggle.classList.add('active');
+    } else {
+        hintOverlay.style.display = 'none';
+        hintToggle.classList.remove('active');
+    }
 }
 
 // Place guess marker on map
@@ -288,7 +389,11 @@ function placeGuessMarker(latlng) {
 
 // Make guess
 function makeGuess() {
-    if (!game.guessLatLng) return;
+    if (!game.guessLatLng || game.hasGuessed) return;
+    
+    // Mark as guessed and disable button
+    game.hasGuessed = true;
+    document.getElementById('make-guess').disabled = true;
     
     const distance = calculateDistance(
         game.guessLatLng.lat,
@@ -322,6 +427,7 @@ function showResults(distance, points) {
     const resultMapDiv = document.getElementById('result-map');
     resultMapDiv.innerHTML = '';
     
+    // Create new map instance
     game.resultMap = L.map('result-map').setView([47.2692, 9.8916], 8);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
@@ -372,10 +478,23 @@ function showResults(distance, points) {
 function endGame() {
     // Create score breakdown
     const breakdown = document.getElementById('score-breakdown');
-    breakdown.innerHTML = '<h3>Round Scores:</h3>';
+    breakdown.innerHTML = '<h3>Your Performance:</h3>';
     
-    // Calculate average distance
-    const avgDistance = game.bestGuess ? game.bestGuess : 0;
+    // Add performance stats
+    breakdown.innerHTML += `
+        <div class="round-score">
+            <span>Total Rounds:</span>
+            <span>${game.totalRounds}</span>
+        </div>
+        <div class="round-score">
+            <span>Best Guess:</span>
+            <span>${game.bestGuess ? game.bestGuess.toFixed(1) + ' km' : 'N/A'}</span>
+        </div>
+        <div class="round-score">
+            <span>Average Score:</span>
+            <span>${Math.round(game.totalScore / game.totalRounds)} points</span>
+        </div>
+    `;
     
     // Show final score
     document.getElementById('final-score-text').textContent = game.totalScore.toLocaleString();
@@ -390,6 +509,13 @@ function resetGame() {
     game.locations = [];
     game.currentLocation = null;
     game.guessLatLng = null;
+    game.hasGuessed = false;
+    
+    // Clean up result map if exists
+    if (game.resultMap) {
+        game.resultMap.remove();
+        game.resultMap = null;
+    }
     
     document.getElementById('total-score').textContent = '0';
     document.getElementById('best-guess').textContent = '-';

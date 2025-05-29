@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/vorarlberg-game.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://unpkg.com/mapillary-js@4.1.1/dist/mapillary.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -53,18 +54,25 @@
 
         <!-- Main Game Area -->
         <div class="game-container">
-            <!-- Panorama View -->
+            <!-- Mapillary Street View -->
             <div class="panorama-container" id="panorama-container">
-                <div id="panorama-view">
-                    <div class="loading-spinner">
+                <div id="mapillary-viewer" class="mapillary-viewer">
+                    <div class="loading-spinner" id="loading-spinner">
                         <div class="spinner"></div>
-                        <p>Loading location...</p>
+                        <p>Loading street view...</p>
                     </div>
                 </div>
                 <div class="panorama-controls">
-                    <button class="control-btn" id="zoom-in"><i class="fas fa-search-plus"></i></button>
-                    <button class="control-btn" id="zoom-out"><i class="fas fa-search-minus"></i></button>
-                    <button class="control-btn" id="reset-view"><i class="fas fa-undo"></i></button>
+                    <button class="control-btn" id="zoom-in" title="Zoom In"><i class="fas fa-search-plus"></i></button>
+                    <button class="control-btn" id="zoom-out" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
+                    <button class="control-btn" id="reset-view" title="Reset View"><i class="fas fa-undo"></i></button>
+                    <button class="control-btn hint-toggle" id="hint-toggle" title="Show Hint">
+                        <i class="fas fa-lightbulb"></i>
+                    </button>
+                </div>
+                <div class="hint-overlay" id="hint-overlay" style="display: none;">
+                    <i class="fas fa-lightbulb"></i>
+                    <span id="hint-text"></span>
                 </div>
             </div>
 
@@ -125,19 +133,48 @@
                     </div>
                 </div>
                 <h2>Welcome to Vorarlberg Explorer!</h2>
-                <p>Test your knowledge of Vorarlberg's beautiful locations. You'll be shown a street view or satellite image, and you need to guess where it is on the map.</p>
+                <p>Explore Vorarlberg through real street-level imagery. Look around, find clues, and guess where you are!</p>
                 <div class="game-rules">
                     <h3>How to Play:</h3>
                     <ul>
-                        <li>Look around the panorama view using your mouse</li>
+                        <li>Navigate the street view using your mouse</li>
+                        <li>Look for clues: signs, landmarks, mountains</li>
                         <li>Click on the map to place your guess</li>
                         <li>The closer you are, the more points you get!</li>
                         <li>Maximum 5000 points per round</li>
                     </ul>
                 </div>
-                <button class="start-game-btn" id="start-game">
+                <div class="api-status" id="api-status">
+                    <i class="fas fa-circle-notch fa-spin"></i> Checking Mapillary connection...
+                </div>
+                <button class="start-game-btn" id="start-game" disabled>
                     <i class="fas fa-play"></i> Start Game
                 </button>
+            </div>
+        </div>
+
+        <!-- API Key Setup Modal -->
+        <div class="modal" id="api-key-modal" style="display: none;">
+            <div class="modal-content">
+                <h2>Setup Required</h2>
+                <p>To play this game, you need a free Mapillary API key. Don't worry, it's quick and free!</p>
+                <div class="api-setup-steps">
+                    <h3>Quick Setup (2 minutes):</h3>
+                    <ol>
+                        <li>Visit <a href="https://www.mapillary.com/dashboard/developers" target="_blank">Mapillary Developers</a></li>
+                        <li>Sign up/Login (you can use Facebook or email)</li>
+                        <li>Create a new application (name it anything)</li>
+                        <li>Copy your Client Token</li>
+                        <li>Paste it below</li>
+                    </ol>
+                </div>
+                <div class="api-key-input">
+                    <input type="text" id="api-key-input" placeholder="Paste your Mapillary Client Token here">
+                    <button class="save-api-btn" id="save-api-key">
+                        <i class="fas fa-save"></i> Save & Continue
+                    </button>
+                </div>
+                <p class="api-note">Your key is saved locally and never shared.</p>
             </div>
         </div>
 
@@ -148,8 +185,7 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/pannellum@2.5.6/build/pannellum.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/pannellum@2.5.6/build/pannellum.css">
+    <script src="https://unpkg.com/mapillary-js@4.1.1/dist/mapillary.js"></script>
     <script src="assets/js/vorarlberg-game.js"></script>
 </body>
 </html>

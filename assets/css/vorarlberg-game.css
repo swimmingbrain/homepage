@@ -502,3 +502,163 @@
     background: var(--background-glass-hover);
     color: var(--text-primary);
 }
+
+/* Mapillary Viewer */
+.mapillary-viewer {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: #000;
+}
+
+/* Hint System */
+.hint-toggle {
+    position: relative;
+}
+
+.hint-toggle.active {
+    background: var(--color-primary);
+    color: white;
+}
+
+.hint-overlay {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: var(--background-glass-hover);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color-glass);
+    border-radius: 15px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 4px 15px var(--shadow-color-medium);
+    z-index: 100;
+}
+
+.hint-overlay i {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+}
+
+.hint-overlay span {
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* API Status */
+.api-status {
+    background: var(--background-secondary);
+    border-radius: 10px;
+    padding: 12px 20px;
+    margin: 1.5rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.api-status.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.api-status.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* API Key Modal */
+.api-setup-steps {
+    background: var(--background-secondary);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: left;
+}
+
+.api-setup-steps h3 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+.api-setup-steps ol {
+    padding-left: 1.5rem;
+}
+
+.api-setup-steps li {
+    padding: 0.5rem 0;
+    line-height: 1.6;
+}
+
+.api-setup-steps a {
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.api-setup-steps a:hover {
+    text-decoration: underline;
+}
+
+.api-key-input {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.api-key-input input {
+    padding: 12px 20px;
+    border: 2px solid var(--border-color-light);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    transition: border-color 0.3s ease;
+}
+
+.api-key-input input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.save-api-btn {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--shadow-color-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 auto;
+}
+
+.save-api-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow-color-dark);
+}
+
+.api-note {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-align: center;
+    font-style: italic;
+}
+
+/* Mapillary Attribution */
+.panorama-container .mapillary-attribution {
+    background: rgba(0, 0, 0, 0.7) !important;
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+}
