@@ -152,49 +152,7 @@
                 </button>
             </div>
         </div>
-
-        <!-- API Key Setup Modal -->
-        <div class="modal" id="api-key-modal" style="display: none;">
-            <div class="modal-content">
-                <h2>Setup Required</h2>
-                <p>To play this game, you need a free Mapillary API key. Don't worry, it's quick and free!</p>
-                <div class="api-setup-steps">
-                    <h3>Quick Setup (2 minutes):</h3>
-                    <ol>
-                        <li>Visit <a href="https://www.mapillary.com/dashboard/developers" target="_blank">Mapillary Developers</a></li>
-                        <li>Sign up/Login (you can use Facebook, Apple, or email)</li>
-                        <li>Click "Register Application" button</li>
-                        <li>Fill in the form:
-                            <ul>
-                                <li>Application Name: WoGsi Game</li>
-                                <li>Application Description: Vorarlberg location guessing game</li>
-                                <li>Company/Website: Your GitHub pages URL</li>
-                                <li>Callback URL: https://localhost (not used but required)</li>
-                            </ul>
-                        </li>
-                        <li>Click "Save" to create your application</li>
-                        <li>Copy your <strong>Client Token</strong> (starts with MLY|)</li>
-                        <li>Paste it below</li>
-                    </ol>
-                </div>
-                <div class="api-key-input">
-                    <input type="text" id="api-key-input" placeholder="Paste your Client Token here (MLY|...)">
-                    <button class="save-api-btn" id="save-api-key">
-                        <i class="fas fa-save"></i> Save & Continue
-                    </button>
-                </div>
-                <p class="api-note">Your key is saved locally and never shared.</p>
-            </div>
-        </div>
-
-        <footer class="footer">
-            <p>© 2025 SwimmingBrain.dev - Explore Vorarlberg! 🏔️</p>
-        </footer>
     </div>
-
-    <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/mapillary-js@4.1.1/dist/mapillary.js"></script>
     <script src="assets/js/wogsi-game.js"></script>
 </body>
 </html>

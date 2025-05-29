@@ -1,4 +1,4 @@
-// WoGsi? Game - Lite Version (Uses static images instead of Mapillary viewer)
+// WoGsi? Game (Uses static images instead of Mapillary viewer)
 let game = {
     currentRound: 0,
     totalRounds: 5,
@@ -60,25 +60,17 @@ const vorarlbergLocations = [
 
 // Initialize the game
 function init() {
-    console.log('Initializing WoGsi Lite...');
+    console.log('Initializing WoGsi?...');
     
-    // Check for saved API key
-    game.apiKey = localStorage.getItem('mapillary_api_key');
+    // Set API key directly
+    game.apiKey = 'MLY|30634047539527293|81b8b31fda1638a58b5d5124a26fb7ab';
     
     // Set up event listeners
-    document.getElementById('save-api-key')?.addEventListener('click', saveApiKey);
     document.getElementById('start-game')?.addEventListener('click', startGame);
     document.getElementById('make-guess')?.addEventListener('click', makeGuess);
     document.getElementById('next-round')?.addEventListener('click', nextRound);
     document.getElementById('play-again')?.addEventListener('click', resetGame);
     document.getElementById('hint-toggle')?.addEventListener('click', toggleHint);
-    
-    // Handle Enter key in API input
-    document.getElementById('api-key-input')?.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            saveApiKey();
-        }
-    });
     
     // Initialize maps
     initializeMaps();
@@ -90,14 +82,6 @@ function init() {
 // Check Mapillary connection
 async function checkMapillaryConnection() {
     const statusEl = document.getElementById('api-status');
-    
-    if (!game.apiKey) {
-        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> API key required';
-        statusEl.className = 'api-status error';
-        document.getElementById('start-modal').style.display = 'none';
-        document.getElementById('api-key-modal').style.display = 'flex';
-        return;
-    }
     
     try {
         statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Validating API key...';
@@ -112,7 +96,7 @@ async function checkMapillaryConnection() {
         );
         
         if (response.ok) {
-            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Ready to play! (Lite Mode - Static Images)';
+            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Ready to play!';
             statusEl.className = 'api-status success';
             document.getElementById('start-game').disabled = false;
         } else {
@@ -121,57 +105,8 @@ async function checkMapillaryConnection() {
         
     } catch (error) {
         console.error('API key validation error:', error);
-        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid API key';
+        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error connecting to Mapillary';
         statusEl.className = 'api-status error';
-        document.getElementById('start-modal').style.display = 'none';
-        document.getElementById('api-key-modal').style.display = 'flex';
-    }
-}
-
-// Save API key
-async function saveApiKey() {
-    const apiKey = document.getElementById('api-key-input').value.trim();
-    
-    if (!apiKey) {
-        alert('Please enter your Mapillary API key');
-        return;
-    }
-    
-    if (!apiKey.startsWith('MLY|')) {
-        alert('API key should start with "MLY|". Please check your Client Token from Mapillary dashboard.');
-        return;
-    }
-    
-    const saveBtn = document.getElementById('save-api-key');
-    const originalText = saveBtn.innerHTML;
-    saveBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Validating...';
-    saveBtn.disabled = true;
-    
-    game.apiKey = apiKey;
-    
-    try {
-        const response = await fetch(
-            `https://graph.mapillary.com/images?bbox=9.5,47.0,10.3,47.6&limit=1`,
-            {
-                headers: {
-                    'Authorization': `OAuth ${apiKey}`
-                }
-            }
-        );
-        
-        if (response.ok) {
-            localStorage.setItem('mapillary_api_key', apiKey);
-            document.getElementById('api-key-modal').style.display = 'none';
-            document.getElementById('start-modal').style.display = 'flex';
-            await checkMapillaryConnection();
-        } else {
-            throw new Error('Invalid API key');
-        }
-    } catch (error) {
-        alert('Invalid API key. Please check your Client Token and try again.');
-        game.apiKey = null;
-        saveBtn.innerHTML = originalText;
-        saveBtn.disabled = false;
     }
 }
 
