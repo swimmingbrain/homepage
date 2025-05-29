@@ -1,4 +1,4 @@
-// Vorarlberg Explorer Game with Mapillary
+// WoGsi? Game
 let game = {
     currentRound: 0,
     totalRounds: 5,
