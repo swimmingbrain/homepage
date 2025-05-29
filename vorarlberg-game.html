@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vorarlberg Explorer - SwimmingBrain</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/vorarlberg-game.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="ocean-bg">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <div class="container">
+        <header class="header game-header">
+            <div class="welcome-text">
+                <h1>vorarlberg <span class="highlight">explorer</span></h1>
+                <span class="domain">guess the location!</span>
+            </div>
+            <div class="divider"></div>
+        </header>
+
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="spotify.html" class="nav-link">Music</a>
+            <a href="github.html" class="nav-link">GitHub</a>
+            <a href="vorarlberg-game.html" class="nav-link active">Game</a>
+        </nav>
+
+        <!-- Game Stats -->
+        <div class="game-stats">
+            <div class="stat-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <span class="stat-value" id="round-number">1/5</span>
+                <span class="stat-label">Round</span>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-trophy"></i>
+                <span class="stat-value" id="total-score">0</span>
+                <span class="stat-label">Score</span>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-bullseye"></i>
+                <span class="stat-value" id="best-guess">-</span>
+                <span class="stat-label">Best Guess</span>
+            </div>
+        </div>
+
+        <!-- Main Game Area -->
+        <div class="game-container">
+            <!-- Panorama View -->
+            <div class="panorama-container" id="panorama-container">
+                <div id="panorama-view">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <p>Loading location...</p>
+                    </div>
+                </div>
+                <div class="panorama-controls">
+                    <button class="control-btn" id="zoom-in"><i class="fas fa-search-plus"></i></button>
+                    <button class="control-btn" id="zoom-out"><i class="fas fa-search-minus"></i></button>
+                    <button class="control-btn" id="reset-view"><i class="fas fa-undo"></i></button>
+                </div>
+            </div>
+
+            <!-- Map for Guessing -->
+            <div class="map-container" id="map-container">
+                <div id="guess-map"></div>
+                <button class="guess-btn" id="make-guess" disabled>
+                    <i class="fas fa-check"></i> Make Guess
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Modal -->
+        <div class="modal" id="results-modal">
+            <div class="modal-content">
+                <h2>Round Results</h2>
+                <div class="result-info">
+                    <div class="distance-result">
+                        <i class="fas fa-route"></i>
+                        <span id="distance-text">0 km away</span>
+                    </div>
+                    <div class="score-result">
+                        <i class="fas fa-star"></i>
+                        <span id="score-text">0 points</span>
+                    </div>
+                </div>
+                <div id="result-map"></div>
+                <button class="next-round-btn" id="next-round">
+                    <i class="fas fa-arrow-right"></i> Next Round
+                </button>
+            </div>
+        </div>
+
+        <!-- Game Over Modal -->
+        <div class="modal" id="game-over-modal">
+            <div class="modal-content">
+                <h2>Game Complete!</h2>
+                <div class="final-score">
+                    <i class="fas fa-trophy"></i>
+                    <span id="final-score-text">0</span>
+                    <span>Total Points</span>
+                </div>
+                <div class="score-breakdown" id="score-breakdown"></div>
+                <button class="play-again-btn" id="play-again">
+                    <i class="fas fa-redo"></i> Play Again
+                </button>
+            </div>
+        </div>
+
+        <!-- Start Screen -->
+        <div class="modal show" id="start-modal">
+            <div class="modal-content start-content">
+                <div class="brain-jar small">
+                    <div class="jar">
+                        <div class="water-fill"></div>
+                        <div class="water-surface"></div>
+                        <div class="brain">🗺️</div>
+                    </div>
+                </div>
+                <h2>Welcome to Vorarlberg Explorer!</h2>
+                <p>Test your knowledge of Vorarlberg's beautiful locations. You'll be shown a street view or satellite image, and you need to guess where it is on the map.</p>
+                <div class="game-rules">
+                    <h3>How to Play:</h3>
+                    <ul>
+                        <li>Look around the panorama view using your mouse</li>
+                        <li>Click on the map to place your guess</li>
+                        <li>The closer you are, the more points you get!</li>
+                        <li>Maximum 5000 points per round</li>
+                    </ul>
+                </div>
+                <button class="start-game-btn" id="start-game">
+                    <i class="fas fa-play"></i> Start Game
+                </button>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>© 2025 SwimmingBrain.dev - Explore Vorarlberg! 🏔️</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/pannellum@2.5.6/build/pannellum.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/pannellum@2.5.6/build/pannellum.css">
+    <script src="assets/js/vorarlberg-game.js"></script>
+</body>
+</html>

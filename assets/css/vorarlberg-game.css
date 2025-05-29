@@ -1,0 +1,504 @@
+/* Vorarlberg Explorer Game Styles */
+
+.game-header {
+    padding: 4rem 0 3rem;
+}
+
+/* Game Stats */
+.game-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: var(--gradient-card);
+    padding: 1.5rem 2rem;
+    border-radius: 15px;
+    border: 1px solid var(--border-color-light);
+    box-shadow: 0 4px 15px var(--shadow-color-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 120px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow-color-medium);
+}
+
+.stat-card i {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* Game Container */
+.game-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+    height: 600px;
+}
+
+/* Panorama Container */
+.panorama-container {
+    background: var(--gradient-card);
+    border-radius: 20px;
+    border: 1px solid var(--border-color-light);
+    box-shadow: 0 10px 30px var(--shadow-color-medium);
+    overflow: hidden;
+    position: relative;
+}
+
+#panorama-view {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    position: relative;
+}
+
+.loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.panorama-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    background: var(--background-glass-hover);
+    border: 1px solid var(--border-color-glass);
+    color: var(--text-primary);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.control-btn:hover {
+    background: var(--color-primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Map Container */
+.map-container {
+    background: var(--gradient-card);
+    border-radius: 20px;
+    border: 1px solid var(--border-color-light);
+    box-shadow: 0 10px 30px var(--shadow-color-medium);
+    overflow: hidden;
+    position: relative;
+}
+
+#guess-map, #result-map {
+    width: 100%;
+    height: 100%;
+}
+
+.guess-btn {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--shadow-color-dark);
+    z-index: 1000;
+}
+
+.guess-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.guess-btn:not(:disabled):hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow-color-dark);
+}
+
+/* Modals */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(5px);
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--background-primary);
+    padding: 3rem;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content h2 {
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.result-info {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 2rem;
+}
+
+.distance-result, .score-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.distance-result i, .score-result i {
+    font-size: 2rem;
+    color: var(--color-primary);
+}
+
+.distance-result span, .score-result span {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+#result-map {
+    height: 300px;
+    margin-bottom: 2rem;
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid var(--border-color-light);
+}
+
+.next-round-btn, .play-again-btn, .start-game-btn {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--shadow-color-dark);
+    display: block;
+    margin: 0 auto;
+}
+
+.next-round-btn:hover, .play-again-btn:hover, .start-game-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--shadow-color-dark);
+}
+
+/* Game Over Modal */
+.final-score {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.final-score i {
+    font-size: 4rem;
+    color: #FFD700;
+    display: block;
+    margin-bottom: 1rem;
+}
+
+.final-score span:first-of-type {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    display: block;
+}
+
+.final-score span:last-of-type {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+}
+
+.score-breakdown {
+    background: var(--background-secondary);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.score-breakdown h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.round-score {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.round-score:last-child {
+    border-bottom: none;
+}
+
+/* Start Modal */
+.start-content {
+    text-align: center;
+}
+
+.brain-jar.small {
+    width: 100px;
+    height: 120px;
+    margin: 0 auto 2rem;
+}
+
+.brain-jar.small .jar {
+    font-size: 2rem;
+}
+
+.brain-jar.small .brain {
+    font-size: 2rem;
+}
+
+.game-rules {
+    background: var(--background-secondary);
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.game-rules h3 {
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+.game-rules ul {
+    list-style: none;
+    padding: 0;
+}
+
+.game-rules li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.game-rules li::before {
+    content: '🎯';
+    position: absolute;
+    left: 0;
+}
+
+/* Custom Leaflet Styles */
+.leaflet-container {
+    font-family: 'Inter', sans-serif;
+}
+
+.guess-marker {
+    background: var(--color-primary);
+    border: 3px solid white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.actual-marker {
+    background: #4CAF50;
+    border: 3px solid white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .game-container {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    
+    .panorama-container {
+        height: 400px;
+    }
+    
+    .map-container {
+        height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-stats {
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem 1.5rem;
+        min-width: 100px;
+    }
+    
+    .modal-content {
+        padding: 2rem;
+    }
+    
+    .panorama-container {
+        height: 300px;
+    }
+    
+    .map-container {
+        height: 300px;
+    }
+}
+
+/* Street View Fallback */
+.street-view-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f0f0;
+    color: var(--text-primary);
+    text-align: center;
+    padding: 2rem;
+}
+
+.street-view-fallback i {
+    font-size: 3rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+/* Satellite View */
+.satellite-view {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.satellite-view img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-navigation {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    pointer-events: none;
+}
+
+.nav-arrow {
+    background: var(--background-glass-hover);
+    border: 1px solid var(--border-color-glass);
+    color: var(--text-primary);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    pointer-events: all;
+}
+
+.nav-arrow:hover {
+    background: var(--color-primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+.nav-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.nav-arrow:disabled:hover {
+    transform: none;
+    background: var(--background-glass-hover);
+    color: var(--text-primary);
+}
