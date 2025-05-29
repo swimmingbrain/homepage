@@ -1,4 +1,4 @@
-// WoGsi? Game
+// Vorarlberg Explorer Game with Mapillary
 let game = {
     currentRound: 0,
     totalRounds: 5,
@@ -119,6 +119,8 @@ const vorarlbergLocations = [
 
 // Initialize the game
 function init() {
+    console.log('Initializing WoGsi game...');
+    
     // Check for saved API key
     game.apiKey = localStorage.getItem('mapillary_api_key');
     
@@ -130,6 +132,13 @@ function init() {
     document.getElementById('play-again').addEventListener('click', resetGame);
     document.getElementById('hint-toggle').addEventListener('click', toggleHint);
     
+    // Handle Enter key in API input
+    document.getElementById('api-key-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            saveApiKey();
+        }
+    });
+    
     // Initialize maps
     initializeMaps();
     
@@ -138,7 +147,7 @@ function init() {
 }
 
 // Check Mapillary connection
-function checkMapillaryConnection() {
+async function checkMapillaryConnection() {
     const statusEl = document.getElementById('api-status');
     
     if (!game.apiKey) {
@@ -149,29 +158,34 @@ function checkMapillaryConnection() {
         return;
     }
     
-    // Test API key by trying to initialize viewer
+    // Test API key by making a simple API request
     try {
-        // Initialize a test viewer
-        const testContainer = document.createElement('div');
-        testContainer.style.display = 'none';
-        document.body.appendChild(testContainer);
+        statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Validating API key...';
         
-        const testViewer = new Mapillary.Viewer({
-            accessToken: game.apiKey,
-            container: testContainer,
-        });
+        // Test the API key with a simple request using OAuth header
+        const response = await fetch(
+            `https://graph.mapillary.com/images?bbox=9.5,47.0,10.3,47.6&limit=1`,
+            {
+                headers: {
+                    'Authorization': `OAuth ${game.apiKey}`
+                }
+            }
+        );
         
-        // If we get here, API key is valid
-        statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Ready to play!';
-        statusEl.className = 'api-status success';
-        document.getElementById('start-game').disabled = false;
-        
-        // Clean up test viewer
-        testViewer.remove();
-        document.body.removeChild(testContainer);
+        if (response.ok) {
+            // API key is valid
+            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Ready to play!';
+            statusEl.className = 'api-status success';
+            document.getElementById('start-game').disabled = false;
+        } else {
+            const errorData = await response.text();
+            console.error('API validation failed:', errorData);
+            throw new Error('Invalid API key');
+        }
         
     } catch (error) {
-        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid API key';
+        console.error('API key validation error:', error);
+        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid API key or connection error';
         statusEl.className = 'api-status error';
         document.getElementById('start-modal').style.display = 'none';
         document.getElementById('api-key-modal').style.display = 'flex';
@@ -179,7 +193,7 @@ function checkMapillaryConnection() {
 }
 
 // Save API key
-function saveApiKey() {
+async function saveApiKey() {
     const apiKey = document.getElementById('api-key-input').value.trim();
     
     if (!apiKey) {
@@ -187,13 +201,52 @@ function saveApiKey() {
         return;
     }
     
-    localStorage.setItem('mapillary_api_key', apiKey);
+    // Validate format - should be MLY|numbers|hash
+    if (!apiKey.startsWith('MLY|')) {
+        alert('API key should start with "MLY|". Please check your Client Token from Mapillary dashboard.');
+        return;
+    }
+    
+    // Show loading state
+    const saveBtn = document.getElementById('save-api-key');
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Validating...';
+    saveBtn.disabled = true;
+    
+    // Save the key temporarily
     game.apiKey = apiKey;
     
-    document.getElementById('api-key-modal').style.display = 'none';
-    document.getElementById('start-modal').style.display = 'flex';
-    
-    checkMapillaryConnection();
+    // Test if the key is valid
+    try {
+        const response = await fetch(
+            `https://graph.mapillary.com/images?bbox=9.5,47.0,10.3,47.6&limit=1`,
+            {
+                headers: {
+                    'Authorization': `OAuth ${apiKey}`
+                }
+            }
+        );
+        
+        if (response.ok) {
+            // Key is valid, save it
+            localStorage.setItem('mapillary_api_key', apiKey);
+            
+            document.getElementById('api-key-modal').style.display = 'none';
+            document.getElementById('start-modal').style.display = 'flex';
+            
+            await checkMapillaryConnection();
+        } else {
+            const errorText = await response.text();
+            console.error('API validation error:', errorText);
+            throw new Error('Invalid API key');
+        }
+    } catch (error) {
+        console.error('API key error:', error);
+        alert('Invalid API key. Please check your Client Token from the Mapillary dashboard and try again.');
+        game.apiKey = null;
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+    }
 }
 
 // Initialize Leaflet maps
@@ -238,35 +291,64 @@ function startGame() {
 
 // Initialize Mapillary viewer
 function initializeMapillaryViewer() {
-    // Remove loading spinner
-    document.getElementById('loading-spinner').style.display = 'none';
-    
-    // Create viewer
-    game.viewer = new Mapillary.Viewer({
-        accessToken: game.apiKey,
-        container: 'mapillary-viewer',
-        component: {
-            cover: false,
-            direction: false,
-            sequence: false,
-            tag: false,
-            zoom: false
-        }
-    });
-    
-    // Add zoom controls
-    document.getElementById('zoom-in').addEventListener('click', () => {
-        game.viewer.setZoom(game.viewer.getZoom() + 0.5);
-    });
-    
-    document.getElementById('zoom-out').addEventListener('click', () => {
-        game.viewer.setZoom(game.viewer.getZoom() - 0.5);
-    });
-    
-    document.getElementById('reset-view').addEventListener('click', () => {
-        game.viewer.setZoom(0);
-        game.viewer.setBearing(0);
-    });
+    try {
+        // Remove any existing viewer content
+        const viewerContainer = document.getElementById('mapillary-viewer');
+        viewerContainer.innerHTML = '<div class="loading-spinner" id="loading-spinner"><div class="spinner"></div><p>Initializing viewer...</p></div>';
+        
+        // Create viewer with correct options for v4
+        // Note: For viewer, the token format might be different than API calls
+        game.viewer = new Mapillary.Viewer({
+            accessToken: game.apiKey,
+            container: 'mapillary-viewer',
+            component: {
+                cover: false,
+                direction: false,
+                sequence: false,
+                tag: false,
+                zoom: false
+            }
+        });
+        
+        // Add event listener for when viewer is ready
+        game.viewer.on('load', () => {
+            console.log('Mapillary viewer loaded successfully');
+        });
+        
+        // Add error handling
+        game.viewer.on('error', (error) => {
+            console.error('Mapillary viewer error:', error);
+        });
+        
+        // Set up zoom controls only after viewer is created
+        setTimeout(() => {
+            document.getElementById('zoom-in').addEventListener('click', () => {
+                const currentZoom = game.viewer.getZoom();
+                game.viewer.setZoom(Math.min(currentZoom + 0.5, 3));
+            });
+            
+            document.getElementById('zoom-out').addEventListener('click', () => {
+                const currentZoom = game.viewer.getZoom();
+                game.viewer.setZoom(Math.max(currentZoom - 0.5, 0));
+            });
+            
+            document.getElementById('reset-view').addEventListener('click', () => {
+                game.viewer.setZoom(0);
+                game.viewer.setBearing(0);
+            });
+        }, 1000);
+        
+    } catch (error) {
+        console.error('Error initializing Mapillary viewer:', error);
+        document.getElementById('mapillary-viewer').innerHTML = `
+            <div class="street-view-fallback">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Viewer initialization failed</h3>
+                <p>Error: ${error.message}</p>
+                <p>Please check your API key and try again.</p>
+            </div>
+        `;
+    }
 }
 
 // Load next round
@@ -308,41 +390,59 @@ function nextRound() {
 async function loadMapillaryLocation() {
     try {
         // Show loading spinner
-        document.getElementById('loading-spinner').style.display = 'block';
+        document.getElementById('loading-spinner').style.display = 'flex';
         
-        // For now, we'll move to the coordinates
-        // In production, you'd search for the nearest image
-        const position = {
-            lat: game.currentLocation.lat,
-            lng: game.currentLocation.lng
-        };
+        // Search for images near the location
+        const bbox = [
+            game.currentLocation.lng - 0.01,
+            game.currentLocation.lat - 0.01,
+            game.currentLocation.lng + 0.01,
+            game.currentLocation.lat + 0.01
+        ].join(',');
         
-        // Move viewer to location
-        await game.viewer.moveTo(position)
-            .catch(async () => {
-                // If no image at exact location, find nearest
-                const searchResponse = await fetch(
-                    `https://graph.mapillary.com/images?access_token=${game.apiKey}&fields=id,geometry&bbox=${position.lng-0.01},${position.lat-0.01},${position.lng+0.01},${position.lat+0.01}&limit=1`
-                );
-                
-                if (searchResponse.ok) {
-                    const data = await searchResponse.json();
-                    if (data.data && data.data.length > 0) {
-                        return game.viewer.moveTo(data.data[0].id);
-                    }
+        // Use OAuth in header for graph API
+        const response = await fetch(
+            `https://graph.mapillary.com/images?bbox=${bbox}&fields=id,computed_geometry&limit=10`,
+            {
+                headers: {
+                    'Authorization': `OAuth ${game.apiKey}`
                 }
-                
-                // Fallback: show a placeholder message
-                throw new Error('No street view available');
-            });
+            }
+        );
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('API Error:', errorText);
+            throw new Error('Failed to fetch images');
+        }
+        
+        const data = await response.json();
+        console.log('Found images:', data);
+        
+        if (data.data && data.data.length > 0) {
+            // Use the first image found
+            const imageId = data.data[0].id;
+            console.log('Loading image:', imageId);
+            
+            // Move viewer to the image
+            await game.viewer.moveTo(imageId);
+            
+            // Hide loading spinner
+            document.getElementById('loading-spinner').style.display = 'none';
+        } else {
+            // No images found, show fallback
+            throw new Error('No street view available');
+        }
+        
+    } catch (error) {
+        console.error('Error loading Mapillary location:', error);
         
         // Hide loading spinner
         document.getElementById('loading-spinner').style.display = 'none';
         
-    } catch (error) {
-        console.error('Error loading Mapillary location:', error);
-        // Show error message
-        document.getElementById('mapillary-viewer').innerHTML = `
+        // Show error message with hint
+        const viewerContainer = document.getElementById('mapillary-viewer');
+        viewerContainer.innerHTML = `
             <div class="street-view-fallback">
                 <i class="fas fa-street-view"></i>
                 <h3>No street view available</h3>
@@ -555,4 +655,26 @@ function shuffleArray(array) {
 }
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if Mapillary is loaded, if not wait a bit
+    if (typeof Mapillary === 'undefined') {
+        console.log('Waiting for Mapillary to load...');
+        let attempts = 0;
+        const checkMapillary = setInterval(() => {
+            attempts++;
+            if (typeof Mapillary !== 'undefined') {
+                clearInterval(checkMapillary);
+                console.log('Mapillary loaded after', attempts, 'attempts');
+                init();
+            } else if (attempts > 20) { // 10 seconds timeout
+                clearInterval(checkMapillary);
+                console.error('Failed to load Mapillary after 10 seconds');
+                document.getElementById('api-status').innerHTML = 
+                    '<i class="fas fa-exclamation-circle"></i> Failed to load Mapillary library. Try refreshing or test on GitHub Pages.';
+                document.getElementById('api-status').className = 'api-status error';
+            }
+        }, 500);
+    } else {
+        init();
+    }
+});
