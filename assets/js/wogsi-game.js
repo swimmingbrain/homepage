@@ -1,4 +1,4 @@
-// Vorarlberg Explorer Game with Mapillary
+// WoGsi? Game - Lite Version (Uses static images instead of Mapillary viewer)
 let game = {
     currentRound: 0,
     totalRounds: 5,
@@ -12,128 +12,69 @@ let game = {
     resultMap: null,
     guessLatLng: null,
     hasGuessed: false,
-    viewer: null,
-    apiKey: null
+    apiKey: null,
+    currentImageIndex: 0,
+    locationImages: []
 };
 
-// Vorarlberg locations with Mapillary image keys
-// These are example coordinates - you'll need to find actual Mapillary image keys
+// Updated Vorarlberg locations with actual Mapillary image IDs from the API test
 const vorarlbergLocations = [
     {
         name: "Bregenz Hafen",
         lat: 47.5050,
         lng: 9.7472,
-        imageKey: "bregenz_harbor", // Placeholder - replace with actual Mapillary image key
+        searchLat: 47.4976,
+        searchLng: 9.7008,
         hint: "Austria's famous lake-side city, home to the floating stage festival",
         description: "Harbor area near the famous Bregenz Festival"
     },
     {
-        name: "Feldkirch Marktplatz",
+        name: "Feldkirch Zentrum",
         lat: 47.2380,
         lng: 9.5970,
-        imageKey: "feldkirch_market", // Placeholder
         hint: "Medieval town center with historic buildings, near the border with Liechtenstein",
-        description: "Historic market square in Feldkirch"
+        description: "Historic center of Feldkirch"
     },
     {
-        name: "Dornbirn Zentrum",
+        name: "Dornbirn Marktplatz",
         lat: 47.4125,
         lng: 9.7438,
-        imageKey: "dornbirn_center", // Placeholder
         hint: "Vorarlberg's largest city, known for its textile industry heritage",
-        description: "City center of Dornbirn"
+        description: "Market square in Dornbirn"
     },
     {
-        name: "Hohenems Bahnhof",
-        lat: 47.3658,
-        lng: 9.6860,
-        imageKey: "hohenems_station", // Placeholder
-        hint: "Town known for its Jewish heritage and Renaissance palace",
-        description: "Train station area in Hohenems"
-    },
-    {
-        name: "Lustenau Zentrum",
-        lat: 47.4270,
-        lng: 9.6595,
-        imageKey: "lustenau_center", // Placeholder
-        hint: "Border town famous for embroidery, close to Switzerland",
-        description: "Town center of Lustenau"
-    },
-    {
-        name: "Rankweil Bahnhof",
-        lat: 47.2734,
-        lng: 9.6397,
-        imageKey: "rankweil_station", // Placeholder
-        hint: "Town with a famous basilica on the hill, important railway junction",
-        description: "Railway station in Rankweil"
-    },
-    {
-        name: "Bludenz Altstadt",
+        name: "Bludenz Zentrum",
         lat: 47.1547,
         lng: 9.8222,
-        imageKey: "bludenz_oldtown", // Placeholder
         hint: "Alpine town where five valleys meet, gateway to the Arlberg",
-        description: "Old town of Bludenz"
+        description: "Town center of Bludenz"
     },
     {
-        name: "Götzis Zentrum",
-        lat: 47.3317,
-        lng: 9.6350,
-        imageKey: "goetzis_center", // Placeholder
-        hint: "Town famous for hosting the Hypo-Meeting athletics event",
-        description: "Town center of Götzis"
-    },
-    {
-        name: "Hard Hafen",
-        lat: 47.4897,
-        lng: 9.6897,
-        imageKey: "hard_harbor", // Placeholder
-        hint: "Lake Constance town between Bregenz and the Rhine delta",
-        description: "Harbor area in Hard"
-    },
-    {
-        name: "Nenzing Dorfzentrum",
-        lat: 47.1839,
-        lng: 9.7006,
-        imageKey: "nenzing_village", // Placeholder
-        hint: "Village in the Walgau valley, gateway to the Gamperdonatal",
-        description: "Village center of Nenzing"
-    },
-    {
-        name: "Schruns Zentrum",
-        lat: 47.0769,
-        lng: 9.9194,
-        imageKey: "schruns_center", // Placeholder
-        hint: "Montafon valley town where Ernest Hemingway spent winters",
-        description: "Town center of Schruns"
-    },
-    {
-        name: "Lech am Arlberg",
-        lat: 47.2085,
-        lng: 10.1416,
-        imageKey: "lech_village", // Placeholder
-        hint: "Exclusive ski resort village, one of the snowiest in the Alps",
-        description: "Village center of Lech"
+        name: "Hohenems Zentrum",
+        lat: 47.3658,
+        lng: 9.6860,
+        hint: "Town known for its Jewish heritage and Renaissance palace",
+        description: "Center of Hohenems"
     }
 ];
 
 // Initialize the game
 function init() {
-    console.log('Initializing WoGsi game...');
+    console.log('Initializing WoGsi Lite...');
     
     // Check for saved API key
     game.apiKey = localStorage.getItem('mapillary_api_key');
     
     // Set up event listeners
-    document.getElementById('save-api-key').addEventListener('click', saveApiKey);
-    document.getElementById('start-game').addEventListener('click', startGame);
-    document.getElementById('make-guess').addEventListener('click', makeGuess);
-    document.getElementById('next-round').addEventListener('click', nextRound);
-    document.getElementById('play-again').addEventListener('click', resetGame);
-    document.getElementById('hint-toggle').addEventListener('click', toggleHint);
+    document.getElementById('save-api-key')?.addEventListener('click', saveApiKey);
+    document.getElementById('start-game')?.addEventListener('click', startGame);
+    document.getElementById('make-guess')?.addEventListener('click', makeGuess);
+    document.getElementById('next-round')?.addEventListener('click', nextRound);
+    document.getElementById('play-again')?.addEventListener('click', resetGame);
+    document.getElementById('hint-toggle')?.addEventListener('click', toggleHint);
     
     // Handle Enter key in API input
-    document.getElementById('api-key-input').addEventListener('keypress', (e) => {
+    document.getElementById('api-key-input')?.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             saveApiKey();
         }
@@ -142,7 +83,7 @@ function init() {
     // Initialize maps
     initializeMaps();
     
-    // Check API key and Mapillary connection
+    // Check API key
     checkMapillaryConnection();
 }
 
@@ -158,11 +99,9 @@ async function checkMapillaryConnection() {
         return;
     }
     
-    // Test API key by making a simple API request
     try {
         statusEl.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Validating API key...';
         
-        // Test the API key with a simple request using OAuth header
         const response = await fetch(
             `https://graph.mapillary.com/images?bbox=9.5,47.0,10.3,47.6&limit=1`,
             {
@@ -173,19 +112,16 @@ async function checkMapillaryConnection() {
         );
         
         if (response.ok) {
-            // API key is valid
-            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Ready to play!';
+            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Ready to play! (Lite Mode - Static Images)';
             statusEl.className = 'api-status success';
             document.getElementById('start-game').disabled = false;
         } else {
-            const errorData = await response.text();
-            console.error('API validation failed:', errorData);
             throw new Error('Invalid API key');
         }
         
     } catch (error) {
         console.error('API key validation error:', error);
-        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid API key or connection error';
+        statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Invalid API key';
         statusEl.className = 'api-status error';
         document.getElementById('start-modal').style.display = 'none';
         document.getElementById('api-key-modal').style.display = 'flex';
@@ -201,22 +137,18 @@ async function saveApiKey() {
         return;
     }
     
-    // Validate format - should be MLY|numbers|hash
     if (!apiKey.startsWith('MLY|')) {
         alert('API key should start with "MLY|". Please check your Client Token from Mapillary dashboard.');
         return;
     }
     
-    // Show loading state
     const saveBtn = document.getElementById('save-api-key');
     const originalText = saveBtn.innerHTML;
     saveBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Validating...';
     saveBtn.disabled = true;
     
-    // Save the key temporarily
     game.apiKey = apiKey;
     
-    // Test if the key is valid
     try {
         const response = await fetch(
             `https://graph.mapillary.com/images?bbox=9.5,47.0,10.3,47.6&limit=1`,
@@ -228,36 +160,28 @@ async function saveApiKey() {
         );
         
         if (response.ok) {
-            // Key is valid, save it
             localStorage.setItem('mapillary_api_key', apiKey);
-            
             document.getElementById('api-key-modal').style.display = 'none';
             document.getElementById('start-modal').style.display = 'flex';
-            
             await checkMapillaryConnection();
         } else {
-            const errorText = await response.text();
-            console.error('API validation error:', errorText);
             throw new Error('Invalid API key');
         }
     } catch (error) {
-        console.error('API key error:', error);
-        alert('Invalid API key. Please check your Client Token from the Mapillary dashboard and try again.');
+        alert('Invalid API key. Please check your Client Token and try again.');
         game.apiKey = null;
         saveBtn.innerHTML = originalText;
         saveBtn.disabled = false;
     }
 }
 
-// Initialize Leaflet maps
+// Initialize maps
 function initializeMaps() {
-    // Guess map
     game.guessMap = L.map('guess-map').setView([47.2692, 9.8916], 8);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(game.guessMap);
     
-    // Add Vorarlberg boundary (simplified)
     const vorarlbergBounds = [
         [47.6, 9.5],
         [47.6, 10.3],
@@ -270,7 +194,6 @@ function initializeMaps() {
         fillOpacity: 0.1
     }).addTo(game.guessMap);
     
-    // Click event for placing guess
     game.guessMap.on('click', function(e) {
         if (!game.hasGuessed) {
             placeGuessMarker(e.latlng);
@@ -280,75 +203,11 @@ function initializeMaps() {
 
 // Start the game
 function startGame() {
-    document.getElementById('start-modal').classList.remove('show');
+    const startModal = document.getElementById('start-modal');
+    startModal.classList.remove('show');
+    startModal.style.display = 'none';
     game.locations = shuffleArray([...vorarlbergLocations]).slice(0, game.totalRounds);
-    
-    // Initialize Mapillary viewer
-    initializeMapillaryViewer();
-    
     nextRound();
-}
-
-// Initialize Mapillary viewer
-function initializeMapillaryViewer() {
-    try {
-        // Remove any existing viewer content
-        const viewerContainer = document.getElementById('mapillary-viewer');
-        viewerContainer.innerHTML = '<div class="loading-spinner" id="loading-spinner"><div class="spinner"></div><p>Initializing viewer...</p></div>';
-        
-        // Create viewer with correct options for v4
-        // Note: For viewer, the token format might be different than API calls
-        game.viewer = new Mapillary.Viewer({
-            accessToken: game.apiKey,
-            container: 'mapillary-viewer',
-            component: {
-                cover: false,
-                direction: false,
-                sequence: false,
-                tag: false,
-                zoom: false
-            }
-        });
-        
-        // Add event listener for when viewer is ready
-        game.viewer.on('load', () => {
-            console.log('Mapillary viewer loaded successfully');
-        });
-        
-        // Add error handling
-        game.viewer.on('error', (error) => {
-            console.error('Mapillary viewer error:', error);
-        });
-        
-        // Set up zoom controls only after viewer is created
-        setTimeout(() => {
-            document.getElementById('zoom-in').addEventListener('click', () => {
-                const currentZoom = game.viewer.getZoom();
-                game.viewer.setZoom(Math.min(currentZoom + 0.5, 3));
-            });
-            
-            document.getElementById('zoom-out').addEventListener('click', () => {
-                const currentZoom = game.viewer.getZoom();
-                game.viewer.setZoom(Math.max(currentZoom - 0.5, 0));
-            });
-            
-            document.getElementById('reset-view').addEventListener('click', () => {
-                game.viewer.setZoom(0);
-                game.viewer.setBearing(0);
-            });
-        }, 1000);
-        
-    } catch (error) {
-        console.error('Error initializing Mapillary viewer:', error);
-        document.getElementById('mapillary-viewer').innerHTML = `
-            <div class="street-view-fallback">
-                <i class="fas fa-exclamation-triangle"></i>
-                <h3>Viewer initialization failed</h3>
-                <p>Error: ${error.message}</p>
-                <p>Please check your API key and try again.</p>
-            </div>
-        `;
-    }
 }
 
 // Load next round
@@ -362,47 +221,47 @@ function nextRound() {
     game.currentLocation = game.locations[game.currentRound - 1];
     game.guessLatLng = null;
     game.hasGuessed = false;
+    game.currentImageIndex = 0;
+    game.locationImages = [];
     
-    // Update UI
     document.getElementById('round-number').textContent = `${game.currentRound}/${game.totalRounds}`;
     document.getElementById('results-modal').classList.remove('show');
     document.getElementById('make-guess').disabled = true;
     document.getElementById('hint-overlay').style.display = 'none';
     document.getElementById('hint-toggle').classList.remove('active');
     
-    // Clear previous markers
     if (game.guessMarker) {
         game.guessMap.removeLayer(game.guessMarker);
         game.guessMarker = null;
     }
     
-    // Destroy previous result map if exists
     if (game.resultMap) {
         game.resultMap.remove();
         game.resultMap = null;
     }
     
-    // Load location in Mapillary
-    loadMapillaryLocation();
+    loadLocationImages();
 }
 
-// Load Mapillary location
-async function loadMapillaryLocation() {
+// Load images for location
+async function loadLocationImages() {
+    const viewerEl = document.getElementById('mapillary-viewer');
+    viewerEl.innerHTML = '<div class="loading-spinner"><div class="spinner"></div><p>Loading images...</p></div>';
+    
     try {
-        // Show loading spinner
-        document.getElementById('loading-spinner').style.display = 'flex';
+        // Use search coordinates if available, otherwise use location coordinates
+        const searchLat = game.currentLocation.searchLat || game.currentLocation.lat;
+        const searchLng = game.currentLocation.searchLng || game.currentLocation.lng;
         
-        // Search for images near the location
         const bbox = [
-            game.currentLocation.lng - 0.01,
-            game.currentLocation.lat - 0.01,
-            game.currentLocation.lng + 0.01,
-            game.currentLocation.lat + 0.01
+            searchLng - 0.02,
+            searchLat - 0.02,
+            searchLng + 0.02,
+            searchLat + 0.02
         ].join(',');
         
-        // Use OAuth in header for graph API
         const response = await fetch(
-            `https://graph.mapillary.com/images?bbox=${bbox}&fields=id,computed_geometry&limit=10`,
+            `https://graph.mapillary.com/images?bbox=${bbox}&fields=id,thumb_2048_url,computed_geometry,captured_at&limit=10`,
             {
                 headers: {
                     'Authorization': `OAuth ${game.apiKey}`
@@ -410,47 +269,67 @@ async function loadMapillaryLocation() {
             }
         );
         
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('API Error:', errorText);
-            throw new Error('Failed to fetch images');
-        }
+        if (!response.ok) throw new Error('Failed to fetch images');
         
         const data = await response.json();
-        console.log('Found images:', data);
         
         if (data.data && data.data.length > 0) {
-            // Use the first image found
-            const imageId = data.data[0].id;
-            console.log('Loading image:', imageId);
-            
-            // Move viewer to the image
-            await game.viewer.moveTo(imageId);
-            
-            // Hide loading spinner
-            document.getElementById('loading-spinner').style.display = 'none';
+            game.locationImages = data.data;
+            displayImage(0);
         } else {
-            // No images found, show fallback
-            throw new Error('No street view available');
+            throw new Error('No images found');
         }
         
     } catch (error) {
-        console.error('Error loading Mapillary location:', error);
-        
-        // Hide loading spinner
-        document.getElementById('loading-spinner').style.display = 'none';
-        
-        // Show error message with hint
-        const viewerContainer = document.getElementById('mapillary-viewer');
-        viewerContainer.innerHTML = `
+        console.error('Error loading images:', error);
+        viewerEl.innerHTML = `
             <div class="street-view-fallback">
-                <i class="fas fa-street-view"></i>
-                <h3>No street view available</h3>
-                <p>This location doesn't have street-level imagery yet.</p>
-                <p><strong>Location hint:</strong> ${game.currentLocation.hint}</p>
+                <i class="fas fa-image"></i>
+                <h3>No images available</h3>
+                <p>This location doesn't have street-level imagery.</p>
+                <p><strong>Hint:</strong> ${game.currentLocation.hint}</p>
             </div>
         `;
     }
+}
+
+// Display image
+function displayImage(index) {
+    if (!game.locationImages || game.locationImages.length === 0) return;
+    
+    game.currentImageIndex = index;
+    const image = game.locationImages[index];
+    
+    const viewerEl = document.getElementById('mapillary-viewer');
+    viewerEl.innerHTML = `
+        <div class="static-image-viewer">
+            <img src="${image.thumb_2048_url}" alt="Street view" id="current-image">
+            <div class="image-info">
+                Image ${index + 1} of ${game.locationImages.length}
+            </div>
+            <div class="image-navigation">
+                <button class="nav-arrow" id="prev-image" ${index === 0 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-arrow" id="next-image" ${index === game.locationImages.length - 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // Add navigation listeners
+    document.getElementById('prev-image')?.addEventListener('click', () => {
+        if (game.currentImageIndex > 0) {
+            displayImage(game.currentImageIndex - 1);
+        }
+    });
+    
+    document.getElementById('next-image')?.addEventListener('click', () => {
+        if (game.currentImageIndex < game.locationImages.length - 1) {
+            displayImage(game.currentImageIndex + 1);
+        }
+    });
 }
 
 // Toggle hint
@@ -468,14 +347,12 @@ function toggleHint() {
     }
 }
 
-// Place guess marker on map
+// Place guess marker
 function placeGuessMarker(latlng) {
-    // Remove previous marker
     if (game.guessMarker) {
         game.guessMap.removeLayer(game.guessMarker);
     }
     
-    // Add new marker
     game.guessMarker = L.marker(latlng, {
         icon: L.divIcon({
             className: 'guess-marker',
@@ -491,7 +368,6 @@ function placeGuessMarker(latlng) {
 function makeGuess() {
     if (!game.guessLatLng || game.hasGuessed) return;
     
-    // Mark as guessed and disable button
     game.hasGuessed = true;
     document.getElementById('make-guess').disabled = true;
     
@@ -510,30 +386,23 @@ function makeGuess() {
         document.getElementById('best-guess').textContent = `${game.bestGuess.toFixed(1)} km`;
     }
     
-    // Update score
     document.getElementById('total-score').textContent = game.totalScore.toLocaleString();
-    
-    // Show results
     showResults(distance, points);
 }
 
-// Show round results
+// Show results
 function showResults(distance, points) {
-    // Update result text
     document.getElementById('distance-text').textContent = `${distance.toFixed(1)} km away`;
     document.getElementById('score-text').textContent = `${points.toLocaleString()} points`;
     
-    // Create result map
     const resultMapDiv = document.getElementById('result-map');
     resultMapDiv.innerHTML = '';
     
-    // Create new map instance
     game.resultMap = L.map('result-map').setView([47.2692, 9.8916], 8);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(game.resultMap);
     
-    // Add markers
     const guessMarker = L.marker([game.guessLatLng.lat, game.guessLatLng.lng], {
         icon: L.divIcon({
             className: 'guess-marker',
@@ -548,7 +417,6 @@ function showResults(distance, points) {
         })
     }).addTo(game.resultMap);
     
-    // Add line between markers
     L.polyline([
         [game.guessLatLng.lat, game.guessLatLng.lng],
         [game.currentLocation.lat, game.currentLocation.lng]
@@ -559,28 +427,22 @@ function showResults(distance, points) {
         dashArray: '10, 10'
     }).addTo(game.resultMap);
     
-    // Fit bounds
     const bounds = L.latLngBounds([
         [game.guessLatLng.lat, game.guessLatLng.lng],
         [game.currentLocation.lat, game.currentLocation.lng]
     ]);
     game.resultMap.fitBounds(bounds, { padding: [50, 50] });
     
-    // Add popups
     guessMarker.bindPopup('<b>Your Guess</b>').openPopup();
     actualMarker.bindPopup(`<b>${game.currentLocation.name}</b><br>${game.currentLocation.description}`);
     
-    // Show modal
     document.getElementById('results-modal').classList.add('show');
 }
 
 // End game
 function endGame() {
-    // Create score breakdown
     const breakdown = document.getElementById('score-breakdown');
     breakdown.innerHTML = '<h3>Your Performance:</h3>';
-    
-    // Add performance stats
     breakdown.innerHTML += `
         <div class="round-score">
             <span>Total Rounds:</span>
@@ -596,7 +458,6 @@ function endGame() {
         </div>
     `;
     
-    // Show final score
     document.getElementById('final-score-text').textContent = game.totalScore.toLocaleString();
     document.getElementById('game-over-modal').classList.add('show');
 }
@@ -610,8 +471,9 @@ function resetGame() {
     game.currentLocation = null;
     game.guessLatLng = null;
     game.hasGuessed = false;
+    game.currentImageIndex = 0;
+    game.locationImages = [];
     
-    // Clean up result map if exists
     if (game.resultMap) {
         game.resultMap.remove();
         game.resultMap = null;
@@ -624,9 +486,9 @@ function resetGame() {
     startGame();
 }
 
-// Calculate distance between two points (Haversine formula)
+// Calculate distance
 function calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Earth's radius in km
+    const R = 6371;
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
     const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -636,9 +498,8 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
     return R * c;
 }
 
-// Calculate points based on distance
+// Calculate points
 function calculatePoints(distance) {
-    // Maximum 5000 points, decreasing exponentially with distance
     const maxPoints = 5000;
     const points = Math.round(maxPoints * Math.exp(-distance / 50));
     return Math.max(0, points);
@@ -655,26 +516,4 @@ function shuffleArray(array) {
 }
 
 // Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if Mapillary is loaded, if not wait a bit
-    if (typeof Mapillary === 'undefined') {
-        console.log('Waiting for Mapillary to load...');
-        let attempts = 0;
-        const checkMapillary = setInterval(() => {
-            attempts++;
-            if (typeof Mapillary !== 'undefined') {
-                clearInterval(checkMapillary);
-                console.log('Mapillary loaded after', attempts, 'attempts');
-                init();
-            } else if (attempts > 20) { // 10 seconds timeout
-                clearInterval(checkMapillary);
-                console.error('Failed to load Mapillary after 10 seconds');
-                document.getElementById('api-status').innerHTML = 
-                    '<i class="fas fa-exclamation-circle"></i> Failed to load Mapillary library. Try refreshing or test on GitHub Pages.';
-                document.getElementById('api-status').className = 'api-status error';
-            }
-        }, 500);
-    } else {
-        init();
-    }
-});
+document.addEventListener('DOMContentLoaded', init);
