@@ -342,61 +342,76 @@ function showResults(distance, points) {
     const resultMapDiv = document.getElementById('result-map');
     resultMapDiv.innerHTML = '';
     
-    // Calculate bounds before creating the map
+    // Show the modal first
+    const resultsModal = document.getElementById('results-modal');
+    resultsModal.classList.add('show');
+    
+    // Calculate bounds
     const bounds = L.latLngBounds([
         [game.guessLatLng.lat, game.guessLatLng.lng],
         [game.currentLocation.lat, game.currentLocation.lng]
     ]);
     
-    // Create map with initial bounds
-    game.resultMap = L.map('result-map', {
-        zoomControl: false
-    }).fitBounds(bounds, { padding: [50, 50] });
-    
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
-    }).addTo(game.resultMap);
-    
-    // Add zoom control after the map is created
-    L.control.zoom({
-        position: 'bottomright'
-    }).addTo(game.resultMap);
-    
-    const guessMarker = L.marker([game.guessLatLng.lat, game.guessLatLng.lng], {
-        icon: L.divIcon({
-            className: 'guess-marker',
-            iconSize: [20, 20]
-        })
-    }).addTo(game.resultMap);
-    
-    const actualMarker = L.marker([game.currentLocation.lat, game.currentLocation.lng], {
-        icon: L.divIcon({
-            className: 'actual-marker',
-            iconSize: [20, 20]
-        })
-    }).addTo(game.resultMap);
-    
-    L.polyline([
-        [game.guessLatLng.lat, game.guessLatLng.lng],
-        [game.currentLocation.lat, game.currentLocation.lng]
-    ], {
-        color: 'var(--color-primary)',
-        weight: 3,
-        opacity: 0.7,
-        dashArray: '10, 10'
-    }).addTo(game.resultMap);
-    
-    guessMarker.bindPopup('<b>Your Guess</b>').openPopup();
-    actualMarker.bindPopup(`<b>${game.currentLocation.name}</b><br>${game.currentLocation.description}`);
-    
-    // Show the modal
-    const resultsModal = document.getElementById('results-modal');
-    resultsModal.classList.add('show');
-    
-    // Update map size after modal is shown
+    // Wait for modal animation and container sizing
     setTimeout(() => {
-        game.resultMap.invalidateSize();
-        game.resultMap.fitBounds(bounds, { padding: [50, 50] });
+        // Create map with initial bounds
+        game.resultMap = L.map('result-map', {
+            zoomControl: false,
+            minZoom: 8,
+            maxZoom: 18
+        });
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(game.resultMap);
+        
+        // Add zoom control after the map is created
+        L.control.zoom({
+            position: 'bottomright'
+        }).addTo(game.resultMap);
+        
+        const guessMarker = L.marker([game.guessLatLng.lat, game.guessLatLng.lng], {
+            icon: L.divIcon({
+                className: 'guess-marker',
+                iconSize: [20, 20]
+            })
+        }).addTo(game.resultMap);
+        
+        const actualMarker = L.marker([game.currentLocation.lat, game.currentLocation.lng], {
+            icon: L.divIcon({
+                className: 'actual-marker',
+                iconSize: [20, 20]
+            })
+        }).addTo(game.resultMap);
+        
+        L.polyline([
+            [game.guessLatLng.lat, game.guessLatLng.lng],
+            [game.currentLocation.lat, game.currentLocation.lng]
+        ], {
+            color: 'var(--color-primary)',
+            weight: 3,
+            opacity: 0.7,
+            dashArray: '10, 10'
+        }).addTo(game.resultMap);
+        
+        // Force a resize and fit bounds
+        game.resultMap.invalidateSize(true);
+        game.resultMap.fitBounds(bounds, { 
+            padding: [50, 50],
+            maxZoom: 12
+        });
+        
+        guessMarker.bindPopup('<b>Your Guess</b>').openPopup();
+        actualMarker.bindPopup(`<b>${game.currentLocation.name}</b><br>${game.currentLocation.description}`);
+        
+        // Additional resize check after a short delay
+        setTimeout(() => {
+            game.resultMap.invalidateSize(true);
+            game.resultMap.fitBounds(bounds, { 
+                padding: [50, 50],
+                maxZoom: 12
+            });
+        }, 300);
     }, 100);
 }
 
