@@ -195,33 +195,42 @@ async function loadLocationImages() {
             searchLat + 0.02
         ].join(',');
         
+        console.log('Fetching images with bbox:', bbox);
+        
         const response = await fetch(
             `https://graph.mapillary.com/images?bbox=${bbox}&fields=id,thumb_2048_url,computed_geometry,captured_at&limit=10`,
             {
                 headers: {
-                    'Authorization': `OAuth ${game.apiKey}`
-                }
+                    'Authorization': `OAuth ${game.apiKey}`,
+                    'Accept': 'application/json'
+                },
+                mode: 'cors'
             }
         );
         
-        if (!response.ok) throw new Error('Failed to fetch images');
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Mapillary API error:', response.status, response.statusText, errorText);
+            throw new Error(`Failed to fetch images: ${response.status} ${response.statusText}`);
+        }
         
         const data = await response.json();
+        console.log('Received images:', data.data?.length || 0);
         
         if (data.data && data.data.length > 0) {
             game.locationImages = data.data;
             displayImage(0);
         } else {
-            throw new Error('No images found');
+            throw new Error('No images found in the area');
         }
         
     } catch (error) {
         console.error('Error loading images:', error);
         viewerEl.innerHTML = `
             <div class="street-view-fallback">
-                <i class="fas fa-image"></i>
-                <h3>No images available</h3>
-                <p>This location doesn't have street-level imagery.</p>
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Error loading images</h3>
+                <p>${error.message}</p>
                 <p><strong>Hint:</strong> ${game.currentLocation.hint}</p>
             </div>
         `;
@@ -333,9 +342,24 @@ function showResults(distance, points) {
     const resultMapDiv = document.getElementById('result-map');
     resultMapDiv.innerHTML = '';
     
-    game.resultMap = L.map('result-map').setView([47.2692, 9.8916], 8);
+    // Calculate bounds before creating the map
+    const bounds = L.latLngBounds([
+        [game.guessLatLng.lat, game.guessLatLng.lng],
+        [game.currentLocation.lat, game.currentLocation.lng]
+    ]);
+    
+    // Create map with initial bounds
+    game.resultMap = L.map('result-map', {
+        zoomControl: false
+    }).fitBounds(bounds, { padding: [50, 50] });
+    
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
+    }).addTo(game.resultMap);
+    
+    // Add zoom control after the map is created
+    L.control.zoom({
+        position: 'bottomright'
     }).addTo(game.resultMap);
     
     const guessMarker = L.marker([game.guessLatLng.lat, game.guessLatLng.lng], {
@@ -361,12 +385,6 @@ function showResults(distance, points) {
         opacity: 0.7,
         dashArray: '10, 10'
     }).addTo(game.resultMap);
-    
-    const bounds = L.latLngBounds([
-        [game.guessLatLng.lat, game.guessLatLng.lng],
-        [game.currentLocation.lat, game.currentLocation.lng]
-    ]);
-    game.resultMap.fitBounds(bounds, { padding: [50, 50] });
     
     guessMarker.bindPopup('<b>Your Guess</b>').openPopup();
     actualMarker.bindPopup(`<b>${game.currentLocation.name}</b><br>${game.currentLocation.description}`);
