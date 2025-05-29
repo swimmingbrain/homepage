@@ -389,7 +389,15 @@ function showResults(distance, points) {
     guessMarker.bindPopup('<b>Your Guess</b>').openPopup();
     actualMarker.bindPopup(`<b>${game.currentLocation.name}</b><br>${game.currentLocation.description}`);
     
-    document.getElementById('results-modal').classList.add('show');
+    // Show the modal
+    const resultsModal = document.getElementById('results-modal');
+    resultsModal.classList.add('show');
+    
+    // Update map size after modal is shown
+    setTimeout(() => {
+        game.resultMap.invalidateSize();
+        game.resultMap.fitBounds(bounds, { padding: [50, 50] });
+    }, 100);
 }
 
 // End game
