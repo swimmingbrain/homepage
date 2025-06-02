@@ -776,15 +776,6 @@ const vorarlbergLocations = [
         description: "The beautiful Formarinsee and the impressive Rote Wand massif."
     },
     {
-        name: "Spullersee",
-        lat: 47.1550,
-        lng: 10.0550,
-        searchLat: 47.1550,
-        searchLng: 10.0550,
-        hint: "Reservoir lake near Lech, popular for fishing and hiking.",
-        description: "The Spullersee, nestled in the Lechquellengebirge mountains."
-    },
-    {
         name: "Stuben am Arlberg",
         lat: 47.1333,
         lng: 10.1667,
@@ -929,15 +920,6 @@ const vorarlbergLocations = [
         searchLng: 9.9220,
         hint: "Popular hiking peak above Damüls with great views of the Bregenzerwald.",
         description: "The summit of the Mittagspitze near Damüls."
-    },
-    {
-        name: "Zitterklapfen Gipfel",
-        lat: 47.2200,
-        lng: 10.0160,
-        searchLat: 47.2200,
-        searchLng: 10.0160,
-        hint: "Striking peak in the Lechquellen Mountains, a serious alpine objective.",
-        description: "The summit of Zitterklapfen, one of the highest in the Lechquellen range."
     },
     {
         name: "Braunarlspitze Gipfel",
