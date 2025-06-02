@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vorarlberg Explorer - SwimmingBrain</title>
+    <title>WoGsi? - Entdecke Vorarlberg</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/wogsi-game.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -20,8 +20,8 @@
     <div class="container">
         <header class="header game-header">
             <div class="welcome-text">
-                <h1>vorarlberg <span class="highlight">explorer</span></h1>
-                <span class="domain">guess the location!</span>
+                <h1>entdecke<span class="highlight">vorarlberg</span></h1>
+                <span class="domain">Wo gsi?</span>
             </div>
             <div class="divider"></div>
         </header>
@@ -30,7 +30,7 @@
             <a href="index.html" class="nav-link">Home</a>
             <a href="spotify.html" class="nav-link">Music</a>
             <a href="github.html" class="nav-link">GitHub</a>
-            <a href="wogsi-game.html" class="nav-link active">Game</a>
+            <a href="wogsi-game.html" class="nav-link active">WoGsi?</a>
         </nav>
 
         <!-- Game Stats -->
@@ -38,17 +38,17 @@
             <div class="stat-card">
                 <i class="fas fa-map-marker-alt"></i>
                 <span class="stat-value" id="round-number">1/5</span>
-                <span class="stat-label">Round</span>
+                <span class="stat-label">Runde</span>
             </div>
             <div class="stat-card">
                 <i class="fas fa-trophy"></i>
                 <span class="stat-value" id="total-score">0</span>
-                <span class="stat-label">Score</span>
+                <span class="stat-label">Punkte</span>
             </div>
             <div class="stat-card">
                 <i class="fas fa-bullseye"></i>
                 <span class="stat-value" id="best-guess">-</span>
-                <span class="stat-label">Best Guess</span>
+                <span class="stat-label">Beste Schätzung</span>
             </div>
         </div>
 
@@ -59,14 +59,14 @@
                 <div id="mapillary-viewer" class="mapillary-viewer">
                     <div class="loading-spinner" id="loading-spinner">
                         <div class="spinner"></div>
-                        <p>Loading location images...</p>
+                        <p>Lade Standortbilder...</p>
                     </div>
                 </div>
                 <div class="panorama-controls">
-                    <button class="control-btn" id="zoom-in" title="Zoom In"><i class="fas fa-search-plus"></i></button>
-                    <button class="control-btn" id="zoom-out" title="Zoom Out"><i class="fas fa-search-minus"></i></button>
-                    <button class="control-btn" id="reset-view" title="Reset View"><i class="fas fa-undo"></i></button>
-                    <button class="control-btn hint-toggle" id="hint-toggle" title="Show Hint">
+                    <button class="control-btn" id="zoom-in" title="Vergrößern"><i class="fas fa-search-plus"></i></button>
+                    <button class="control-btn" id="zoom-out" title="Verkleinern"><i class="fas fa-search-minus"></i></button>
+                    <button class="control-btn" id="reset-view" title="Ansicht zurücksetzen"><i class="fas fa-undo"></i></button>
+                    <button class="control-btn hint-toggle" id="hint-toggle" title="Tipp anzeigen">
                         <i class="fas fa-lightbulb"></i>
                     </button>
                 </div>
@@ -80,7 +80,7 @@
             <div class="map-container" id="map-container">
                 <div id="guess-map"></div>
                 <button class="guess-btn" id="make-guess" disabled>
-                    <i class="fas fa-check"></i> Make Guess
+                    <i class="fas fa-check"></i> Schätzen
                 </button>
             </div>
         </div>
@@ -88,20 +88,20 @@
         <!-- Results Modal -->
         <div class="modal" id="results-modal">
             <div class="modal-content">
-                <h2>Round Results</h2>
+                <h2>Rundenergebnis</h2>
                 <div class="result-info">
                     <div class="distance-result">
                         <i class="fas fa-route"></i>
-                        <span id="distance-text">0 km away</span>
+                        <span id="distance-text">0 km entfernt</span>
                     </div>
                     <div class="score-result">
                         <i class="fas fa-star"></i>
-                        <span id="score-text">0 points</span>
+                        <span id="score-text">0 Punkte</span>
                     </div>
                 </div>
                 <div id="result-map"></div>
                 <button class="next-round-btn" id="next-round">
-                    <i class="fas fa-arrow-right"></i> Next Round
+                    <i class="fas fa-arrow-right"></i> Nächste Runde
                 </button>
             </div>
         </div>
@@ -109,15 +109,15 @@
         <!-- Game Over Modal -->
         <div class="modal" id="game-over-modal">
             <div class="modal-content">
-                <h2>Game Complete!</h2>
+                <h2>Spiel beendet!</h2>
                 <div class="final-score">
                     <i class="fas fa-trophy"></i>
                     <span id="final-score-text">0</span>
-                    <span>Total Points</span>
+                    <span>Gesamtpunkte</span>
                 </div>
                 <div class="score-breakdown" id="score-breakdown"></div>
                 <button class="play-again-btn" id="play-again">
-                    <i class="fas fa-redo"></i> Play Again
+                    <i class="fas fa-redo"></i> Nochmal spielen
                 </button>
             </div>
         </div>
@@ -132,23 +132,23 @@
                         <div class="brain">🗺️</div>
                     </div>
                 </div>
-                <h2>Welcome to Vorarlberg Explorer!</h2>
-                <p>Explore Vorarlberg through real street-level imagery. Look around, find clues, and guess where you are!</p>
+                <h2>Willkommen beim 'WoGsi?' Vorarlberg Explorer!</h2>
+                <p>Entdecke Vorarlberg durch echte Straßenansichten. Schau dich um, suche nach Hinweisen und rate, wo du dich befindest!</p>
                 <div class="game-rules">
-                    <h3>How to Play:</h3>
+                    <h3>So spielst du:</h3>
                     <ul>
-                        <li>Navigate the street view using your mouse</li>
-                        <li>Look for clues: signs, landmarks, mountains</li>
-                        <li>Click on the map to place your guess</li>
-                        <li>The closer you are, the more points you get!</li>
-                        <li>Maximum 5000 points per round</li>
+                        <li>Navigiere in der Straßenansicht mit deiner Maus</li>
+                        <li>Suche nach Hinweisen: Schilder, Sehenswürdigkeiten, Berge</li>
+                        <li>Klicke auf die Karte, um deine Schätzung abzugeben</li>
+                        <li>Je näher du dran bist, desto mehr Punkte bekommst du!</li>
+                        <li>Maximal 5000 Punkte pro Runde</li>
                     </ul>
                 </div>
                 <div class="api-status" id="api-status">
-                    <i class="fas fa-circle-notch fa-spin"></i> Checking Mapillary connection...
+                    <i class="fas fa-circle-notch fa-spin"></i> Überprüfe Mapillary-Verbindung...
                 </div>
                 <button class="start-game-btn" id="start-game" disabled>
-                    <i class="fas fa-play"></i> Start Game
+                    <i class="fas fa-play"></i> Spiel starten
                 </button>
             </div>
         </div>
