@@ -257,15 +257,6 @@ const vorarlbergLocations = [
         description: "The market town of Bezau, a popular tourist destination."
     },
     {
-        name: "Seilbahn Bezau Bergstation Baumgarten",
-        lat: 47.3780,
-        lng: 9.9300,
-        searchLat: 47.3780,
-        searchLng: 9.9300,
-        hint: "Mountain station above Bezau, offering panoramic views and hiking.",
-        description: "Top of the Bezau cable car, gateway to the Niedere-Baumgarten hiking area."
-    },
-    {
         name: "Andelsbuch Stausee",
         lat: 47.4150,
         lng: 9.9030,
