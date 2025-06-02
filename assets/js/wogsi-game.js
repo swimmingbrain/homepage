@@ -758,15 +758,6 @@ const vorarlbergLocations = [
         description: "The stunning Körbersee, accessible by a short hike."
     },
     {
-        name: "Formarinsee & Rote Wand",
-        lat: 47.1600, // Formarinsee
-        lng: 9.9800,  // Formarinsee
-        searchLat: 47.1600,
-        searchLng: 9.9800,
-        hint: "Alpine lake at the foot of the Rote Wand mountain, source of the Lech river.",
-        description: "The beautiful Formarinsee and the impressive Rote Wand massif."
-    },
-    {
         name: "Stuben am Arlberg",
         lat: 47.1333,
         lng: 10.1667,
