@@ -18,7 +18,7 @@ let game = {
 };
 
 // Updated Vorarlberg locations with actual Mapillary image IDs from the API test
-const additionalVorarlbergLocations = [
+const vorarlbergLocations = [
     // ------------- Rhine Valley (Rheintal) -------------
     {
         name: "Lustenau Zentrum",
