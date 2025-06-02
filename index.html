@@ -60,35 +60,35 @@
         </nav>
 
         <div class="hub-grid">
-            <a href="firmware.html" class="hub-card">
+            <div class="hub-card coming-soon" onclick="showComingSoon()">
                 <div class="hub-icon">🔧</div>
                 <h3>Firmware Development</h3>
                 <p>Low-level programming, bootloaders, and hardware optimization</p>
-            </a>
+            </div>
 
-            <a href="tools.html" class="hub-card">
+            <div class="hub-card coming-soon" onclick="showComingSoon()">
                 <div class="hub-icon">🛠️</div>
                 <h3>Development Tools</h3>
                 <p>Custom utilities, debugging tools, and automation scripts</p>
-            </a>
+            </div>
 
-            <a href="blog.html" class="hub-card">
+            <div class="hub-card coming-soon" onclick="showComingSoon()">
                 <div class="hub-icon">📝</div>
                 <h3>Technical Writing</h3>
                 <p>In-depth articles on embedded systems and engineering insights</p>
-            </a>
+            </div>
 
-            <a href="contact.html" class="hub-card">
+            <div class="hub-card coming-soon" onclick="showComingSoon()">
                 <div class="hub-icon">💬</div>
                 <h3>Let's Connect</h3>
                 <p>Discuss projects, collaborations, and embedded solutions</p>
-            </a>
+            </div>
 
-            <a href="research.html" class="hub-card">
+            <div class="hub-card coming-soon" onclick="showComingSoon()">
                 <div class="hub-icon">🔬</div>
                 <h3>Research & Innovation</h3>
                 <p>Experimental projects and cutting-edge technology research</p>
-            </a>
+            </div>
 
             <a href="spotify.html" class="hub-card">
                 <div class="hub-icon">🎵</div>
@@ -109,11 +109,39 @@
             </a>
         </div>
 
+        <!-- Coming Soon Modal -->
+        <div class="modal" id="coming-soon-modal">
+            <div class="modal-content">
+                <h2>Coming Soon! 🚀</h2>
+                <p>This feature is currently under development. Check back later!</p>
+                <button class="close-modal-btn" onclick="hideComingSoon()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+
         <footer class="footer">
             <p>© 2025 SwimmingBrain.dev - Where ideas float and code flows 🌊</p>
         </footer>
     </div>
 
     <script src="assets/js/main.js"></script>
+    <script>
+        function showComingSoon() {
+            document.getElementById('coming-soon-modal').classList.add('show');
+        }
+
+        function hideComingSoon() {
+            document.getElementById('coming-soon-modal').classList.remove('show');
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('coming-soon-modal');
+            if (event.target === modal) {
+                hideComingSoon();
+            }
+        }
+    </script>
 </body>
 </html>
