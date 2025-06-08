@@ -1,4 +1,4 @@
-// WoGsi? Game (Uses static images instead of Mapillary viewer)
+// WoGsi? Game with Leaderboard (Uses static images instead of Mapillary viewer)
 let game = {
     currentRound: 0,
     totalRounds: 5,
@@ -14,7 +14,19 @@ let game = {
     hasGuessed: false,
     apiKey: null,
     currentImageIndex: 0,
-    locationImages: []
+    locationImages: [],
+    playerName: null
+};
+
+// Leaderboard configuration using JSONBin.io (free tier)
+const LEADERBOARD_CONFIG = {
+    // You need to create a free account at jsonbin.io and replace these values
+    // 1. Go to https://jsonbin.io/ and sign up
+    // 2. Create a new bin with initial data: []
+    // 3. Copy your API key and bin ID below
+    API_KEY: '$2a$10$i7sCL/vugXipKri6firtauddxCLM9lvZm0vCuEmH95bTsKrUlhf5K', // Replace with your JSONBin API key
+    BIN_ID: '68449b28f5fda636aace9116', // Replace with your bin ID
+    API_URL: 'https://api.jsonbin.io/v3/b/'
 };
 
 // Updated Vorarlberg locations with actual Mapillary image IDs from the API test
@@ -267,7 +279,7 @@ const vorarlbergLocations = [
     },
     {
         name: "Werkraum Bregenzerwald",
-        lat: 47.4083, // In Andelsbuch
+        lat: 47.4083,
         lng: 9.9030,
         searchLat: 47.4083,
         searchLng: 9.9030,
@@ -303,7 +315,7 @@ const vorarlbergLocations = [
     },
     {
         name: "Krumbach Bushaltestellen (BUSSTOPS)",
-        lat: 47.4667, // Approximate center for the project
+        lat: 47.4667,
         lng: 9.9167,
         searchLat: 47.4660,
         searchLng: 9.9160,
@@ -366,8 +378,8 @@ const vorarlbergLocations = [
     },
     {
         name: "Kanisfluh Aussichtspunkt",
-        lat: 47.3350, // Approx for a viewpoint
-        lng: 9.9300,  // Approx for a viewpoint
+        lat: 47.3350,
+        lng: 9.9300,
         searchLat: 47.3350,
         searchLng: 9.9300,
         hint: "Iconic mountain massif in the Bregenzerwald, known for its steep north face.",
@@ -449,7 +461,7 @@ const vorarlbergLocations = [
     },
     {
         name: "Piz Buin (Austrian side viewpoint)",
-        lat: 46.8400, // Approx. viewpoint from Bielerhöhe side
+        lat: 46.8400,
         lng: 10.1200,
         searchLat: 46.8400,
         searchLng: 10.1200,
@@ -568,7 +580,7 @@ const vorarlbergLocations = [
     },
     {
         name: "Ifenbahn Bergstation",
-        lat: 47.3300, // Approx. Bergstation Ifen I or II
+        lat: 47.3300,
         lng: 10.1300,
         searchLat: 47.3300,
         searchLng: 10.1300,
@@ -604,7 +616,7 @@ const vorarlbergLocations = [
     },
     {
         name: "Breitachklamm Eingang (Austrian side access)",
-        lat: 47.3780, // Near Walserschanz, the gorge is mostly Bavarian
+        lat: 47.3780,
         lng: 10.2250,
         searchLat: 47.3780,
         searchLng: 10.2250,
@@ -651,7 +663,7 @@ const vorarlbergLocations = [
     },
     {
         name: "Dorfbahn Brand Bergstation",
-        lat: 47.0950, // Approximate
+        lat: 47.0950,
         lng: 9.7300,
         searchLat: 47.0950,
         searchLng: 9.7300,
@@ -669,7 +681,7 @@ const vorarlbergLocations = [
     },
     {
         name: "Einhornbahn II Bergstation (Bürserberg)",
-        lat: 47.1350, // Approximate
+        lat: 47.1350,
         lng: 9.7500,
         searchLat: 47.1350,
         searchLng: 9.7500,
@@ -696,7 +708,7 @@ const vorarlbergLocations = [
     },
     {
         name: "Sonnenkopf Bergbahn Talstation",
-        lat: 47.1290, // Klösterle/Wald am Arlberg
+        lat: 47.1290,
         lng: 10.0620,
         searchLat: 47.1290,
         searchLng: 10.0620,
@@ -786,8 +798,8 @@ const vorarlbergLocations = [
     },
     {
         name: "Sonntag-Stein Seilbahn Bergstation",
-        lat: 47.2400, // Approximate
-        lng: 9.8800,  // Approximate
+        lat: 47.2400,
+        lng: 9.8800,
         searchLat: 47.2400,
         searchLng: 9.8800,
         hint: "Cable car in Großes Walsertal leading to a sunny hiking area.",
@@ -804,8 +816,8 @@ const vorarlbergLocations = [
     },
     {
         name: "Fontanella-Faschina (Faschinajoch)",
-        lat: 47.2667, // Faschinajoch
-        lng: 9.9167,  // Faschinajoch
+        lat: 47.2667,
+        lng: 9.9167,
         searchLat: 47.2660,
         searchLng: 9.9160,
         hint: "Mountain pass and small ski resort connecting Großes Walsertal and Damüls.",
@@ -822,8 +834,8 @@ const vorarlbergLocations = [
     },
     {
         name: "Laterns-Gapfohl Skigebiet (Talstation)",
-        lat: 47.2950, // Innerlaterns
-        lng: 9.7100,  // Innerlaterns
+        lat: 47.2950,
+        lng: 9.7100,
         searchLat: 47.2950,
         searchLng: 9.7100,
         hint: "Family-friendly ski and hiking area in the Laternser Valley.",
@@ -831,7 +843,7 @@ const vorarlbergLocations = [
     },
     {
         name: "Üble Schlucht Eingang",
-        lat: 47.3000, // Approx. entrance near Laterns
+        lat: 47.3000,
         lng: 9.7000,
         searchLat: 47.3000,
         searchLng: 9.7000,
@@ -860,7 +872,7 @@ const vorarlbergLocations = [
     },
     {
         name: "Drei Schwestern Gipfel (Frastanzer Seite)",
-        lat: 47.1667, // Approx. main peak
+        lat: 47.1667,
         lng: 9.5900,
         searchLat: 47.1667,
         searchLng: 9.5900,
@@ -1026,9 +1038,20 @@ function init() {
     document.getElementById('next-round')?.addEventListener('click', nextRound);
     document.getElementById('play-again')?.addEventListener('click', resetGame);
     document.getElementById('hint-toggle')?.addEventListener('click', toggleHint);
+    document.getElementById('submit-score')?.addEventListener('click', submitScore);
+    
+    // Enter key submits score
+    document.getElementById('player-name')?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            submitScore();
+        }
+    });
     
     // Initialize maps
     initializeMaps();
+    
+    // Load leaderboard
+    loadLeaderboard();
     
     // Check API key
     checkMapillaryConnection();
@@ -1390,6 +1413,13 @@ function endGame() {
     `;
     
     document.getElementById('final-score-text').textContent = game.totalScore.toLocaleString();
+    
+    // Show name input section
+    document.getElementById('player-name-section').style.display = 'block';
+    document.getElementById('player-name').value = '';
+    document.getElementById('submit-score').disabled = false;
+    document.getElementById('submit-score').innerHTML = '<i class="fas fa-paper-plane"></i> Eintragen';
+    
     document.getElementById('game-over-modal').classList.add('show');
 }
 
@@ -1444,6 +1474,178 @@ function shuffleArray(array) {
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled;
+}
+
+// Escape HTML to prevent XSS
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// Load and display leaderboard
+async function loadLeaderboard() {
+    const container = document.getElementById('leaderboard-container');
+    
+    try {
+        const response = await fetch(`${LEADERBOARD_CONFIG.API_URL}${LEADERBOARD_CONFIG.BIN_ID}/latest`, {
+            headers: {
+                'X-Master-Key': LEADERBOARD_CONFIG.API_KEY
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to load leaderboard');
+        }
+        
+        const data = await response.json();
+        const scores = data.record || [];
+        
+        // Sort by score descending
+        scores.sort((a, b) => b.score - a.score);
+        
+        // Display top 10
+        const top10 = scores.slice(0, 10);
+        
+        if (top10.length === 0) {
+            container.innerHTML = '<p class="no-scores">Noch keine Einträge. Sei der Erste!</p>';
+            return;
+        }
+        
+        let html = '<div class="leaderboard-list">';
+        top10.forEach((entry, index) => {
+            const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+            html += `
+                <div class="leaderboard-entry ${index < 3 ? 'top-three' : ''}">
+                    <span class="rank">${medal || (index + 1) + '.'}</span>
+                    <span class="name">${escapeHtml(entry.name)}</span>
+                    <span class="score">${entry.score.toLocaleString()} Punkte</span>
+                    <span class="date">${new Date(entry.date).toLocaleDateString('de-AT')}</span>
+                </div>
+            `;
+        });
+        html += '</div>';
+        
+        container.innerHTML = html;
+        
+    } catch (error) {
+        console.error('Error loading leaderboard:', error);
+        container.innerHTML = '<p class="error-message">Leaderboard konnte nicht geladen werden</p>';
+    }
+}
+
+// Submit score to leaderboard
+async function submitScore() {
+    const nameInput = document.getElementById('player-name');
+    const playerName = nameInput.value.trim();
+    
+    if (!playerName) {
+        nameInput.classList.add('error');
+        nameInput.placeholder = 'Bitte Namen eingeben!';
+        setTimeout(() => {
+            nameInput.classList.remove('error');
+            nameInput.placeholder = 'Dein Name';
+        }, 2000);
+        return;
+    }
+    
+    if (playerName.length > 20) {
+        alert('Name darf maximal 20 Zeichen lang sein!');
+        return;
+    }
+    
+    const submitBtn = document.getElementById('submit-score');
+    const originalContent = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Speichern...';
+    submitBtn.disabled = true;
+    
+    try {
+        // First, get current leaderboard
+        const getResponse = await fetch(`${LEADERBOARD_CONFIG.API_URL}${LEADERBOARD_CONFIG.BIN_ID}/latest`, {
+            headers: {
+                'X-Master-Key': LEADERBOARD_CONFIG.API_KEY
+            }
+        });
+        
+        if (!getResponse.ok) {
+            throw new Error('Failed to fetch leaderboard');
+        }
+        
+        const data = await getResponse.json();
+        let scores = data.record || [];
+        
+        // Check if player already exists
+        const existingIndex = scores.findIndex(entry => 
+            entry.name.toLowerCase() === playerName.toLowerCase()
+        );
+        
+        const newEntry = {
+            name: playerName,
+            score: game.totalScore,
+            date: new Date().toISOString(),
+            bestGuess: game.bestGuess
+        };
+        
+        // Only update if new score is better or player doesn't exist
+        if (existingIndex !== -1) {
+            if (scores[existingIndex].score < game.totalScore) {
+                scores[existingIndex] = newEntry;
+            } else {
+                // Score not better
+                submitBtn.innerHTML = '<i class="fas fa-times"></i> Score nicht besser';
+                submitBtn.classList.add('not-better');
+                setTimeout(() => {
+                    submitBtn.innerHTML = originalContent;
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('not-better');
+                }, 2000);
+                return;
+            }
+        } else {
+            scores.push(newEntry);
+        }
+        
+        // Update leaderboard
+        const updateResponse = await fetch(`${LEADERBOARD_CONFIG.API_URL}${LEADERBOARD_CONFIG.BIN_ID}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Master-Key': LEADERBOARD_CONFIG.API_KEY
+            },
+            body: JSON.stringify(scores)
+        });
+        
+        if (!updateResponse.ok) {
+            throw new Error('Failed to update leaderboard');
+        }
+        
+        // Success
+        submitBtn.innerHTML = '<i class="fas fa-check"></i> Gespeichert!';
+        submitBtn.classList.add('success');
+        
+        // Hide input section
+        setTimeout(() => {
+            document.getElementById('player-name-section').style.display = 'none';
+        }, 1000);
+        
+        // Reload leaderboard
+        loadLeaderboard();
+        
+    } catch (error) {
+        console.error('Error submitting score:', error);
+        submitBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Fehler!';
+        submitBtn.classList.add('error');
+        setTimeout(() => {
+            submitBtn.innerHTML = originalContent;
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('error');
+        }, 2000);
+    }
 }
 
 // Initialize when DOM is loaded

@@ -85,6 +85,17 @@
             </div>
         </div>
 
+        <!-- Leaderboard Section -->
+        <div class="leaderboard-section">
+            <h2><i class="fas fa-crown"></i> Bestenliste</h2>
+            <div class="leaderboard-container" id="leaderboard-container">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p>Lade Bestenliste...</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Results Modal -->
         <div class="modal" id="results-modal">
             <div class="modal-content">
@@ -116,6 +127,16 @@
                     <span>Gesamtpunkte</span>
                 </div>
                 <div class="score-breakdown" id="score-breakdown"></div>
+                <div class="player-name-section" id="player-name-section">
+                    <h3>Trage dich in die Bestenliste ein!</h3>
+                    <div class="name-input-group">
+                        <input type="text" id="player-name" placeholder="Dein Name" maxlength="20">
+                        <button class="submit-score-btn" id="submit-score">
+                            <i class="fas fa-paper-plane"></i> Eintragen
+                        </button>
+                    </div>
+                    <p class="name-hint">Nur dein bester Score wird gespeichert</p>
+                </div>
                 <button class="play-again-btn" id="play-again">
                     <i class="fas fa-redo"></i> Nochmal spielen
                 </button>
