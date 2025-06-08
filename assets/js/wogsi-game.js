@@ -24,7 +24,7 @@ const LEADERBOARD_CONFIG = {
     // 1. Go to https://jsonbin.io/ and sign up
     // 2. Create a new bin with initial data: []
     // 3. Copy your API key and bin ID below
-    API_KEY: '$2a$10$i7sCL/vugXipKri6firtauddxCLM9lvZm0vCuEmH95bTsKrUlhf5K', // Replace with your JSONBin API key
+    API_KEY: '$2a$10$I3aSVpUO8hTyGsHVeUgpTuH5r8NKvXcn0Ew/6k/VUs6KazVXd.r.a', // Replace with your JSONBin API key
     BIN_ID: '6844e14d8960c979a5a678c8', // Replace with your bin ID
     API_URL: 'https://api.jsonbin.io/v3/b/'
 };
