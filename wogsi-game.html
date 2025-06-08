@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/wogsi-game.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="https://unpkg.com/mapillary-js@4.1.1/dist/mapillary.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -54,25 +53,21 @@
 
         <!-- Main Game Area -->
         <div class="game-container">
-            <!-- Mapillary Street View -->
+            <!-- Google Street View -->
             <div class="panorama-container" id="panorama-container">
-                <div id="mapillary-viewer" class="mapillary-viewer">
+                <div id="street-view-container" class="street-view-container">
                     <div class="loading-spinner" id="loading-spinner">
                         <div class="spinner"></div>
-                        <p>Lade Standortbilder...</p>
+                        <p>Lade Straßenansicht...</p>
                     </div>
                 </div>
                 <div class="panorama-controls">
-                    <button class="control-btn" id="zoom-in" title="Vergrößern"><i class="fas fa-search-plus"></i></button>
-                    <button class="control-btn" id="zoom-out" title="Verkleinern"><i class="fas fa-search-minus"></i></button>
-                    <button class="control-btn" id="reset-view" title="Ansicht zurücksetzen"><i class="fas fa-undo"></i></button>
-                    <button class="control-btn hint-toggle" id="hint-toggle" title="Tipp anzeigen">
-                        <i class="fas fa-lightbulb"></i>
+                    <button class="control-btn" id="fullscreen" title="Vollbild">
+                        <i class="fas fa-expand"></i>
                     </button>
-                </div>
-                <div class="hint-overlay" id="hint-overlay" style="display: none;">
-                    <i class="fas fa-lightbulb"></i>
-                    <span id="hint-text"></span>
+                    <button class="control-btn" id="reset-view" title="Ansicht zurücksetzen">
+                        <i class="fas fa-undo"></i>
+                    </button>
                 </div>
             </div>
 
@@ -154,24 +149,22 @@
                     </div>
                 </div>
                 <h2>Willkommen beim 'WoGsi?'!</h2>
-                <p>Entdecke Vorarlberg durch echte Straßenansichten. Suche nach Hinweisen und rate, wo du dich befindest!</p>
+                <p>Entdecke Vorarlberg durch Google Street View. Schaue dich um und rate, wo du dich befindest!</p>
                 <div class="game-rules">
                     <h3>So spielst du:</h3>
                     <ul>
-                        <li>Suche nach Hinweisen: Schilder, Sehenswürdigkeiten, Berge</li>
-                        <li>Klicke auf die Karte, um die Schätzung abzugeben</li>
-                        <li>Maximal 5000 Punkte pro Runde</li>
+                        <li>Erkunde die Umgebung mit Street View</li>
+                        <li>Klicke auf die Karte, um deine Schätzung abzugeben</li>
+                        <li>Je näher deine Schätzung, desto mehr Punkte!</li>
                     </ul>
                 </div>
-                <div class="api-status" id="api-status">
-                    <i class="fas fa-circle-notch fa-spin"></i> Überprüfe Mapillary-Verbindung...
-                </div>
-                <button class="start-game-btn" id="start-game" disabled>
+                <button class="start-game-btn" id="start-game">
                     <i class="fas fa-play"></i> Spiel starten
                 </button>
             </div>
         </div>
     </div>
+    
     <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="assets/js/wogsi-game.js"></script>
