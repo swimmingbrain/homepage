@@ -871,93 +871,76 @@
 /* Player Name Input Section */
 .player-name-section {
     margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border-color-light);
+    padding: 1.5rem;
+    background: var(--background-secondary);
+    border-radius: 15px;
+    border: 1px solid var(--border-color-light);
 }
 
 .player-name-section h3 {
-    text-align: center;
     color: var(--text-primary);
     margin-bottom: 1rem;
+    text-align: center;
 }
 
 .name-input-group {
     display: flex;
     gap: 1rem;
-    max-width: 400px;
-    margin: 0 auto;
+    margin-bottom: 1rem;
+    width: 100%;
+    max-width: 100%;
 }
 
 .name-input-group input {
     flex: 1;
-    padding: 12px 20px;
-    border: 2px solid var(--border-color-light);
-    border-radius: 25px;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border-color-medium);
+    border-radius: 8px;
     font-size: 1rem;
-    transition: all 0.3s ease;
-    background: var(--background-secondary);
     color: var(--text-primary);
+    background-color: var(--color-white);
+    transition: all 0.3s ease;
+    min-width: 0;
 }
 
 .name-input-group input:focus {
     outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+    box-shadow: 0 0 0 2px var(--border-color-light);
+    background-color: var(--color-white);
 }
 
-.name-input-group input.error {
-    border-color: #dc3545;
-    animation: shake 0.5s;
-}
-
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
+.name-input-group input::placeholder {
+    color: var(--text-tertiary);
 }
 
 .submit-score-btn {
     background: var(--gradient-primary);
-    color: white;
+    color: var(--text-light);
     border: none;
-    padding: 12px 30px;
-    border-radius: 25px;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px var(--shadow-color-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .submit-score-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px var(--shadow-color-dark);
-}
-
-.submit-score-btn:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-}
-
-.submit-score-btn.success {
-    background: linear-gradient(135deg, #28a745, #20c997);
-}
-
-.submit-score-btn.error {
-    background: linear-gradient(135deg, #dc3545, #c82333);
-}
-
-.submit-score-btn.not-better {
-    background: linear-gradient(135deg, #ffc107, #fd7e14);
+    box-shadow: 0 4px 15px var(--shadow-color-medium);
 }
 
 .name-hint {
-    text-align: center;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--text-secondary);
+    text-align: center;
     margin-top: 0.5rem;
-    font-style: italic;
 }
 
 /* Responsive Design for Leaderboard */
@@ -1070,12 +1053,11 @@
     }
     
     .name-input-group input {
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.2);
-        color: white;
+        background-color: var(--color-white);
+        color: var(--text-primary);
     }
     
-    .name-input-group input::placeholder {
-        color: rgba(255, 255, 255, 0.5);
+    .name-input-group input:focus {
+        background-color: var(--color-white);
     }
 }
