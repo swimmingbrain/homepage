@@ -1,3 +1,13 @@
+// Add Google AdSense script
+const adScript = document.createElement('script');
+adScript.async = true;
+adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7904933237120180';
+adScript.crossOrigin = 'anonymous';
+document.head.appendChild(adScript);
+
+// Initialize AdSense
+(window.adsbygoogle = window.adsbygoogle || []).push({});
+
 // WoGsi? Game with Google Street View
 let game = {
     currentRound: 0,
