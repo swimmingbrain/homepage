@@ -75,8 +75,8 @@
 }
 
 .street-view-container iframe {
-    width: 120%;
-    height: 120%;
+    width: 150%;
+    height: 150%;
     border: none;
     /* Center the zoomed iframe */
     position: absolute;
@@ -267,15 +267,15 @@
     background: var(--gradient-primary);
     color: white;
     border: none;
-    padding: 15px 40px;
+    padding: 12px 30px;
     border-radius: 25px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px var(--shadow-color-dark);
-    display: block;
-    margin: 0 auto;
+    width: 100%;
+    margin-top: 1.5rem;
 }
 
 .next-round-btn:hover, .play-again-btn:hover, .start-game-btn:hover {
@@ -678,6 +678,11 @@
     .submit-score-btn {
         width: 100%;
         justify-content: center;
+    }
+    
+    .street-view-container iframe {
+        width: 200%;
+        height: 200%;
     }
 }
 

@@ -114,7 +114,19 @@ const vorarlbergLocations = [
     { name: "Lauterach Bundesstraße", lat: 47.4760, lng: 9.7290 },
     { name: "Altach Bahnhofstraße", lat: 47.3550, lng: 9.6505 },
     { name: "Frastanz Bahnhof", lat: 47.2180, lng: 9.6320 },
-    { name: "Satteins Kirchplatz", lat: 47.2190, lng: 9.6580 }
+    { name: "Satteins Kirchplatz", lat: 47.2190, lng: 9.6580 },
+
+    // Blum
+    { name: "Blum Werk 1, Höchst (Im Städtle 40)", lat: 47.3800, lng: 9.7630 },
+    { name: "Blum Werk 2, Höchst (Industriestraße 1)", lat: 47.3795, lng: 9.7640 },
+    { name: "Blum Werk 3, Höchst (Landstraße 14)", lat: 47.3797, lng: 9.7645 },
+    { name: "Blum Werk 4, Bregenz (Brachsenweg 35)", lat: 47.4985, lng: 9.7120 },
+    { name: "Blum Werk 5, Fußach (Birkenfeld 1)", lat: 47.5015, lng: 9.7150 },
+    { name: "Blum Werk 6, Gaißau (Hauptstraße 73)", lat: 47.4990, lng: 9.6920 },
+    { name: "Blum Werk 7, Dornbirn (Stöckenstraße 5)", lat: 47.4170, lng: 9.7440 },
+    { name: "Blum Werk 8, Dornbirn (Joh.-Baptist-Salzmann-Str. 1)", lat: 47.4155, lng: 9.7435 },
+    { name: "Julius Blum S009 – Oberer Achdamm 52, Hard", lat: 47.48616, lng: 9.71544 },
+    { name: "Julius Blum S011 – Wolfordstraße 1, Bregenz", lat: 47.5033, lng: 9.7469 }
 ];
 
 // Initialize the game
