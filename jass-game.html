@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jass - SwimmingBrain.dev</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/jass-game.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="ocean-bg">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <div class="container">
+        <header class="header game-header">
+            <div class="welcome-text">
+                <h1>schweizer <span class="highlight">jass</span></h1>
+                <span class="domain">Online Multiplayer</span>
+            </div>
+            <div class="divider"></div>
+        </header>
+
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="spotify.html" class="nav-link">Music</a>
+            <a href="github.html" class="nav-link">GitHub</a>
+            <a href="wogsi-game.html" class="nav-link">WoGsi?</a>
+            <a href="jass-game.html" class="nav-link active">Jass</a>
+        </nav>
+
+        <!-- Lobby Screen -->
+        <div id="lobby-screen" class="screen active">
+            <div class="lobby-container">
+                <div class="player-setup">
+                    <h2>Willkommen zum Jass!</h2>
+                    
+                    <div class="name-input-section">
+                        <input type="text" id="player-name-input" placeholder="Dein Name" maxlength="15">
+                    </div>
+
+                    <div class="character-selector">
+                        <button class="arrow-btn left" id="prev-character">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="character-display">
+                            <img id="character-img" src="assets/img/jass/character1.png" alt="Character">
+                            <p id="character-name">Character 1</p>
+                        </div>
+                        <button class="arrow-btn right" id="next-character">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <div class="lobby-options">
+                        <button class="btn primary" id="create-party-btn">
+                            <i class="fas fa-plus"></i> Partie erstellen
+                        </button>
+                        <div class="join-party-section">
+                            <input type="text" id="party-code-input" placeholder="Party-Code" maxlength="6">
+                            <button class="btn secondary" id="join-party-btn">
+                                <i class="fas fa-sign-in-alt"></i> Beitreten
+                            </button>
+                        </div>
+                        <button class="btn tertiary" id="join-lobby-btn">
+                            <i class="fas fa-users"></i> Öffentliche Lobby
+                        </button>
+                    </div>
+                </div>
+
+                <div class="waiting-room" id="waiting-room" style="display: none;">
+                    <h3>Warte auf Spieler...</h3>
+                    <div class="party-code-display" id="party-code-display" style="display: none;">
+                        <p>Party-Code: <span id="party-code-value"></span></p>
+                    </div>
+                    <div class="players-grid">
+                        <div class="player-slot" id="player-slot-1">
+                            <div class="empty-slot">
+                                <i class="fas fa-user-plus"></i>
+                                <p>Wartet...</p>
+                            </div>
+                        </div>
+                        <div class="player-slot" id="player-slot-2">
+                            <div class="empty-slot">
+                                <i class="fas fa-user-plus"></i>
+                                <p>Wartet...</p>
+                            </div>
+                        </div>
+                        <div class="player-slot" id="player-slot-3">
+                            <div class="empty-slot">
+                                <i class="fas fa-user-plus"></i>
+                                <p>Wartet...</p>
+                            </div>
+                        </div>
+                        <div class="player-slot" id="player-slot-4">
+                            <div class="empty-slot">
+                                <i class="fas fa-user-plus"></i>
+                                <p>Wartet...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn danger" id="leave-lobby-btn">
+                        <i class="fas fa-door-open"></i> Verlassen
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen" style="display: none;">
+            <div class="game-board">
+                <!-- Top Player -->
+                <div class="player-area top">
+                    <div class="player-info">
+                        <img class="player-avatar" id="top-player-avatar" src="">
+                        <span class="player-name" id="top-player-name">-</span>
+                        <span class="player-score" id="top-player-score">0</span>
+                    </div>
+                    <div class="player-cards" id="top-player-cards"></div>
+                </div>
+
+                <!-- Left Player -->
+                <div class="player-area left">
+                    <div class="player-info">
+                        <img class="player-avatar" id="left-player-avatar" src="">
+                        <span class="player-name" id="left-player-name">-</span>
+                        <span class="player-score" id="left-player-score">0</span>
+                    </div>
+                    <div class="player-cards" id="left-player-cards"></div>
+                </div>
+
+                <!-- Game Table -->
+                <div class="game-table">
+                    <div class="table-center">
+                        <div class="played-cards" id="played-cards">
+                            <div class="played-card-slot" id="played-top"></div>
+                            <div class="played-card-slot" id="played-right"></div>
+                            <div class="played-card-slot" id="played-bottom"></div>
+                            <div class="played-card-slot" id="played-left"></div>
+                        </div>
+                        <div class="trump-display" id="trump-display">
+                            <p>Trumpf: <span id="trump-suit">-</span></p>
+                        </div>
+                        <div class="round-info">
+                            <p>Runde: <span id="round-number">1</span>/9</p>
+                            <p>Stich: <span id="trick-number">1</span>/9</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Player -->
+                <div class="player-area right">
+                    <div class="player-info">
+                        <img class="player-avatar" id="right-player-avatar" src="">
+                        <span class="player-name" id="right-player-name">-</span>
+                        <span class="player-score" id="right-player-score">0</span>
+                    </div>
+                    <div class="player-cards" id="right-player-cards"></div>
+                </div>
+
+                <!-- Bottom Player (Current Player) -->
+                <div class="player-area bottom">
+                    <div class="player-info">
+                        <img class="player-avatar" id="bottom-player-avatar" src="">
+                        <span class="player-name" id="bottom-player-name">Du</span>
+                        <span class="player-score" id="bottom-player-score">0</span>
+                    </div>
+                    <div class="player-cards" id="bottom-player-cards"></div>
+                </div>
+
+                <!-- Game Controls -->
+                <div class="game-controls">
+                    <div class="team-scores">
+                        <div class="team-score">
+                            <p>Team 1: <span id="team1-score">0</span></p>
+                        </div>
+                        <div class="team-score">
+                            <p>Team 2: <span id="team2-score">0</span></p>
+                        </div>
+                    </div>
+                    <button class="btn danger small" id="leave-game-btn">
+                        <i class="fas fa-door-open"></i> Spiel verlassen
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trump Selection Modal -->
+        <div class="modal" id="trump-modal">
+            <div class="modal-content">
+                <h2>Trumpf wählen</h2>
+                <div class="trump-options">
+                    <button class="trump-btn" data-trump="hearts">
+                        <i class="fas fa-heart" style="color: red;"></i> Herz
+                    </button>
+                    <button class="trump-btn" data-trump="diamonds">
+                        <i class="fas fa-diamond" style="color: red;"></i> Karo
+                    </button>
+                    <button class="trump-btn" data-trump="clubs">
+                        <i class="fas fa-club" style="color: black;"></i> Kreuz
+                    </button>
+                    <button class="trump-btn" data-trump="spades">
+                        <i class="fas fa-spade" style="color: black;"></i> Pik
+                    </button>
+                    <button class="trump-btn" data-trump="oben">
+                        <i class="fas fa-arrow-up"></i> Oben
+                    </button>
+                    <button class="trump-btn" data-trump="unten">
+                        <i class="fas fa-arrow-down"></i> Unten
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Modal -->
+        <div class="modal" id="game-over-modal">
+            <div class="modal-content">
+                <h2>Spiel beendet!</h2>
+                <div class="final-scores">
+                    <div class="winning-team" id="winning-team">
+                        <i class="fas fa-trophy"></i>
+                        <h3>Gewinner: <span id="winner-names"></span></h3>
+                        <p class="final-score"><span id="winner-score"></span> Punkte</p>
+                    </div>
+                    <div class="losing-team">
+                        <h4>Verlierer: <span id="loser-names"></span></h4>
+                        <p class="final-score"><span id="loser-score"></span> Punkte</p>
+                    </div>
+                </div>
+                <button class="btn primary" id="back-to-lobby-btn">
+                    <i class="fas fa-home"></i> Zur Lobby
+                </button>
+            </div>
+        </div>
+
+        <!-- Error/Info Messages -->
+        <div class="toast-container" id="toast-container"></div>
+    </div>
+
+    <script src="assets/js/jass-game.js"></script>
+</body>
+</html>
