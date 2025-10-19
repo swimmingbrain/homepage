@@ -293,14 +293,14 @@
             background: var(--window-bg);
         }
 
-        /* Resume Window */
+        /* Resume Window (top-most among app windows) */
         #resume-window {
             top: 100px;
             left: 160px;
             width: 720px;
             height: 560px;
             display: none;
-            z-index: 9999; /* ensure PDF window sits above other app windows */
+            z-index: 14000; /* ensure PDF window sits above other app windows */
         }
         #resume-frame {
             width: 100%;
@@ -317,17 +317,23 @@
             height: 520px;
         }
         
-        /* Legal Windows */
+        /* Legal Windows (always on top layer over app windows) */
         #cookies-window, #privacy-window, #terms-window, #cookie-policy-window, #coming-soon-bubblupo {
             top: 90px;
             left: 140px;
             width: 640px;
             height: 500px;
             display: none;
+            z-index: 15000;
         }
 
         #cookies-window {
             height: 200px
+        }
+        
+        /* Coming soon window: lower height */
+        #coming-soon-bubblupo {
+            height: 300px;
         }
         
         .about-container {
@@ -946,7 +952,7 @@ Powered off.
                     <div class="window-button window-close" onclick="closeWindow('cookies-window')">×</div>
                 </div>
             </div>
-            <div class="window-content">
+            <div class="window-content" style="padding:20px">
                 <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
                     <p style="color: var(--text-primary);">We use cookies on this site to enhance your experience, provide services and products, and display content from third parties.</p>
                     <div style="margin-top: 12px;">
@@ -969,7 +975,7 @@ Powered off.
                     <div class="window-button window-close" onclick="closeWindow('cookie-policy-window')">×</div>
                 </div>
             </div>
-            <div class="window-content">
+            <div class="window-content" style="padding:20px">
                 <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
                     <h3 style="color: var(--text-primary); margin-bottom: 10px;">1. Overview</h3>
                     <p>We use cookies and similar technologies to provide and secure our website, understand usage, and improve features. You can control cookies through your browser settings.</p>
@@ -1000,7 +1006,7 @@ Powered off.
                     <div class="window-button window-close" onclick="closeWindow('privacy-window')">×</div>
                 </div>
             </div>
-            <div class="window-content">
+            <div class="window-content" style="padding:20px">
                 <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
                     <h3 style="color: var(--text-primary); margin-bottom: 10px;">1. Introduction</h3>
                     <p>We respect your privacy. This site is a personal portfolio and does not sell or rent personal data.</p>
@@ -1038,7 +1044,7 @@ Powered off.
                     <div class="window-button window-close" onclick="closeWindow('terms-window')">×</div>
                 </div>
             </div>
-            <div class="window-content">
+            <div class="window-content" style="padding:20px">
                 <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
                     <h3 style="color: var(--text-primary); margin-bottom: 10px;">1. Acceptance</h3>
                     <p>By accessing this site, you agree to these Terms. If you do not agree, please do not use the site.</p>
@@ -1068,7 +1074,7 @@ Powered off.
                     <div class="window-button window-close" onclick="closeWindow('coming-soon-bubblupo')">×</div>
                 </div>
             </div>
-            <div class="window-content">
+            <div class="window-content" style="padding:20px">
                 <div style="font-family: 'Ubuntu Mono', monospace; color: var(--text-secondary);">
                     <div style="color: var(--ubuntu-orange); font-size: 12px; margin-bottom: 12px;">$ status bubblupo</div>
                     <div style="background: rgba(0,0,0,0.2); border: 1px solid #444; padding: 14px;">
