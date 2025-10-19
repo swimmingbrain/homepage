@@ -3,145 +3,1851 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Braian's personal website - Embedded Systems Engineer and Developer">
-    <meta name="keywords" content="embedded systems, firmware, hardware design, development tools">
-    <meta name="author" content="Braian">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://sdk.scdn.co https://api.spotify.com; script-src 'self' https://sdk.scdn.co 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.spotify.com https://accounts.spotify.com;">
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
-    <title>Braian</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="preload" href="assets/css/style.css" as="style">
-    <link rel="preload" href="assets/js/main.js" as="script">
-</head>
-<body>
-    <div class="ocean-bg">
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
-    </div>
-
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-
-    <div class="floating-cat">🐱</div>
-    <div class="floating-cat">😸</div>
-    <div class="floating-cat">🐾</div>
-    <div class="cat-follower">🐱</div>
-
-    <div class="container">
-        <header class="header">
-            <div class="brain-jar">
-                <div class="jar">
-                    <div class="water-fill"></div>
-                    <div class="water-surface"></div>
-                    <div class="brain">🧠</div>
-                    <div class="water-ripple"></div>
-                </div>
-            </div>
-            <div class="welcome-text">
-                <h1>hi, i'm <span class="highlight">braian</span></h1>
-                <span class="domain">swimmingbrain.dev</span>
-                <div class="job-title">they call me "the brain"</div>
-            </div>
-            <div class="divider"></div>
-        </header>
-
-        <nav class="main-nav">
-            <a href="index.html" class="nav-link active">Home</a>
-            <a href="spotify.html" class="nav-link">Music</a>
-            <a href="github.html" class="nav-link">GitHub</a>
-            <a href="wogsi-game.html" class="nav-link">WoGsi?</a>
-        </nav>
-
-        <div class="hub-grid">
-            <div class="hub-card coming-soon" onclick="showComingSoon()">
-                <div class="hub-icon">🔧</div>
-                <h3>Firmware Development</h3>
-                <p>Low-level programming, bootloaders, and hardware optimization</p>
-            </div>
-
-            <div class="hub-card coming-soon" onclick="showComingSoon()">
-                <div class="hub-icon">🛠️</div>
-                <h3>Development Tools</h3>
-                <p>Custom utilities, debugging tools, and automation scripts</p>
-            </div>
-
-            <div class="hub-card coming-soon" onclick="showComingSoon()">
-                <div class="hub-icon">📝</div>
-                <h3>Technical Writing</h3>
-                <p>In-depth articles on embedded systems and engineering insights</p>
-            </div>
-
-            <div class="hub-card coming-soon" onclick="showComingSoon()">
-                <div class="hub-icon">💬</div>
-                <h3>Let's Connect</h3>
-                <p>Discuss projects, collaborations, and embedded solutions</p>
-            </div>
-
-            <div class="hub-card coming-soon" onclick="showComingSoon()">
-                <div class="hub-icon">🔬</div>
-                <h3>Research & Innovation</h3>
-                <p>Experimental projects and cutting-edge technology research</p>
-            </div>
-
-            <a href="spotify.html" class="hub-card">
-                <div class="hub-icon">🎵</div>
-                <h3>Music Vibes</h3>
-                <p>Check out my favorite playlists and tracks (requires Spotify Premium!)</p>
-            </a>
-
-            <a href="github.html" class="hub-card">
-                <div class="hub-icon">💻</div>
-                <h3>GitHub Profile</h3>
-                <p>Explore my projects, contributions, and coding journey</p>
-            </a>
-
-            <a href="wogsi-game.html" class="hub-card">
-                <div class="hub-icon">🗺️</div>
-                <h3>WoGsi?</h3>
-                <p>Where am I? Test your knowledge of Vorarlberg's beautiful locations!</p>
-            </a>
-        </div>
-
-        <!-- Coming Soon Modal -->
-        <div class="modal" id="coming-soon-modal">
-            <div class="modal-content">
-                <h2>Coming Soon! 🚀</h2>
-                <p>This feature is currently under development. Check back later!</p>
-                <button class="close-modal-btn" onclick="hideComingSoon()">
-                    <i class="fas fa-times"></i> Close
-                </button>
-            </div>
-        </div>
-
-        <footer class="footer">
-            <p>© 2025 SwimmingBrain.dev - Where ideas float and code flows 🌊</p>
-        </footer>
-    </div>
-
-    <script src="assets/js/main.js"></script>
-    <script>
-        function showComingSoon() {
-            document.getElementById('coming-soon-modal').classList.add('show');
+    <title>braian@swimmingbrain:~</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --ubuntu-orange: #dd4814;
+            --ubuntu-dark: #2c001e;
+            --panel-bg: #2c2c2c;
+            --window-bg: #3c3c3c;
+            --window-header: #404040;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --border: #1a1a1a;
+            --hover: #505050;
+            --terminal-green: #4cff00;
+            --terminal-bg: #300a24;
+            --linkedin-blue: #0077b5;
+        }
+        
+        body {
+            font-family: 'Ubuntu', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            background: #2c001e;
+            color: var(--text-primary);
+            position: relative;
+            user-select: none;
+        }
+        
+        .wallpaper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/bg.jpg');
+            background-position: left top;
+            background-size: cover;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+        
+        .desktop {
+            width: 100%;
+            height: calc(100vh);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Top Panel */
+        .panel-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 28px;
+            background: var(--panel-bg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            z-index: 10000;
+            font-size: 13px;
+        }
+        
+        .panel-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .panel-logo {
+            width: 20px;
+            height: 20px;
+            display: block;
+            object-fit: contain;
+        }
+        
+        .dock-logo {
+            width: 100%;
+            height: 100%;
+            padding: 5px;
+            display: block;
+            object-fit: contain;
+            margin: 0;
+        }
+        
+        .activities {
+            cursor: pointer;
+            padding: 0 8px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+        
+        .activities:hover {
+            background: var(--hover);
+        }
+        
+        /* Panel links (Cookies, Privacy, Terms) */
+        .panel-left span {
+            cursor: pointer;
+            padding: 0 8px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+        .panel-left span:hover {
+            background: var(--hover);
+        }
+        
+        .panel-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Ubuntu Mono', monospace;
+        }
+        
+        .panel-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Ubuntu Mono', monospace;
+        }
+        
+        .system-tray {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            padding: 0 5px;
+        }
+        
+        .tray-icon {
+            width: 16px;
+            height: 16px;
+            background: var(--text-secondary);
+            cursor: pointer;
+        }
+        
+        /* Dock */
+        .dock {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: calc(100vh - 28px);
+            top: 28px;
+            background: rgba(28, 28, 28, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+            gap: 10px;
+            z-index: 9998;
+        }
+        
+        .dock-item {
+            width: 48px;
+            height: 48px;
+            background: var(--window-header);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+            font-family: 'Ubuntu Mono', monospace;
+            font-size: 20px;
+            color: var(--ubuntu-orange);
+        }
+        
+        .dock-item:hover {
+            background: var(--hover);
+            transform: scale(1.1);
+        }
+        
+        .dock-item.active::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: var(--ubuntu-orange);
+        }
+        
+        .dock-tooltip {
+            position: absolute;
+            left: 60px;
+            background: var(--panel-bg);
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            font-size: 12px;
+            white-space: nowrap;
+            display: none;
+            pointer-events: none;
+        }
+        
+        .dock-item:hover .dock-tooltip {
+            display: block;
+        }
+        
+        /* Windows */
+        .window {
+            position: absolute;
+            background: var(--window-bg);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            min-width: 300px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .window.active {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+        }
+        
+        .window.minimized {
+            display: none;
+        }
+        
+        .window-header {
+            height: 30px;
+            background: var(--window-header);
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            cursor: move;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .window-title {
+            flex: 1;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'Ubuntu', sans-serif;
+        }
+        
+        .window-buttons {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .window-button {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .window-minimize {
+            background: #949494;
+        }
+        
+        .window-maximize {
+            background: #949494;
+        }
+        
+        .window-close {
+            background: #f25056;
+        }
+        
+        .window-button:hover {
+            opacity: 0.8;
+        }
+        
+        .window-content {
+            flex: 1;
+            overflow: auto;
+            background: var(--window-bg);
         }
 
-        function hideComingSoon() {
-            document.getElementById('coming-soon-modal').classList.remove('show');
+        /* Resume Window */
+        #resume-window {
+            top: 100px;
+            left: 160px;
+            width: 720px;
+            height: 560px;
+            display: none;
+            z-index: 9999; /* ensure PDF window sits above other app windows */
+        }
+        #resume-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        
+        /* About Window */
+        #about-window {
+            top: 80px;
+            left: 100px;
+            width: 420px;
+            height: 520px;
+        }
+        
+        /* Legal Windows */
+        #cookies-window, #privacy-window, #terms-window, #cookie-policy-window, #coming-soon-bubblupo {
+            top: 90px;
+            left: 140px;
+            width: 640px;
+            height: 500px;
+            display: none;
         }
 
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('coming-soon-modal');
-            if (event.target === modal) {
-                hideComingSoon();
+        #cookies-window {
+            height: 200px
+        }
+        
+        .about-container {
+            color: var(--text-secondary);
+            font-family: 'Ubuntu Mono', monospace;
+            padding: 10px;
+        }
+        
+        .about-portrait {
+            display: block;
+            width: 180px;
+            height: auto;
+            margin: 0; /* left-aligned, no space above system-info */
+            filter: none;
+        }
+        
+        .system-info {
+            border: 1px solid #555;
+            padding: 15px;
+            margin: 0 0 15px 0; /* no top space so it sits over the portrait */
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .info-line {
+            display: flex;
+            margin: 8px 0;
+            font-size: 13px;
+        }
+        
+        .info-label {
+            color: var(--ubuntu-orange);
+            min-width: 120px;
+        }
+        
+        .info-value {
+            color: var(--text-primary);
+        }
+        
+        /* Projects Window */
+        #projects-window {
+            top: 80px;
+            left: 560px;
+            width: 500px;
+            height: 400px;
+        }
+        
+        .file-manager {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .file-toolbar {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: #353535;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .file-path {
+            flex: 1;
+            background: var(--terminal-bg);
+            border: 1px solid var(--border);
+            padding: 4px 8px;
+            color: var(--text-primary);
+            font-family: 'Ubuntu Mono', monospace;
+            font-size: 12px;
+        }
+        
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 15px;
+            padding: 15px;
+        }
+        
+        .file-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+        
+        .file-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--ubuntu-orange), #ff6b35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Ubuntu Mono', monospace;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .folder-icon {
+            background: #656565;
+            position: relative;
+        }
+        
+        .folder-icon::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: 0;
+            width: 20px;
+            height: 5px;
+            background: #757575;
+            border-radius: 2px 2px 0 0;
+        }
+        
+        .file-name {
+            font-size: 11px;
+            text-align: center;
+            word-break: break-word;
+        }
+        
+        /* Terminal Window */
+        #terminal-window {
+            bottom: 60px;
+            left: 100px;
+            width: 600px;
+            height: 400px;
+        }
+        
+        .terminal {
+            background: var(--terminal-bg);
+            color: var(--text-primary);
+            font-family: 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            padding: 10px;
+            height: 100%;
+            overflow-y: auto;
+            line-height: 1.4;
+        }
+        
+        #terminal-output {
+            white-space: pre-wrap;
+        }
+        
+        .terminal-input {
+            background: transparent;
+            color: var(--text-primary);
+            border: none;
+            outline: none;
+            font-family: 'Ubuntu Mono', monospace;
+            font-size: 13px;
+            width: 70%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .terminal-line {
+            margin: 2px 0;
+        }
+        
+        .terminal-prompt {
+            color: var(--terminal-green);
+        }
+        
+        .terminal-user {
+            color: var(--terminal-green);
+        }
+        
+        .terminal-host {
+            color: var(--text-primary);
+        }
+        
+        .terminal-path {
+            color: #729fcf;
+        }
+        
+        .terminal-command {
+            color: var(--text-primary);
+        }
+        
+        .terminal-output {
+            color: var(--text-secondary);
+            margin-left: 0;
+        }
+        
+        .terminal-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 14px;
+            background: var(--text-primary);
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+        
+        /* Powered-off overlay */
+        .powered-off-overlay {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            color: #0f0;
+            font-family: 'Ubuntu Mono', monospace;
+            z-index: 20000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .powered-off-overlay .message {
+            max-width: 800px;
+            line-height: 1.6;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        
+        /* LinkedIn Window */
+        #linkedin-window {
+            top: 80px;
+            left: calc(560px + 500px + 20px); /* next to projects window */
+            width: 520px;
+            height: 600px;
+        }
+        
+        .linkedin-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 100%;
+        }
+        
+        .linkedin-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid #444;
+        }
+        
+        .linkedin-profile-img {
+            width: 60px;
+            height: 60px;
+            background: var(--linkedin-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        
+        .linkedin-profile-info {
+            flex: 1;
+        }
+        
+        .linkedin-name {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        
+        .linkedin-title {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .linkedin-connect-btn {
+            background: var(--linkedin-blue);
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+        
+        .linkedin-connect-btn:hover {
+            background: #005885;
+        }
+        
+        .linkedin-tabs {
+            display: flex;
+            gap: 20px;
+            padding: 0 15px;
+            border-bottom: 1px solid #444;
+        }
+        
+        .linkedin-tab {
+            padding: 10px 0;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .linkedin-tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--ubuntu-orange);
+        }
+        
+        .linkedin-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .feed-post {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid #444;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .feed-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .feed-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--linkedin-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+        }
+        
+        .feed-meta {
+            flex: 1;
+        }
+        
+        .feed-author {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .feed-time {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'Ubuntu Mono', monospace;
+        }
+        
+        .feed-content {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+        
+        .feed-actions {
+            display: flex;
+            gap: 20px;
+            padding-top: 8px;
+            border-top: 1px solid #333;
+        }
+        
+        .feed-action {
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .feed-action:hover {
+            color: var(--ubuntu-orange);
+        }
+        
+        .skills-grid {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .skill-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid #444;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .skill-name {
+            font-size: 13px;
+        }
+        
+        .skill-endorsements {
+            background: var(--ubuntu-orange);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 2px;
+            font-size: 11px;
+        }
+        
+        .experience-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid #444;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .experience-title {
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .experience-company {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+        
+        .experience-duration {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-family: 'Ubuntu Mono', monospace;
+            margin-bottom: 8px;
+        }
+        
+        .experience-description {
+            font-size: 12px;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dock {
+                width: 100%;
+                height: 48px;
+                flex-direction: row;
+                bottom: 0;
+                top: auto;
+                padding: 0 10px;
+                justify-content: center;
+            }
+            
+            .dock-item {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .dock-tooltip {
+                display: none !important;
+            }
+            
+            .window {
+                position: fixed !important;
+                top: 28px !important;
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 48px !important;
+                width: 100% !important;
+                height: auto !important;
+                max-width: 100% !important;
+            }
+            
+            .desktop {
+                height: calc(100vh - 28px - 48px);
             }
         }
+
+        /* Hide date/time on very small screens */
+        @media (max-width: 600px) {
+            .panel-center { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wallpaper"></div>
+    
+    <!-- Top Panel -->
+    <div class="panel-top">
+        <div class="panel-left">
+            <span class="activities" onclick="toggleWindow('cookie-policy-window')">Cookies</span>
+            <span onclick="toggleWindow('privacy-window')">Privacy</span>
+            <span onclick="toggleWindow('terms-window')">Terms</span>
+        </div>
+        <div class="panel-center">
+            <span id="panel-time"></span>
+        </div>
+        <div class="panel-right">
+            <div class="system-tray">
+                <div class="tray-icon" style="background: none; color: var(--text-secondary);">⚡</div>
+                <div class="tray-icon" style="background: none; color: var(--text-secondary);">🔊</div>
+                <div class="tray-icon" style="background: none; color: var(--text-secondary);">📶</div>
+            </div>
+            <span>braian</span>
+        </div>
+    </div>
+    
+    <!-- Desktop -->
+    <div class="desktop" id="desktop">
+        <div class="powered-off-overlay" id="powered-off">
+            <div class="message">System is powered off due to cookie rejection.
+
+Reason: Non-essential cookies are disabled. This site requires basic functionality cookies to render the desktop experience.
+
+What you can do:
+- Refresh the page to try again
+- Review our Cookies Policy from the top bar
+
+Powered off.
+            </div>
+        </div>
+        <!-- Dock -->
+        <div class="dock">
+            <div class="dock-item active" onclick="toggleWindow('terminal-window')">
+                &gt;_
+                <span class="dock-tooltip">Terminal</span>
+            </div>
+            <div class="dock-item" onclick="toggleWindow('about-window')">
+                👤
+                <span class="dock-tooltip">About</span>
+            </div>
+            <div class="dock-item" onclick="toggleWindow('projects-window')">
+                📁
+                <span class="dock-tooltip">Projects</span>
+            </div>
+            <div class="dock-item" onclick="toggleWindow('linkedin-window')">
+                in
+                <span class="dock-tooltip">LinkedIn</span>
+            </div>
+            <div style="flex: 1"></div>
+            <a href="https://github.com/swimmingbrain" target="_blank" rel="noopener noreferrer" class="dock-item" title="GitHub: swimmingbrain" style="cursor: pointer;">
+                <img src="assets/github.png" alt="swimmingbrain" class="dock-logo" />
+                <span class="dock-tooltip">GitHub</span>
+            </a>
+        </div>
+        
+        <!-- About Window -->
+        <div class="window" id="about-window">
+            <div class="window-header">
+                <span class="window-title">About - braian@swimmingbrain</span>
+                <div class="window-buttons">
+                    <div class="window-button window-minimize" onclick="minimizeWindow('about-window')">-</div>
+                    <div class="window-button window-close" onclick="closeWindow('about-window')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="about-container">
+                    <div style="display: flex; align-items: flex-end; gap: 10px;">
+                        <img src="assets/profile.png" alt="Profile" class="about-portrait" />
+                        <img src="assets/swimmingbrain-icon.png" alt="swimmingbrain" style="height:120px;" />
+                    </div>
+                    <div class="system-info">
+                        <div class="info-line">
+                            <span class="info-label">USER:</span>
+                            <span class="info-value">Braian Plaku</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">HOSTNAME:</span>
+                            <span class="info-value">swimmingbrain.dev</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">OCCUPATION:</span>
+                            <span class="info-value">Automation Engineer @ Blum</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">LOCATION:</span>
+                            <span class="info-value">Vorarlberg, AT (from Albania)</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">EDUCATION:</span>
+                            <span class="info-value">BSc Electrical Engineering | BSc Computer Science Digital Innovation (2026) | MSc Artificial Intelligence (2027)</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">SPECIALIZATION:</span>
+                            <span class="info-value">Software, Automation, AI</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">INTERESTS:</span>
+                            <span class="info-value">Cats, Coffee, Neural Networks</span>
+                        </div>
+                        <div class="info-line">
+                            <span class="info-label">KERNEL:</span>
+                            <span class="info-value">Human v1.0 (continuously learning)</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; color: var(--ubuntu-orange); font-size: 12px;">
+                        $ echo "Building the future, one commit at a time"
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Cookie Opt-in Window (shown on first load) -->
+        <div class="window" id="cookies-window">
+            <div class="window-header">
+                <span class="window-title">Cookies on swimmingbrain.dev</span>
+                <div class="window-buttons">
+                    <div class="window-button window-minimize" onclick="minimizeWindow('cookies-window')">_</div>
+                    <div class="window-button window-maximize">□</div>
+                    <div class="window-button window-close" onclick="closeWindow('cookies-window')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                    <p style="color: var(--text-primary);">We use cookies on this site to enhance your experience, provide services and products, and display content from third parties.</p>
+                    <div style="margin-top: 12px;">
+                        <a onclick="openLegal('cookie-policy-window')" style="color: #ffb27a; cursor: pointer;">Show cookie policy</a>
+                    </div>
+                    <div style="margin-top: 16px; display: flex; gap: 10px;">
+                        <button id="cookies-accept" style="background: linear-gradient(135deg, #2c2c2c, #3a3a3a); color: #fff; border: 1px solid #555; padding: 8px 14px; cursor: pointer; border-radius: 3px; box-shadow: inset 0 0 0 1px #000;">Accept</button>
+                        <button id="cookies-reject" style="background: linear-gradient(135deg, #420000, #650000); color: #fff; border: 1px solid #7a1f1f; padding: 8px 14px; cursor: pointer; border-radius: 3px; box-shadow: inset 0 0 0 1px #000;">Reject</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cookie Policy Window (full policy) -->
+        <div class="window" id="cookie-policy-window" style="display: none;">
+            <div class="window-header">
+                <span class="window-title">Cookie Policy - swimmingbrain.dev</span>
+                <div class="window-buttons">
+                    <div class="window-button window-minimize" onclick="minimizeWindow('cookie-policy-window')">_</div>
+                    <div class="window-button window-maximize">□</div>
+                    <div class="window-button window-close" onclick="closeWindow('cookie-policy-window')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 10px;">1. Overview</h3>
+                    <p>We use cookies and similar technologies to provide and secure our website, understand usage, and improve features. You can control cookies through your browser settings.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">2. Types of cookies we use</h3>
+                    <ul style="margin-left: 18px;">
+                        <li><strong>Strictly necessary</strong>: Required for core functionality (e.g., window state, preferences).</li>
+                        <li><strong>Performance</strong>: Anonymous analytics to understand site usage.</li>
+                        <li><strong>Functional</strong>: Remember choices to personalize your experience.</li>
+                        <li><strong>Third‑party</strong>: Embedded content (e.g., LinkedIn Elfsight widget) may set cookies.</li>
+                    </ul>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">3. Managing cookies</h3>
+                    <p>You can block or delete cookies in your browser. This site will function with strictly necessary cookies only if you opt out of others.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">4. Third‑party services</h3>
+                    <p>We embed third‑party content. For LinkedIn feeds provided via Elfsight, refer to their policies: <a href="https://elfsight.com/privacy-policy/" target="_blank" style="color: #ffb27a;">Elfsight Privacy Policy</a> and <a href="https://www.linkedin.com/legal/cookie-policy" target="_blank" style="color: #ffb27a;">LinkedIn Cookie Policy</a>.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">5. Contact</h3>
+                    <p>Questions? Contact: <a href="mailto:legal@swimmingbrain.dev" style="color: #ffb27a;">legal@swimmingbrain.dev</a>.</p>
+                    <p style="margin-top: 12px; font-size: 12px;">Effective date: 2025‑10‑19</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Privacy Window -->
+        <div class="window" id="privacy-window">
+            <div class="window-header">
+                <span class="window-title">Privacy Policy - swimmingbrain.dev</span>
+                <div class="window-buttons">
+                    <div class="window-button window-minimize" onclick="minimizeWindow('privacy-window')">_</div>
+                    <div class="window-button window-maximize">□</div>
+                    <div class="window-button window-close" onclick="closeWindow('privacy-window')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 10px;">1. Introduction</h3>
+                    <p>We respect your privacy. This site is a personal portfolio and does not sell or rent personal data.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">2. Data we process</h3>
+                    <ul style="margin-left: 18px;">
+                        <li><strong>Usage data</strong>: Non‑identifying analytics (pages viewed, device type) to improve the site.</li>
+                        <li><strong>Contact data</strong>: If you email us, we process your email to respond.</li>
+                        <li><strong>Embedded content</strong>: Third‑party widgets (e.g., LinkedIn via Elfsight) may collect data per their policies.</li>
+                    </ul>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">3. Legal bases</h3>
+                    <p>We process data based on legitimate interests (site functionality and security) and consent where required for non‑essential cookies.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">4. Data retention</h3>
+                    <p>We retain data only as long as needed for the purposes described or to comply with legal obligations.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">5. Your rights</h3>
+                    <p>Depending on your location, you may have rights to access, rectify, delete, or restrict processing of your data. Contact us to exercise these rights.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">6. Security</h3>
+                    <p>We use reasonable technical and organizational measures to protect data. No method is 100% secure.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">7. International transfers</h3>
+                    <p>Third‑party providers may process data in other countries; safeguards such as standard contractual clauses may apply.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">8. Updates</h3>
+                    <p>We may update this policy from time to time. Material changes will be noted here.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">9. Contact</h3>
+                    <p>Email: <a href="mailto:privacy@swimmingbrain.dev" style="color: #ffb27a;">privacy@swimmingbrain.dev</a>.</p>
+                    <p style="margin-top: 12px; font-size: 12px;">Effective date: 2025‑10‑19</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms of Service Window -->
+        <div class="window" id="terms-window">
+            <div class="window-header">
+                <span class="window-title">Terms of Service - swimmingbrain.dev</span>
+                <div class="window-buttons">
+                    <div class="window-button window-minimize" onclick="minimizeWindow('terms-window')">_</div>
+                    <div class="window-button window-maximize">□</div>
+                    <div class="window-button window-close" onclick="closeWindow('terms-window')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
+                    <h3 style="color: var(--text-primary); margin-bottom: 10px;">1. Acceptance</h3>
+                    <p>By accessing this site, you agree to these Terms. If you do not agree, please do not use the site.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">2. Use of content</h3>
+                    <p>Content is for informational and portfolio purposes. You may not misuse the site or infringe intellectual property rights.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">3. No warranties</h3>
+                    <p>The site is provided “as is” without warranties of any kind. We disclaim liability for errors or omissions.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">4. Limitation of liability</h3>
+                    <p>To the extent permitted by law, we are not liable for any damages arising from your use of the site.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">5. Third‑party links</h3>
+                    <p>Links to third‑party sites are provided for convenience. We are not responsible for their content or practices.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">6. Governing law</h3>
+                    <p>These Terms are governed by the laws of Austria, without regard to conflict of laws. Venue: Vorarlberg, AT.</p>
+                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">7. Contact</h3>
+                    <p>Email: <a href="mailto:legal@swimmingbrain.dev" style="color: #ffb27a;">legal@swimmingbrain.dev</a>.</p>
+                    <p style="margin-top: 12px; font-size: 12px;">Effective date: 2025‑10‑19</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon: Bubblupo -->
+        <div class="window" id="coming-soon-bubblupo" style="display: none;">
+            <div class="window-header">
+                <span class="window-title">Bubblupo - Coming Soon</span>
+                <div class="window-buttons">
+                    <div class="window-button window-minimize" onclick="minimizeWindow('coming-soon-bubblupo')">_</div>
+                    <div class="window-button window-maximize">□</div>
+                    <div class="window-button window-close" onclick="closeWindow('coming-soon-bubblupo')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div style="font-family: 'Ubuntu Mono', monospace; color: var(--text-secondary);">
+                    <div style="color: var(--ubuntu-orange); font-size: 12px; margin-bottom: 12px;">$ status bubblupo</div>
+                    <div style="background: rgba(0,0,0,0.2); border: 1px solid #444; padding: 14px;">
+                        <div style="font-size: 14px; color: var(--text-primary); margin-bottom: 8px;">This project will be available soon.</div>
+                        <div style="font-size: 13px;">
+                            We’re polishing features and preparing a public preview. Check back shortly, or follow updates on <a href="https://www.linkedin.com/in/braian-plaku" target="_blank" style="color: #ffb27a;">LinkedIn</a>.
+                        </div>
+                        <div style="margin-top: 12px; font-size: 12px; color: #aaa;">ETA: Q4 2025</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Projects Window -->
+        <div class="window" id="projects-window">
+            <div class="window-header">
+                <span class="window-title">~/Projects - File Manager</span>
+                <div class="window-buttons">
+                    <div class="window-button window-minimize" onclick="minimizeWindow('projects-window')">_</div>
+                    <div class="window-button window-maximize">□</div>
+                    <div class="window-button window-close" onclick="closeWindow('projects-window')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="file-manager">
+                    <div class="file-toolbar">
+                        <div class="file-path">/home/braian/projects</div>
+                    </div>
+                    <div class="file-grid">
+                        <a target="_blank" rel="noopener noreferrer" href="wogsi-game.html" class="file-item">
+                            <div class="file-icon folder-icon">🔗</div>
+                            <div class="file-name">Wo gsi?</div>
+                        </a>
+                        <a target="_blank" rel="noopener noreferrer" href="https://home.vimaya.app" class="file-item">
+                            <div class="file-icon folder-icon">🔗</div>
+                            <div class="file-name">VIMAYA</div>
+                        </a>
+                        <a href="#" class="file-item" onclick="toggleWindow('coming-soon-bubblupo')">
+                            <div class="file-icon folder-icon">🔗</div>
+                            <div class="file-name">Bubblupo</div>
+                        </a>
+                        <a target="_blank" rel="noopener noreferrer" href="https://github.com/swimmingbrain/chingumat-e" class="file-item">
+                            <div class="file-icon folder-icon">🔗</div>
+                            <div class="file-name">Chingumat-e</div>
+                        </a>
+                        <a target="_blank" rel="noopener noreferrer" href="https://github.com/swimmingbrain/decoding-diabetes" class="file-item">
+                            <div class="file-icon folder-icon">🔗</div>
+                            <div class="file-name">Decoding Diabetes</div>
+                        </a>
+                        <a target="_blank" rel="noopener noreferrer" href="https://klimatree.htl-projekt.com/" class="file-item">
+                            <div class="file-icon folder-icon">🔗</div>
+                            <div class="file-name">klimaTree</div>
+                        </a>
+                        <a href="#" class="file-item" onclick="toggleWindow('resume-window')">
+                            <div class="file-icon">CV</div>
+                            <div class="file-name">Resume.pdf</div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resume Window -->
+        <div class="window" id="resume-window">
+            <div class="window-header">
+                <span class="window-title">Resume - assets/resume.pdf</span>
+                <div class="window-buttons">
+                    <div class="window-button window-minimize" onclick="minimizeWindow('resume-window')">_</div>
+                    <div class="window-button window-maximize">□</div>
+                    <div class="window-button window-close" onclick="closeWindow('resume-window')">×</div>
+                </div>
+            </div>
+            <div class="window-content" style="padding: 0; overflow: hidden;">
+                <iframe id="resume-frame" src="assets/resume.pdf" title="Resume PDF"></iframe>
+            </div>
+        </div>
+        
+        <!-- Terminal Window -->
+        <div class="window active" id="terminal-window">
+            <div class="window-header">
+                <span class="window-title">Terminal - braian@swimmingbrain:~</span>
+                <div class="window-buttons">
+                    <div class="window-button window-minimize" onclick="minimizeWindow('terminal-window')">_</div>
+                    <div class="window-button window-maximize">□</div>
+                    <div class="window-button window-close" onclick="closeWindow('terminal-window')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <div class="terminal" id="terminal">
+                    <div id="terminal-output"></div>
+                    <div class="terminal-line" id="terminal-input-line">
+                        <span class="terminal-user">braian@swimmingbrain</span>:<span class="terminal-path">~</span>$ 
+                        <input id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" />
+                    </div>
+                    </div>
+            </div>
+        </div>
+        
+        <!-- LinkedIn Window -->
+        <div class="window" id="linkedin-window">
+            <div class="window-header">
+                <span class="window-title">LinkedIn - braian-plaku</span>
+                <div class="window-buttons">
+                    <div class="window-button window-minimize" onclick="minimizeWindow('linkedin-window')">_</div>
+                    <div class="window-button window-maximize">□</div>
+                    <div class="window-button window-close" onclick="closeWindow('linkedin-window')">×</div>
+                </div>
+            </div>
+            <div class="window-content">
+                <!-- Elfsight LinkedIn Feed | Untitled LinkedIn Feed -->
+                <script src="https://elfsightcdn.com/platform.js" async></script>
+                <div class="elfsight-app-bf7bde62-d1ed-4505-897a-68a34c844df5" data-elfsight-app-lazy></div>
+                            </div>
+                        </div>
+                        </div>
+    
+    <script>
+        // Remove unused LinkedIn data/functions (replaced by Elfsight)
+        /* const linkedInData = {
+            posts: [
+                {
+                    id: 1,
+                    author: "Braian Plaku",
+                    avatar: "BP",
+                    time: "2024-10-17 09:30:00",
+                    content: "Excited to share: Successfully implemented a neural network-based predictive maintenance system at our facility. 30% reduction in downtime! The intersection of AI and industrial automation is where magic happens. #Industry40 #AI #PredictiveMaintenance",
+                    likes: 142,
+                    comments: 18,
+                    shares: 5
+                },
+                {
+                    id: 2,
+                    author: "Braian Plaku",
+                    avatar: "BP",
+                    time: "2024-10-10 14:15:00",
+                    content: "Started my MSc in AI at JKU Linz! Looking forward to diving deeper into reinforcement learning and computer vision. Always be learning! 🎓 #MachineLearning #Education #AI",
+                    likes: 89,
+                    comments: 12,
+                    shares: 2
+                },
+                {
+                    id: 3,
+                    author: "Braian Plaku",
+                    avatar: "BP",
+                    time: "2024-10-05 11:00:00",
+                    content: "Industry 4.0 isn't just a buzzword - it's transforming how we approach manufacturing. Here's my take on bridging traditional PLC systems with modern AI pipelines... [Article Link] #Automation #Manufacturing #Innovation",
+                    likes: 67,
+                    comments: 9,
+                    shares: 3
+                },
+                {
+                    id: 4,
+                    author: "Braian Plaku",
+                    avatar: "BP",
+                    time: "2024-09-28 16:45:00",
+                    content: "Just completed a fascinating project: Real-time quality control using computer vision and TensorFlow. Detecting defects with 99.2% accuracy! Open source implementation coming soon. #ComputerVision #QualityControl #OpenSource",
+                    likes: 203,
+                    comments: 31,
+                    shares: 12
+                },
+                {
+                    id: 5,
+                    author: "Braian Plaku",
+                    avatar: "BP",
+                    time: "2024-09-20 10:30:00",
+                    content: "Coffee ☕ + Cat 🐱 + Code 💻 = Perfect debugging session. Who else has a feline debugging assistant? #CodingLife #Debugging #CatsOfLinkedIn",
+                    likes: 156,
+                    comments: 24,
+                    shares: 1
+                }
+            ],
+            experience: [
+                {
+                    title: "Automation Engineer",
+                    company: "Blum",
+                    duration: "2022 - Present",
+                    description: "Leading automation initiatives and implementing AI-driven solutions for manufacturing optimization. Developed predictive maintenance systems reducing downtime by 30%."
+                },
+                {
+                    title: "Software Developer (Part-time)",
+                    company: "Freelance",
+                    duration: "2020 - Present",
+                    description: "Developing mobile applications and web solutions for various clients. Specializing in React Native, Flutter, and full-stack development."
+                },
+                {
+                    title: "Research Assistant",
+                    company: "University of Applied Sciences",
+                    duration: "2021 - 2022",
+                    description: "Worked on IoT and embedded systems projects, focusing on sensor networks and data acquisition systems."
+                },
+                {
+                    title: "Electrical Engineering Intern",
+                    company: "Local Engineering Firm",
+                    duration: "2019 - 2020",
+                    description: "Assisted in designing electrical systems and gained hands-on experience with industrial automation equipment."
+                }
+            ],
+            skills: [
+                { name: "Python", endorsements: 47 },
+                { name: "Machine Learning", endorsements: 35 },
+                { name: "Industrial Automation", endorsements: 42 },
+                { name: "PLC Programming", endorsements: 38 },
+                { name: "Computer Vision", endorsements: 29 },
+                { name: "TensorFlow", endorsements: 26 },
+                { name: "React Native", endorsements: 22 },
+                { name: "Robotics (ROS)", endorsements: 19 },
+                { name: "IoT Development", endorsements: 24 },
+                { name: "Data Analysis", endorsements: 31 },
+                { name: "C++", endorsements: 18 },
+                { name: "JavaScript", endorsements: 27 },
+                { name: "Docker", endorsements: 15 },
+                { name: "Git", endorsements: 33 },
+                { name: "MATLAB", endorsements: 21 }
+            ]
+        }; */
+
+        // LinkedIn Functions
+        /* function renderLinkedInPosts() {
+            const postsContainer = document.getElementById('linkedin-posts');
+            postsContainer.innerHTML = linkedInData.posts.map(post => `
+                    <div class="feed-post">
+                        <div class="feed-header">
+                        <div class="feed-avatar">${post.avatar}</div>
+                            <div class="feed-meta">
+                            <div class="feed-author">${post.author}</div>
+                            <div class="feed-time">${post.time}</div>
+                            </div>
+                        </div>
+                    <div class="feed-content">${post.content}</div>
+                    <div class="feed-actions">
+                        <div class="feed-action" onclick="likePost(${post.id})">
+                            <span>👍</span>
+                            <span id="likes-${post.id}">${post.likes}</span>
+                        </div>
+                        <div class="feed-action">
+                            <span>💬</span>
+                            <span>${post.comments}</span>
+                    </div>
+                        <div class="feed-action">
+                            <span>↗️</span>
+                            <span>${post.shares}</span>
+                            </div>
+                        </div>
+                        </div>
+            `).join('');
+        } */
+
+        /* function renderLinkedInExperience() {
+            const expContainer = document.getElementById('linkedin-experience');
+            expContainer.innerHTML = linkedInData.experience.map(exp => `
+                <div class="experience-item">
+                    <div class="experience-title">${exp.title}</div>
+                    <div class="experience-company">${exp.company}</div>
+                    <div class="experience-duration">${exp.duration}</div>
+                    <div class="experience-description">${exp.description}</div>
+                    </div>
+            `).join('');
+        } */
+
+        /* function renderLinkedInSkills() {
+            const skillsContainer = document.getElementById('linkedin-skills');
+            skillsContainer.innerHTML = '<div class="skills-grid">' + 
+                linkedInData.skills.map(skill => `
+                    <div class="skill-item">
+                        <span class="skill-name">${skill.name}</span>
+                        <span class="skill-endorsements">${skill.endorsements}</span>
+                </div>
+                `).join('') + '</div>';
+        } */
+
+        /* function switchLinkedInTab(tab, element) {
+            // Update active tab
+            document.querySelectorAll('.linkedin-tab').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            
+            // Hide all content
+            document.getElementById('linkedin-posts').style.display = 'none';
+            document.getElementById('linkedin-experience').style.display = 'none';
+            document.getElementById('linkedin-skills').style.display = 'none';
+            
+            // Show selected content
+            document.getElementById(`linkedin-${tab}`).style.display = 'block';
+        } */
+
+        /* function likePost(postId) {
+            const post = linkedInData.posts.find(p => p.id === postId);
+            if (post) {
+                post.likes++;
+                document.getElementById(`likes-${postId}`).textContent = post.likes;
+            }
+        } */
+
+        // Elfsight handles LinkedIn feed rendering
+
+        // Window Management
+        let activeWindow = null;
+        let isDragging = false;
+        let dragStartMouseX = 0;
+        let dragStartMouseY = 0;
+        let dragStartLeft = 0;
+        let dragStartTop = 0;
+        
+        // Initialize all windows for dragging
+        document.querySelectorAll('.window').forEach(winEl => {
+            const header = winEl.querySelector('.window-header');
+            header.addEventListener('mousedown', dragStart);
+            header.addEventListener('touchstart', dragStart);
+        });
+        
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+        document.addEventListener('mouseup', dragEnd);
+        document.addEventListener('touchend', dragEnd);
+        
+        function dragStart(e) {
+            const winEl = e.target.closest('.window');
+            // Bring window to front
+            document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+            winEl.classList.add('active');
+            activeWindow = winEl;
+
+            // Ensure the window has explicit left/top set relative to its parent
+            const parentRect = winEl.parentElement.getBoundingClientRect();
+            const rect = winEl.getBoundingClientRect();
+            if (!winEl.style.left || !winEl.style.top) {
+                winEl.style.left = `${rect.left - parentRect.left}px`;
+                winEl.style.top = `${rect.top - parentRect.top}px`;
+            }
+            // Clear conflicting edges and transforms so layout uses left/top only
+            winEl.style.right = 'auto';
+            winEl.style.bottom = 'auto';
+            // Clear any transform so movement is based purely on left/top
+            winEl.style.transform = 'none';
+
+            const point = e.type === 'touchstart' ? e.touches[0] : e;
+            dragStartMouseX = point.clientX;
+            dragStartMouseY = point.clientY;
+            dragStartLeft = parseFloat(winEl.style.left) || 0;
+            dragStartTop = parseFloat(winEl.style.top) || 0;
+            
+            if (e.target.closest('.window-header') && !e.target.classList.contains('window-button')) {
+                isDragging = true;
+            }
+        }
+        
+        function drag(e) {
+            if (!isDragging || !activeWindow) return;
+                e.preventDefault();
+            const point = e.type === 'touchmove' ? e.touches[0] : e;
+            const deltaX = point.clientX - dragStartMouseX;
+            const deltaY = point.clientY - dragStartMouseY;
+            const newLeft = dragStartLeft + deltaX;
+            const newTop = dragStartTop + deltaY;
+            activeWindow.style.left = `${newLeft}px`;
+            activeWindow.style.top = `${newTop}px`;
+        }
+        
+        function dragEnd(e) {
+            isDragging = false;
+            activeWindow = null;
+        }
+        
+        // Window controls
+        function minimizeWindow(windowId) {
+            document.getElementById(windowId).classList.add('minimized');
+        }
+        
+        function closeWindow(windowId) {
+            document.getElementById(windowId).style.display = 'none';
+        }
+        
+        function toggleWindow(windowId) {
+            const winEl = document.getElementById(windowId);
+            if (!winEl) return;
+            const isHidden = winEl.style.display === 'none' || getComputedStyle(winEl).display === 'none' || winEl.classList.contains('minimized');
+            if (isHidden) {
+                winEl.classList.remove('minimized');
+                winEl.style.display = 'flex';
+                // Bring to front
+                document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+                winEl.classList.add('active');
+            } else {
+                // Hide if already visible
+                winEl.style.display = 'none';
+            }
+        }
+        
+        // Legal open helper: make sure hidden windows become visible, focused, and positioned on-screen
+        function openLegal(id) {
+            const winEl = document.getElementById(id);
+            if (!winEl) return;
+            winEl.style.display = 'flex';
+            winEl.classList.remove('minimized');
+            document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+            winEl.classList.add('active');
+            // Center within viewport with safe margins
+            const rect = winEl.getBoundingClientRect();
+            const targetLeft = Math.max(20, (window.innerWidth - rect.width) / 2);
+            const targetTop = Math.max(40, (window.innerHeight - rect.height) / 2);
+            winEl.style.left = `${targetLeft}px`;
+            winEl.style.top = `${targetTop}px`;
+        }
+        
+        // Click on window to activate
+        document.querySelectorAll('.window').forEach(winEl => {
+            winEl.addEventListener('mousedown', function(e) {
+                if (!e.target.closest('.window-header')) {
+                    document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+                    this.classList.add('active');
+                }
+            });
+        });
+
+        // Ensure resume window positions sensibly on load
+        (function placeResume() {
+            const resume = document.getElementById('resume-window');
+            if (!resume) return;
+            // Default position if not already set by user drag
+            if (!resume.style.left) resume.style.left = '160px';
+            if (!resume.style.top) resume.style.top = '100px';
+        })();
+        
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('panel-time').textContent = timeString;
+        }
+        
+        updateTime();
+        setInterval(updateTime, 1000);
+        
+        // Cookie Consent Flow
+        const COOKIE_KEY = 'sb_cookies_consent'; // values: 'accepted' | 'rejected' | null
+        const initialWindows = ['about-window', 'projects-window', 'terminal-window', 'linkedin-window'];
+        const cookiesWindow = document.getElementById('cookies-window');
+        const poweredOff = document.getElementById('powered-off');
+        const btnAccept = document.getElementById('cookies-accept');
+        const btnReject = document.getElementById('cookies-reject');
+        const btnManage = null; // removed manage in simplified consent
+
+        function hideAllAppWindows() {
+            initialWindows.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            });
+        }
+
+        function showDefaultAppWindows() {
+            const isMobile = window.innerWidth <= 768;
+            const isTablet = window.innerWidth > 768 && window.innerWidth <= 1024;
+            const isDesktop = window.innerWidth > 1024;
+
+            const about = document.getElementById('about-window');
+            const projects = document.getElementById('projects-window');
+            const terminal = document.getElementById('terminal-window');
+            const linkedin = document.getElementById('linkedin-window');
+
+            if (about) about.style.display = 'flex';
+            if (projects) projects.style.display = 'flex';
+            // Only show Terminal on larger desktops
+            if (terminal) terminal.style.display = window.innerWidth >= 1280 ? 'flex' : 'none';
+            // Only show LinkedIn on larger desktops
+            if (linkedin) linkedin.style.display = window.innerWidth >= 1280 ? 'flex' : 'none';
+
+            // Bring one window to front (prefer terminal on desktop, otherwise about)
+            document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+            const toFocus = (window.innerWidth >= 1280 && terminal && terminal.style.display !== 'none') ? terminal : about;
+            if (toFocus) toFocus.classList.add('active');
+
+            placeWindowsForViewport();
+        }
+
+        function placeWindowsForViewport() {
+            const gap = 20;
+            const about = document.getElementById('about-window');
+            const projects = document.getElementById('projects-window');
+            const terminal = document.getElementById('terminal-window');
+            const linkedin = document.getElementById('linkedin-window');
+
+            const getSize = (el, fallbackW, fallbackH) => {
+                if (!el) return { w: fallbackW, h: fallbackH };
+                const rect = el.getBoundingClientRect();
+                let w = rect.width || parseInt(getComputedStyle(el).width) || fallbackW;
+                let h = rect.height || parseInt(getComputedStyle(el).height) || fallbackH;
+                return { w, h };
+            };
+            const setPos = (el, left, top) => {
+                if (!el) return;
+                el.style.left = `${Math.max(10, left)}px`;
+                el.style.top = `${Math.max(60, top)}px`;
+            };
+
+            // Base positions
+            let aboutLeft = 100;
+            let aboutTop = 80;
+            setPos(about, aboutLeft, aboutTop);
+            const aboutSize = getSize(about, 420, 520);
+
+            // Projects: try to the right of About, else below
+            const projectsSize = getSize(projects, 500, 400);
+            const canProjectsRight = (aboutLeft + aboutSize.w + gap + projectsSize.w + 20) <= window.innerWidth;
+            let projectsLeft = canProjectsRight ? (aboutLeft + aboutSize.w + gap) : aboutLeft;
+            let projectsTop = canProjectsRight ? aboutTop : (aboutTop + aboutSize.h + gap);
+            setPos(projects, projectsLeft, projectsTop);
+
+            // Terminal: if visible, place below About (aligned left)
+            if (terminal && getComputedStyle(terminal).display !== 'none') {
+                const belowY = Math.max(aboutTop + aboutSize.h, projectsTop + projectsSize.h) + gap;
+                setPos(terminal, aboutLeft, belowY);
+            }
+
+            // LinkedIn: if visible, prefer to the right of Projects, else below Projects
+            if (linkedin && getComputedStyle(linkedin).display !== 'none') {
+                const linkedinSize = getSize(linkedin, 520, 600);
+                const canLinkedinRight = (projectsLeft + projectsSize.w + gap + linkedinSize.w + 20) <= window.innerWidth;
+                const lnLeft = canLinkedinRight ? (projectsLeft + projectsSize.w + gap) : projectsLeft;
+                const lnTop = canLinkedinRight ? projectsTop : (projectsTop + projectsSize.h + gap);
+                setPos(linkedin, lnLeft, lnTop);
+            }
+            clampWindowsToViewport();
+        }
+
+        function clampWindowsToViewport() {
+            const minTop = 40; // keep headers in view below top panel
+            const minLeft = 10;
+            const margin = 10;
+            document.querySelectorAll('.window').forEach(winEl => {
+                if (getComputedStyle(winEl).display === 'none' || winEl.classList.contains('minimized')) return;
+                const rect = winEl.getBoundingClientRect();
+                let left = parseFloat(winEl.style.left);
+                let top = parseFloat(winEl.style.top);
+                if (Number.isNaN(left)) left = rect.left;
+                if (Number.isNaN(top)) top = rect.top;
+                const maxLeft = Math.max(minLeft, window.innerWidth - rect.width - margin);
+                const maxTop = Math.max(minTop, window.innerHeight - rect.height - margin);
+                left = Math.min(Math.max(minLeft, left), maxLeft);
+                top = Math.min(Math.max(minTop, top), maxTop);
+                winEl.style.left = `${left}px`;
+                winEl.style.top = `${top}px`;
+            });
+        }
+
+        function openCookiesOnly() {
+            hideAllAppWindows();
+            if (cookiesWindow) cookiesWindow.style.display = 'flex';
+            document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+            cookiesWindow.classList.add('active');
+        }
+
+        function applyConsentStateOnLoad() {
+            const val = localStorage.getItem(COOKIE_KEY);
+            if (val === 'accepted') {
+                if (cookiesWindow) cookiesWindow.style.display = 'none';
+                if (poweredOff) poweredOff.style.display = 'none';
+                showDefaultAppWindows();
+            } else if (val === 'rejected') {
+                // Give another try on refresh: reset to null so user sees opt-in window again
+                localStorage.removeItem(COOKIE_KEY);
+                if (poweredOff) poweredOff.style.display = 'none';
+                openCookiesOnly();
+            } else {
+                // no choice yet -> cookies window only
+                if (poweredOff) poweredOff.style.display = 'none';
+                openCookiesOnly();
+            }
+        }
+
+        if (btnAccept) {
+            btnAccept.addEventListener('click', () => {
+                localStorage.setItem(COOKIE_KEY, 'accepted');
+                if (cookiesWindow) cookiesWindow.style.display = 'none';
+                if (poweredOff) poweredOff.style.display = 'none';
+                showDefaultAppWindows();
+            });
+        }
+        if (btnReject) {
+            btnReject.addEventListener('click', () => {
+                localStorage.setItem(COOKIE_KEY, 'rejected');
+                hideAllAppWindows();
+                if (cookiesWindow) cookiesWindow.style.display = 'none';
+                if (poweredOff) poweredOff.style.display = 'flex';
+            });
+        }
+        // no manage button in simplified consent
+
+        // Ensure legal links still open even when powered off
+        window.openLegal = function(id) {
+            const consent = localStorage.getItem(COOKIE_KEY);
+            const winEl = document.getElementById(id);
+            if (!winEl) return;
+            winEl.style.display = 'flex';
+            winEl.classList.remove('minimized');
+            document.querySelectorAll('.window').forEach(w => w.classList.remove('active'));
+            winEl.classList.add('active');
+        };
+
+        // On load, enforce consent-gated UI
+        applyConsentStateOnLoad();
+        // On resize, keep windows clamped to viewport
+        window.addEventListener('resize', clampWindowsToViewport);
+        
+        // Terminal logic
+        (function initTerminal() {
+            const terminalEl = document.getElementById('terminal');
+            const outputEl = document.getElementById('terminal-output');
+            const inputEl = document.getElementById('terminal-input');
+            if (!terminalEl || !outputEl || !inputEl) return;
+
+            const user = 'braian';
+            const host = 'swimmingbrain';
+            let cwd = '~';
+            const history = [];
+            let historyIndex = -1;
+
+            function prompt() {
+                return `${user}@${host}:${cwd}$`;
+            }
+
+            function scrollToBottom() {
+                terminalEl.scrollTop = terminalEl.scrollHeight;
+            }
+
+            function write(text = '') {
+                if (outputEl.textContent) {
+                    outputEl.textContent += '\n' + text;
+                } else {
+                    outputEl.textContent = text;
+                }
+                scrollToBottom();
+            }
+
+            function handleCommand(line) {
+                const trimmed = line.trim();
+                if (!trimmed) return;
+                write(`${prompt()} ${line}`);
+                const [cmd, ...args] = trimmed.split(' ');
+                switch (cmd) {
+                    case 'help':
+                        write('Available commands: help, clear, neofetch, ls, cat, echo, date, whoami, linkedin');
+                        break;
+                    case 'clear':
+                        outputEl.textContent = '';
+                        break;
+                    case 'linkedin':
+                        write('Opening LinkedIn profile...');
+                        toggleWindow('linkedin-window');
+                        break;
+                    case 'neofetch':
+                        write(`       _,met$$$$$gg.           ${user}@${host}
+    ,g$$$$$$$$$$$$$$$P.        --------------------
+  ,g$$P"     """Y$$.".         OS: Ubuntu 24.04 LTS x86_64
+ ,$$P'              \`$$$.      Shell: bash 5.1.16
+',$$P       ,ggs.     \`$$b:    Uptime: ∞ (always learning)
+\`d$$'     ,$P"'   .    $$$     Packages: npm, pip, cargo
+ $$P      d$'     ,    $$P     Resolution: 4K (seeing clearly)
+ $$:      $$.   -    ,d$$'     DE: GNOME 45
+ $$;      Y$b._   _,d$P'       Terminal: gnome-terminal
+ Y$$.    \`.\`"Y$$$$P"'          CPU: Neural Network @ 100%
+ \`$$b      "-.__               Memory: Unlimited potential
+  \`Y$$                         
+   \`Y$$.                       Languages: Python, JS, C++, Rust
+     \`$$b.                     Frameworks: TensorFlow, React, ROS
+       \`Y$$b.                  Tools: Docker, K8s, Git
+          \`"Y$b._              Status: Caffeinated
+              \`"""             LinkedIn: Connected ✓`);
+                        break;
+                    case 'ls':
+                        if (args.join(' ') === '-la skills/' || args.join(' ') === '-la skills') {
+                            write(`drwxr-xr-x  8 ${user} ${user} 4096 Oct 19 14:22 .
+drwxr-xr-x 12 ${user} ${user} 4096 Oct 19 14:22 ..
+drwxr-xr-x  3 ${user} ${user} 4096 Oct 19 14:22 automation/
+drwxr-xr-x  5 ${user} ${user} 4096 Oct 19 14:22 ai-ml/
+drwxr-xr-x  4 ${user} ${user} 4096 Oct 19 14:22 electrical-engineering/
+drwxr-xr-x  6 ${user} ${user} 4096 Oct 19 14:22 app-development/
+drwxr-xr-x  2 ${user} ${user} 4096 Oct 19 14:22 embedded-systems/
+drwxr-xr-x  3 ${user} ${user} 4096 Oct 19 14:22 robotics/`);
+                        } else {
+                            write('about  projects  linkedin  skills  docs');
+                        }
+                        break;
+                    case 'cat':
+                        if (args[0] === '/etc/motd') {
+                            write(`╔══════════════════════════════════════════════════╗
+║  Welcome to SwimmingBrain Development Environment     ║
+║  "Where neurons meet silicon"                         ║
+║                                                       ║
+║  Current Focus: Industrial AI & Automation            ║
+║  Coffee Level: ████████░░ 80%                        ║
+║  Cat Status: Purring                                  ║
+║  LinkedIn: https://linkedin.com/in/braian-plaku       ║
+╚══════════════════════════════════════════════════╝`);
+                        } else {
+                            write(`cat: ${args[0] || ''}: No such file or directory`);
+                        }
+                        break;
+                    case 'echo':
+                        write(args.join(' '));
+                        break;
+                    case 'date':
+                        write(new Date().toString());
+                        break;
+                    case 'whoami':
+                        write(user);
+                        break;
+                    default:
+                        write(`${cmd}: command not found`);
+                }
+            }
+
+            inputEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const value = inputEl.value;
+                    if (value.trim()) {
+                        history.push(value);
+                    }
+                    historyIndex = history.length;
+                    handleCommand(value);
+                    inputEl.value = '';
+                    e.preventDefault();
+                } else if (e.key === 'ArrowUp') {
+                    if (history.length && historyIndex > 0) {
+                        historyIndex--;
+                        inputEl.value = history[historyIndex];
+                        setTimeout(() => inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length), 0);
+                    }
+                    e.preventDefault();
+                } else if (e.key === 'ArrowDown') {
+                    if (history.length && historyIndex < history.length - 1) {
+                        historyIndex++;
+                        inputEl.value = history[historyIndex];
+                    } else {
+                        historyIndex = history.length;
+                        inputEl.value = '';
+                    }
+                    e.preventDefault();
+                } else if (e.key === 'Escape') {
+                    inputEl.value = '';
+                }
+            });
+
+            function focusInput() { inputEl.focus(); }
+            terminalEl.addEventListener('mousedown', focusInput);
+            document.getElementById('terminal-window').addEventListener('mousedown', focusInput);
+
+            // initial demo content
+            write(`${prompt()} neofetch`);
+            handleCommand('neofetch');
+            write(`${prompt()} ls -la skills/`);
+            handleCommand('ls -la skills/');
+            write(`${prompt()} cat /etc/motd`);
+            handleCommand('cat /etc/motd');
+
+            focusInput();
+        })();
+
+        // Focus input when toggling terminal from dock
+        const __origToggleWindow = toggleWindow;
+        toggleWindow = function(windowId) {
+            // Call the base toggler
+            __origToggleWindow(windowId);
+            // If we just showed the terminal, focus input
+            const el = document.getElementById(windowId);
+            const isVisible = el && getComputedStyle(el).display !== 'none' && !el.classList.contains('minimized');
+            if (windowId === 'terminal-window' && isVisible) {
+                const inp = document.getElementById('terminal-input');
+                if (inp) inp.focus();
+            }
+        };
     </script>
 </body>
 </html>
