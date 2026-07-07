@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Braian Plaku — Software Developer at Julius Blum GmbH | swimmingbrain</title>
+    <meta name="description" content="Braian Plaku (swimmingbrain) is a software developer at Julius Blum GmbH in Dornbirn, Austria, and an open-source developer, focused on computer vision and 6D pose estimation. Studied at FH Vorarlberg (FHV) and JKU Linz.">
+    <link rel="canonical" href="https://swimmingbrain.dev/about">
+    <link rel="icon" href="assets/swimmingbrain-icon.png" type="image/png">
+    <link rel="shortcut icon" href="assets/swimmingbrain-icon.png" type="image/png">
+    <link rel="me" href="https://github.com/swimmingbrain">
+    <link rel="me" href="https://www.linkedin.com/in/braian-plaku">
+    <meta property="og:title" content="About Braian Plaku — Software Developer">
+    <meta property="og:description" content="Braian Plaku (swimmingbrain) is a software developer at Julius Blum GmbH in Dornbirn, Vorarlberg, Austria, focused on computer vision and 6D pose estimation.">
+    <meta property="og:image" content="https://swimmingbrain.dev/assets/sb-pfp.png">
+    <meta property="og:url" content="https://swimmingbrain.dev/about">
+    <meta property="og:type" content="profile">
+    <meta property="og:site_name" content="swimmingbrain.dev">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="About Braian Plaku — Software Developer">
+    <meta name="twitter:description" content="Software developer at Julius Blum GmbH in Vorarlberg, Austria. Computer vision, 6D pose estimation.">
+    <meta name="twitter:image" content="https://swimmingbrain.dev/assets/sb-pfp.png">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "@id": "https://swimmingbrain.dev/about#profilepage",
+      "url": "https://swimmingbrain.dev/about",
+      "name": "About Braian Plaku",
+      "dateModified": "2026-07-08",
+      "mainEntity": {
+        "@type": "Person",
+        "@id": "https://swimmingbrain.dev/#person",
+        "name": "Braian Plaku",
+        "alternateName": "swimmingbrain",
+        "url": "https://swimmingbrain.dev/",
+        "mainEntityOfPage": "https://swimmingbrain.dev/about",
+        "image": "https://swimmingbrain.dev/assets/sb-pfp.png",
+        "description": "Software developer at Julius Blum GmbH and open-source developer known as swimmingbrain, focused on computer vision and 6D pose estimation.",
+        "jobTitle": "Software Developer",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Julius Blum GmbH",
+          "url": "https://www.blum.com"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Dornbirn",
+          "addressRegion": "Vorarlberg",
+          "addressCountry": "AT"
+        },
+        "alumniOf": [
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "FH Vorarlberg (FHV)",
+            "url": "https://www.fhv.at"
+          },
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "Johannes Kepler University Linz (JKU)",
+            "url": "https://www.jku.at"
+          }
+        ],
+        "knowsAbout": [
+          "Computer Vision",
+          "6D Pose Estimation",
+          "Machine Learning",
+          "Open-Source Software Development"
+        ],
+        "sameAs": [
+          "https://github.com/swimmingbrain",
+          "https://www.linkedin.com/in/braian-plaku"
+        ]
+      }
+    }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --ubuntu-orange: #dd4814;
+            --desktop-bg: #2c001e;
+            --panel-bg: #2c2c2c;
+            --window-header: #404040;
+            --terminal-bg: #300a24;
+            --terminal-green: #4cff00;
+            --text-primary: #f2eef1;
+            --text-secondary: #c9b8c4;
+            --link: #ffb27a;
+            --border: #1a1a1a;
+            --hover: #505050;
+        }
+
+        ::selection {
+            background: var(--ubuntu-orange);
+            color: #fff;
+        }
+
+        body {
+            font-family: 'Ubuntu Mono', monospace;
+            background: var(--desktop-bg) url('assets/bg.jpg') left top / cover no-repeat fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 52px 16px 48px;
+        }
+
+        a {
+            color: var(--link);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        a:hover {
+            color: #fff;
+        }
+
+        a:focus-visible {
+            outline: 2px solid var(--terminal-green);
+            outline-offset: 2px;
+        }
+
+        /* Top panel, same as the desktop */
+        .panel-top {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 28px;
+            background: var(--panel-bg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            z-index: 100;
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 13px;
+        }
+
+        .panel-top a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 0 8px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .panel-top a:hover {
+            background: var(--hover);
+        }
+
+        .panel-clock {
+            font-family: 'Ubuntu Mono', monospace;
+            color: var(--text-secondary);
+        }
+
+        /* Terminal window */
+        .terminal-window {
+            max-width: 860px;
+            margin: 0 auto;
+            border: 1px solid var(--border);
+            border-radius: 8px 8px 4px 4px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        .window-header {
+            background: linear-gradient(#4a4a4a, var(--window-header));
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-family: 'Ubuntu', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .window-buttons {
+            position: absolute;
+            right: 10px;
+            display: flex;
+            gap: 7px;
+        }
+
+        .window-button {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #5a5a5a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            line-height: 1;
+            color: #ddd;
+            text-decoration: none;
+        }
+
+        .window-button.close {
+            background: var(--ubuntu-orange);
+            color: #fff;
+        }
+
+        .window-button.close:hover {
+            background: #f0561d;
+            color: #fff;
+        }
+
+        .terminal-body {
+            background: var(--terminal-bg);
+            padding: 22px 26px 30px;
+            font-size: 15px;
+            line-height: 1.75;
+        }
+
+        /* Command blocks */
+        .block {
+            margin-bottom: 26px;
+            animation: appear 0.3s ease both;
+        }
+
+        .block:nth-child(1) { animation-delay: 0.05s; }
+        .block:nth-child(2) { animation-delay: 0.15s; }
+        .block:nth-child(3) { animation-delay: 0.25s; }
+        .block:nth-child(4) { animation-delay: 0.35s; }
+        .block:nth-child(5) { animation-delay: 0.45s; }
+        .block:nth-child(6) { animation-delay: 0.55s; }
+        .block:nth-child(7) { animation-delay: 0.65s; }
+
+        @keyframes appear {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: none; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .block { animation: none; }
+            .cursor { animation: none; }
+        }
+
+        .prompt {
+            color: var(--terminal-green);
+            font-weight: 700;
+            word-break: break-all;
+        }
+
+        .prompt .path { color: #7aa9ff; }
+        .prompt .cmd { color: var(--text-primary); font-weight: 400; }
+
+        .output {
+            margin-top: 4px;
+            color: var(--text-primary);
+        }
+
+        .output p {
+            max-width: 66ch;
+        }
+
+        .output p + p {
+            margin-top: 12px;
+        }
+
+        h1 {
+            font-family: 'Ubuntu Mono', monospace;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        h1 .nick {
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* key-value output, like a config file */
+        .kv {
+            list-style: none;
+        }
+
+        .kv li {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .kv .k {
+            color: var(--text-secondary);
+            min-width: 12ch;
+        }
+
+        .kv .k::after {
+            content: "= ";
+            color: var(--text-secondary);
+        }
+
+        /* file listing output */
+        .ls {
+            list-style: none;
+        }
+
+        .ls li {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0 12px;
+        }
+
+        .ls .file {
+            min-width: 22ch;
+        }
+
+        .ls .note {
+            color: var(--text-secondary);
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 9px;
+            height: 18px;
+            background: var(--text-primary);
+            vertical-align: text-bottom;
+            animation: blink 1.1s steps(1) infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 44px 8px 32px; }
+            .terminal-body { padding: 16px 14px 24px; font-size: 14px; }
+            .kv .k { min-width: 10ch; }
+            .ls .file { min-width: 100%; }
+            .ls li { margin-bottom: 6px; }
+            .ls .note, .output a { overflow-wrap: anywhere; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="panel-top" aria-label="Site">
+        <div style="display:flex; align-items:center;">
+            <a href="/">Desktop</a>
+            <a href="/about" aria-current="page">About</a>
+        </div>
+        <span class="panel-clock">~/about</span>
+    </nav>
+
+    <main class="terminal-window">
+        <div class="window-header">
+            <span>braian@swimmingbrain: ~/about</span>
+            <div class="window-buttons">
+                <span class="window-button" aria-hidden="true">−</span>
+                <a class="window-button close" href="/" title="Close and return to desktop" aria-label="Close and return to desktop">×</a>
+            </div>
+        </div>
+
+        <div class="terminal-body">
+            <section class="block">
+                <div class="prompt" aria-hidden="true">braian@swimmingbrain:<span class="path">~/about</span>$ <span class="cmd">whoami</span></div>
+                <div class="output">
+                    <h1>Braian Plaku <span class="nick">(aka swimmingbrain)</span></h1>
+                </div>
+            </section>
+
+            <section class="block">
+                <h2 class="sr-only">About</h2>
+                <div class="prompt" aria-hidden="true">braian@swimmingbrain:<span class="path">~/about</span>$ <span class="cmd">cat about.txt</span></div>
+                <div class="output">
+                    <p>Braian Plaku is a software developer at <a href="https://www.blum.com" rel="noopener">Julius Blum GmbH</a> in Vorarlberg, Austria — one of the world's leading manufacturers of furniture fittings. Based in Dornbirn, he specializes in computer vision and machine learning, with a focus on 6D pose estimation.</p>
+                    <p>Alongside his work in industry, he is an open-source software developer: under the handle <strong>swimmingbrain</strong> he builds and publishes projects on <a href="https://github.com/swimmingbrain" rel="me noopener">GitHub</a>, from machine-learning experiments to web apps and games. He is completing a BSc in Computer Science (Digital Innovation) at FH Vorarlberg (FHV) and an MSc in Artificial Intelligence at Johannes Kepler University Linz (JKU), having previously earned a BSc in Electrical Engineering.</p>
+                </div>
+            </section>
+
+            <section class="block">
+                <h2 class="sr-only">Work</h2>
+                <div class="prompt" aria-hidden="true">braian@swimmingbrain:<span class="path">~/about</span>$ <span class="cmd">cat work.cfg</span></div>
+                <div class="output">
+                    <ul class="kv">
+                        <li><span class="k">position</span> Software Developer</li>
+                        <li><span class="k">company</span> Julius Blum GmbH</li>
+                        <li><span class="k">location</span> Dornbirn, Vorarlberg, Austria</li>
+                        <li><span class="k">focus</span> Computer Vision, 6D Pose Estimation</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="block">
+                <h2 class="sr-only">Education</h2>
+                <div class="prompt" aria-hidden="true">braian@swimmingbrain:<span class="path">~/about</span>$ <span class="cmd">ls education/</span></div>
+                <div class="output">
+                    <ul class="ls">
+                        <li><span class="file">msc-artificial-intelligence</span> <span class="note">Johannes Kepler University Linz (JKU), 2027</span></li>
+                        <li><span class="file">bsc-computer-science</span> <span class="note">Digital Innovation, FH Vorarlberg (FHV), Dornbirn, 2026</span></li>
+                        <li><span class="file">bsc-electrical-engineering</span> <span class="note">completed</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="block">
+                <h2 class="sr-only">Projects</h2>
+                <div class="prompt" aria-hidden="true">braian@swimmingbrain:<span class="path">~/about</span>$ <span class="cmd">ls projects/</span></div>
+                <div class="output">
+                    <ul class="ls">
+                        <li><span class="file"><a href="https://home.vimaya.app" rel="noopener">VIMAYA</a></span> <span class="note">home.vimaya.app</span></li>
+                        <li><span class="file"><a href="/wogsi-game.html">Wo gsi?</a></span> <span class="note">a Street-View guessing game about Vorarlberg</span></li>
+                        <li><span class="file"><a href="https://github.com/swimmingbrain/chingumat-e" rel="noopener">Chingumat-e</a></span> <span class="note">github.com/swimmingbrain/chingumat-e</span></li>
+                        <li><span class="file"><a href="https://github.com/swimmingbrain/decoding-diabetes" rel="noopener">Decoding Diabetes</a></span> <span class="note">github.com/swimmingbrain/decoding-diabetes</span></li>
+                        <li><span class="file"><a href="https://klimatree.htl-projekt.com/" rel="noopener">klimaTree</a></span> <span class="note">klimatree.htl-projekt.com</span></li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="block">
+                <h2 class="sr-only">Profiles</h2>
+                <div class="prompt" aria-hidden="true">braian@swimmingbrain:<span class="path">~/about</span>$ <span class="cmd">cat profiles.txt</span></div>
+                <div class="output">
+                    <ul class="ls">
+                        <li><span class="file">GitHub</span> <a href="https://github.com/swimmingbrain" rel="me noopener">github.com/swimmingbrain</a></li>
+                        <li><span class="file">LinkedIn</span> <a href="https://www.linkedin.com/in/braian-plaku" rel="me noopener">linkedin.com/in/braian-plaku</a></li>
+                    </ul>
+                </div>
+            </section>
+
+            <div class="block" aria-hidden="true">
+                <div class="prompt">braian@swimmingbrain:<span class="path">~/about</span>$ <span class="cursor"></span></div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
