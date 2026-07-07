@@ -125,8 +125,13 @@
             background: var(--hover);
         }
         
-        /* Panel links (Cookies, Privacy, Terms) */
-        .panel-left span {
+        /* Panel links (About, Cookies, Privacy, Terms) */
+        .panel-left a.panel-link {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        .panel-left span,
+        .panel-left a.panel-link {
             cursor: pointer;
             padding: 0 8px;
             height: 28px;
@@ -134,7 +139,8 @@
             align-items: center;
             font-weight: 500;
         }
-        .panel-left span:hover {
+        .panel-left span:hover,
+        .panel-left a.panel-link:hover {
             background: var(--hover);
         }
         
@@ -840,6 +846,53 @@
             .panel-center { display: none; }
         }
     </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "@id": "https://swimmingbrain.dev/#person",
+      "name": "Braian Plaku",
+      "alternateName": "swimmingbrain",
+      "url": "https://swimmingbrain.dev/",
+      "mainEntityOfPage": "https://swimmingbrain.dev/about",
+      "image": "https://swimmingbrain.dev/assets/sb-pfp.png",
+      "description": "Software developer at Julius Blum GmbH and open-source developer known as swimmingbrain, focused on computer vision and 6D pose estimation.",
+      "jobTitle": "Software Developer",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Julius Blum GmbH",
+        "url": "https://www.blum.com"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Dornbirn",
+        "addressRegion": "Vorarlberg",
+        "addressCountry": "AT"
+      },
+      "alumniOf": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "FH Vorarlberg (FHV)",
+          "url": "https://www.fhv.at"
+        },
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "Johannes Kepler University Linz (JKU)",
+          "url": "https://www.jku.at"
+        }
+      ],
+      "knowsAbout": [
+        "Computer Vision",
+        "6D Pose Estimation",
+        "Machine Learning",
+        "Open-Source Software Development"
+      ],
+      "sameAs": [
+        "https://github.com/swimmingbrain",
+        "https://www.linkedin.com/in/braian-plaku"
+      ]
+    }
+    </script>
 </head>
 <body>
     <div class="wallpaper"></div>
@@ -847,6 +900,7 @@
     <!-- Top Panel -->
     <div class="panel-top">
         <div class="panel-left">
+            <a href="/about" class="panel-link">About</a>
             <span class="activities" onclick="toggleWindow('cookie-policy-window')">Cookies</span>
             <span onclick="toggleWindow('privacy-window')">Privacy</span>
             <span onclick="toggleWindow('terms-window')">Terms</span>
@@ -929,7 +983,7 @@ Powered off.
                         </div>
                         <div class="info-line">
                             <span class="info-label">OCCUPATION:</span>
-                            <span class="info-value">Automation Engineer @ Blum</span>
+                            <span class="info-value">Software Developer @ Julius Blum GmbH</span>
                         </div>
                         <div class="info-line">
                             <span class="info-label">LOCATION:</span>
