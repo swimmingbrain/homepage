@@ -1,0 +1,824 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --ubuntu-orange: #dd4814;
+    --ubuntu-dark: #2c001e;
+    --panel-bg: #2c2c2c;
+    --window-bg: #3c3c3c;
+    --window-header: #404040;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --border: #1a1a1a;
+    --hover: #505050;
+    --terminal-green: #4cff00;
+    --terminal-bg: #300a24;
+    --linkedin-blue: #0077b5;
+}
+
+body {
+    font-family: 'Ubuntu', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    background: #2c001e;
+    color: var(--text-primary);
+    position: relative;
+    user-select: none;
+}
+
+.wallpaper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('assets/bg.jpg');
+    background-position: left top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.desktop {
+    width: 100%;
+    height: calc(100vh);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Top Panel */
+.panel-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 28px;
+    background: var(--panel-bg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    z-index: 10000;
+    font-size: 13px;
+}
+
+.panel-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.panel-logo {
+    width: 20px;
+    height: 20px;
+    display: block;
+    object-fit: contain;
+}
+
+.dock-logo {
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    display: block;
+    object-fit: contain;
+    margin: 0;
+}
+
+.activities {
+    cursor: pointer;
+    padding: 0 8px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+.activities:hover {
+    background: var(--hover);
+}
+
+/* Panel links (About, Cookies, Privacy, Terms) */
+.panel-left a.panel-link {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+.panel-left span,
+.panel-left a.panel-link {
+    cursor: pointer;
+    padding: 0 8px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+.panel-left span:hover,
+.panel-left a.panel-link:hover {
+    background: var(--hover);
+}
+
+.panel-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+.panel-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+.system-tray {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 0 5px;
+}
+
+.tray-icon {
+    width: 16px;
+    height: 16px;
+    background: var(--text-secondary);
+    cursor: pointer;
+}
+
+/* Dock */
+.dock {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: calc(100vh - 28px);
+    top: 28px;
+    background: rgba(28, 28, 28, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    gap: 10px;
+    z-index: 9998;
+}
+
+.dock-item {
+    width: 48px;
+    height: 48px;
+    background: var(--window-header);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 20px;
+    color: var(--ubuntu-orange);
+}
+
+.dock-item:hover {
+    background: var(--hover);
+    transform: scale(1.1);
+}
+
+.dock-item.active::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 20px;
+    background: var(--ubuntu-orange);
+}
+
+.dock-tooltip {
+    position: absolute;
+    left: 60px;
+    background: var(--panel-bg);
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    font-size: 12px;
+    white-space: nowrap;
+    display: none;
+    pointer-events: none;
+}
+
+.dock-item:hover .dock-tooltip {
+    display: block;
+}
+
+/* Windows */
+.window {
+    position: absolute;
+    background: var(--window-bg);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    min-width: 300px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.window.active {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+}
+
+.window.minimized {
+    display: none;
+}
+
+.window-header {
+    height: 30px;
+    background: var(--window-header);
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    cursor: move;
+    border-bottom: 1px solid var(--border);
+}
+
+.window-title {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Ubuntu', sans-serif;
+}
+
+.window-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.window-button {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.window-minimize {
+    background: #949494;
+}
+
+.window-maximize {
+    background: #949494;
+}
+
+.window-close {
+    background: #f25056;
+}
+
+.window-button:hover {
+    opacity: 0.8;
+}
+
+.window-content {
+    flex: 1;
+    overflow: auto;
+    background: var(--window-bg);
+}
+
+/* Resume Window (top-most among app windows) */
+#resume-window {
+    top: 100px;
+    left: 160px;
+    width: 720px;
+    height: 560px;
+    display: none;
+    z-index: 14000; /* ensure PDF window sits above other app windows */
+}
+#resume-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* About Window */
+#about-window {
+    top: 80px;
+    left: 100px;
+    width: 420px;
+    height: 520px;
+}
+
+/* Legal Windows (always on top layer over app windows) */
+#cookies-window, #privacy-window, #terms-window, #cookie-policy-window, #coming-soon-bubblupo {
+    top: 90px;
+    left: 140px;
+    width: 640px;
+    height: 500px;
+    display: none;
+    z-index: 15000;
+}
+
+#cookies-window {
+    height: 200px
+}
+
+/* Coming soon window: lower height */
+#coming-soon-bubblupo {
+    height: 300px;
+}
+
+.about-container {
+    color: var(--text-secondary);
+    font-family: 'Ubuntu Mono', monospace;
+    padding: 10px;
+}
+
+.about-portrait {
+    display: block;
+    width: 180px;
+    height: auto;
+    margin: 0; /* left-aligned, no space above system-info */
+    filter: none;
+}
+
+.system-info {
+    border: 1px solid #555;
+    padding: 15px;
+    margin: 0 0 15px 0; /* no top space so it sits over the portrait */
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.info-line {
+    display: flex;
+    margin: 8px 0;
+    font-size: 13px;
+}
+
+.info-label {
+    color: var(--ubuntu-orange);
+    min-width: 120px;
+}
+
+.info-value {
+    color: var(--text-primary);
+}
+
+/* Projects Window */
+#projects-window {
+    top: 80px;
+    left: 560px;
+    width: 500px;
+    height: 400px;
+}
+
+.file-manager {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.file-toolbar {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background: #353535;
+    border-bottom: 1px solid var(--border);
+}
+
+.file-path {
+    flex: 1;
+    background: var(--terminal-bg);
+    border: 1px solid var(--border);
+    padding: 4px 8px;
+    color: var(--text-primary);
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 12px;
+}
+
+.file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 15px;
+    padding: 15px;
+}
+
+.file-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--text-primary);
+}
+
+.file-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.file-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--ubuntu-orange), #ff6b35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+}
+
+.folder-icon {
+    background: #656565;
+    position: relative;
+}
+
+.folder-icon::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 0;
+    width: 20px;
+    height: 5px;
+    background: #757575;
+    border-radius: 2px 2px 0 0;
+}
+
+.file-name {
+    font-size: 11px;
+    text-align: center;
+    word-break: break-word;
+}
+
+/* Terminal Window */
+#terminal-window {
+    bottom: 60px;
+    left: 100px;
+    width: 600px;
+    height: 400px;
+}
+
+.terminal {
+    background: var(--terminal-bg);
+    color: var(--text-primary);
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 13px;
+    padding: 10px;
+    height: 100%;
+    overflow-y: auto;
+    line-height: 1.4;
+}
+
+#terminal-output {
+    white-space: pre-wrap;
+}
+
+.terminal-input {
+    background: transparent;
+    color: var(--text-primary);
+    border: none;
+    outline: none;
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 13px;
+    width: 70%;
+    padding: 0;
+    margin: 0;
+}
+
+.terminal-line {
+    margin: 2px 0;
+}
+
+.terminal-prompt {
+    color: var(--terminal-green);
+}
+
+.terminal-user {
+    color: var(--terminal-green);
+}
+
+.terminal-host {
+    color: var(--text-primary);
+}
+
+.terminal-path {
+    color: #729fcf;
+}
+
+.terminal-command {
+    color: var(--text-primary);
+}
+
+.terminal-output {
+    color: var(--text-secondary);
+    margin-left: 0;
+}
+
+.terminal-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--text-primary);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Powered-off overlay */
+.powered-off-overlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    color: #0f0;
+    font-family: 'Ubuntu Mono', monospace;
+    z-index: 20000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+.powered-off-overlay .message {
+    max-width: 800px;
+    line-height: 1.6;
+    font-size: 14px;
+    white-space: pre-wrap;
+}
+
+/* LinkedIn Window */
+#linkedin-window {
+    top: 80px;
+    left: calc(560px + 500px + 20px); /* next to projects window */
+    width: 520px;
+    height: 600px;
+}
+
+.linkedin-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+}
+
+.linkedin-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid #444;
+}
+
+.linkedin-profile-img {
+    width: 60px;
+    height: 60px;
+    background: var(--linkedin-blue);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+.linkedin-profile-info {
+    flex: 1;
+}
+
+.linkedin-name {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.linkedin-title {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.linkedin-connect-btn {
+    background: var(--linkedin-blue);
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+}
+
+.linkedin-connect-btn:hover {
+    background: #005885;
+}
+
+.linkedin-tabs {
+    display: flex;
+    gap: 20px;
+    padding: 0 15px;
+    border-bottom: 1px solid #444;
+}
+
+.linkedin-tab {
+    padding: 10px 0;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.linkedin-tab.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--ubuntu-orange);
+}
+
+.linkedin-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+}
+
+.feed-post {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid #444;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.feed-header {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.feed-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--linkedin-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+}
+
+.feed-meta {
+    flex: 1;
+}
+
+.feed-author {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.feed-time {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+.feed-content {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.feed-actions {
+    display: flex;
+    gap: 20px;
+    padding-top: 8px;
+    border-top: 1px solid #333;
+}
+
+.feed-action {
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.feed-action:hover {
+    color: var(--ubuntu-orange);
+}
+
+.skills-grid {
+    display: grid;
+    gap: 10px;
+}
+
+.skill-item {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid #444;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.skill-name {
+    font-size: 13px;
+}
+
+.skill-endorsements {
+    background: var(--ubuntu-orange);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 2px;
+    font-size: 11px;
+}
+
+.experience-item {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid #444;
+    padding: 12px;
+    margin-bottom: 12px;
+}
+
+.experience-title {
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.experience-company {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+}
+
+.experience-duration {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: 'Ubuntu Mono', monospace;
+    margin-bottom: 8px;
+}
+
+.experience-description {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dock {
+        width: 100%;
+        height: 48px;
+        flex-direction: row;
+        bottom: 0;
+        top: auto;
+        padding: 0 10px;
+        justify-content: center;
+    }
+    
+    .dock-item {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .dock-tooltip {
+        display: none !important;
+    }
+    
+    .window {
+        position: fixed !important;
+        top: 28px !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 48px !important;
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100% !important;
+    }
+    
+    .desktop {
+        height: calc(100vh - 28px - 48px);
+    }
+}
+
+/* Hide date/time on very small screens */
+@media (max-width: 600px) {
+    .panel-center { display: none; }
+}
