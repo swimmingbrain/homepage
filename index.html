@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>braian@swimmingbrain</title>
+    <meta name="description" content="Braian Plaku (swimmingbrain): robotics and machine vision at Julius Blum, MSc AI student at JKU Linz. Projects, resume and contact, served as a small Ubuntu desktop.">
+    <link rel="canonical" href="https://swimmingbrain.dev/">
+    <meta name="theme-color" content="#181818">
     <link rel="icon" href="assets/swimmingbrain-icon.png" type="image/png">
     <link rel="shortcut icon" href="assets/swimmingbrain-icon.png" type="image/png">
     <meta property="og:title" content="braian@swimmingbrain">
@@ -20,6 +23,9 @@
     <meta name="twitter:title" content="braian@swimmingbrain">
     <meta name="twitter:description" content="Portfolio, projects, and experiments by Braian Plaku (swimmingbrain)">
     <meta name="twitter:image" content="https://swimmingbrain.dev/assets/sb-pfp.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap">
     <link rel="stylesheet" href="assets/css/desktop.css">
     <script type="application/ld+json">
     {
@@ -70,366 +76,366 @@
     </script>
 </head>
 <body>
-    <div class="wallpaper"></div>
-    
-    <!-- Top Panel -->
-    <div class="panel-top">
+    <svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
+        <!-- app icons -->
+        <symbol id="i-terminal" viewBox="0 0 48 48">
+            <rect x="3" y="3" width="42" height="42" rx="11" fill="#2c001e"/>
+            <rect x="3.5" y="3.5" width="41" height="41" rx="10.5" fill="none" stroke="rgba(255,255,255,.14)"/>
+            <path d="M13 16l9 8-9 8" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M25 33h11" stroke="#fff" stroke-width="3.2" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-files" viewBox="0 0 48 48">
+            <path d="M5 12a4 4 0 0 1 4-4h10l4 4h16a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z" fill="#7d7d7d"/>
+            <path d="M5 18h38v18a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z" fill="#a8a8a8"/>
+        </symbol>
+        <symbol id="i-folder-link" viewBox="0 0 48 48">
+            <path d="M5 12a4 4 0 0 1 4-4h10l4 4h16a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z" fill="#7d7d7d"/>
+            <path d="M5 18h38v18a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z" fill="#a8a8a8"/>
+            <circle cx="37" cy="35" r="8.5" fill="#e95420"/>
+            <path d="M34 38l6-6M35.5 32H40v4.5" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-about" viewBox="0 0 48 48">
+            <rect x="3" y="3" width="42" height="42" rx="11" fill="#4a4a4a"/>
+            <circle cx="24" cy="18.5" r="7" fill="#f7f7f7"/>
+            <path d="M11 38c1.6-7 6.6-11 13-11s11.4 4 13 11z" fill="#f7f7f7"/>
+        </symbol>
+        <symbol id="i-linkedin" viewBox="0 0 48 48">
+            <rect x="3" y="3" width="42" height="42" rx="11" fill="#0a66c2"/>
+            <rect x="12" y="19" width="5.5" height="17" fill="#fff"/>
+            <circle cx="14.75" cy="13.2" r="3.2" fill="#fff"/>
+            <path d="M21.5 19h5.3v2.4c1.1-1.8 3-2.8 5.4-2.8 4.8 0 6.3 3 6.3 7.3V36h-5.5v-8.7c0-2.2-.5-4-2.9-4-2.5 0-3.1 1.9-3.1 4.1V36h-5.5z" fill="#fff"/>
+        </symbol>
+        <symbol id="i-github" viewBox="0 0 48 48">
+            <rect x="3" y="3" width="42" height="42" rx="11" fill="#1b1f23"/>
+            <path transform="translate(9 9) scale(1.25)" fill="#fff" d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </symbol>
+        <symbol id="i-pdf" viewBox="0 0 48 48">
+            <path d="M12 4h16l10 10v28a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="#f2f2f2"/>
+            <path d="M28 4v10h10z" fill="#c4c4c4"/>
+            <rect x="10" y="26" width="28" height="11" fill="#c8321e"/>
+            <text x="24" y="34.5" text-anchor="middle" font-family="Ubuntu, sans-serif" font-weight="700" font-size="8.5" fill="#fff">PDF</text>
+        </symbol>
+        <symbol id="i-txt" viewBox="0 0 48 48">
+            <path d="M12 4h16l10 10v28a2 2 0 0 1-2 2H12a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="#f2f2f2"/>
+            <path d="M28 4v10h10z" fill="#c4c4c4"/>
+            <path d="M16 22h16M16 27h16M16 32h10" stroke="#8a8a8a" stroke-width="2" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-web" viewBox="0 0 48 48">
+            <rect x="3" y="3" width="42" height="42" rx="11" fill="#3d3d3d"/>
+            <circle cx="24" cy="24" r="12" fill="none" stroke="#f7f7f7" stroke-width="2.4"/>
+            <path d="M12 24h24M24 12c-4 4-4 20 0 24M24 12c4 4 4 20 0 24" fill="none" stroke="#f7f7f7" stroke-width="2.2"/>
+        </symbol>
+        <!-- 16px glyphs -->
+        <symbol id="i-grid" viewBox="0 0 16 16">
+            <circle cx="3" cy="3" r="1.7" fill="currentColor"/><circle cx="8" cy="3" r="1.7" fill="currentColor"/><circle cx="13" cy="3" r="1.7" fill="currentColor"/>
+            <circle cx="3" cy="8" r="1.7" fill="currentColor"/><circle cx="8" cy="8" r="1.7" fill="currentColor"/><circle cx="13" cy="8" r="1.7" fill="currentColor"/>
+            <circle cx="3" cy="13" r="1.7" fill="currentColor"/><circle cx="8" cy="13" r="1.7" fill="currentColor"/><circle cx="13" cy="13" r="1.7" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-wifi" viewBox="0 0 16 16">
+            <path d="M1.8 6.3a9.2 9.2 0 0 1 12.4 0M4.3 8.9a5.6 5.6 0 0 1 7.4 0M6.7 11.4a2.2 2.2 0 0 1 2.6 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            <circle cx="8" cy="13.6" r="1.2" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-sound" viewBox="0 0 16 16">
+            <path d="M2 6h2.6L9 2.6v10.8L4.6 10H2z" fill="currentColor"/>
+            <path d="M11 5.6a3.4 3.4 0 0 1 0 4.8M12.9 3.6a6.2 6.2 0 0 1 0 8.8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="i-battery" viewBox="0 0 16 16">
+            <rect x="1.5" y="4.5" width="11" height="7" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.4"/>
+            <rect x="3.2" y="6.2" width="7.6" height="3.6" rx=".6" fill="currentColor"/>
+            <rect x="13.2" y="6.5" width="1.6" height="3" rx=".5" fill="currentColor"/>
+        </symbol>
+        <symbol id="i-chevron" viewBox="0 0 16 16">
+            <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="i-min" viewBox="0 0 16 16"><path d="M4 8.5h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+        <symbol id="i-max" viewBox="0 0 16 16"><rect x="4.2" y="4.2" width="7.6" height="7.6" rx="1" fill="none" stroke="currentColor" stroke-width="1.5"/></symbol>
+        <symbol id="i-close" viewBox="0 0 16 16"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+        <symbol id="i-back" viewBox="0 0 16 16"><path d="M10 3L5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-forward" viewBox="0 0 16 16"><path d="M6 3l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-power" viewBox="0 0 16 16"><path d="M8 1.8v6M4.3 4.4a5.3 5.3 0 1 0 7.4 0" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+        <symbol id="i-restart" viewBox="0 0 16 16"><path d="M13.2 8A5.2 5.2 0 1 1 11 3.8M11.2 1.6v2.8H8.4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-external" viewBox="0 0 16 16"><path d="M6.5 3.5H3.5v9h9v-3M9 3.5h3.5V7M12.5 3.5L7.5 8.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    </svg>
+
+    <div class="wallpaper" aria-hidden="true"></div>
+
+    <noscript><p class="noscript">This desktop needs JavaScript. The plain version lives at <a href="/about">/about</a>.</p></noscript>
+
+    <!-- top panel -->
+    <header class="panel" id="panel">
         <div class="panel-left">
-            <a href="/about" class="panel-link">About</a>
-            <span class="activities" onclick="toggleWindow('cookie-policy-window')">Cookies</span>
-            <span onclick="toggleWindow('privacy-window')">Privacy</span>
-            <span onclick="toggleWindow('terms-window')">Terms</span>
+            <button class="panel-btn" id="activities" aria-expanded="false">Activities</button>
+            <span class="panel-app" id="panel-app"></span>
         </div>
-        <div class="panel-center">
-            <span id="panel-time"></span>
-        </div>
+        <span class="panel-clock" id="panel-clock"></span>
         <div class="panel-right">
-            <div class="system-tray">
-                <div class="tray-icon" style="background: none; color: var(--text-secondary);">⚡</div>
-                <div class="tray-icon" style="background: none; color: var(--text-secondary);">🔊</div>
-                <div class="tray-icon" style="background: none; color: var(--text-secondary);">📶</div>
-            </div>
-            <span>braian</span>
+            <button class="panel-btn tray" id="tray" aria-haspopup="menu" aria-expanded="false" aria-label="System menu">
+                <svg><use href="#i-wifi"/></svg>
+                <svg><use href="#i-sound"/></svg>
+                <svg><use href="#i-battery"/></svg>
+                <svg class="chev"><use href="#i-chevron"/></svg>
+            </button>
         </div>
+    </header>
+
+    <!-- system menu -->
+    <div class="popover" id="system-menu" hidden>
+        <a class="menu-user" href="/about">
+            <img src="assets/sb-pfp.png" alt="" width="40" height="40">
+            <span><strong>Braian Plaku</strong><small>braian@swimmingbrain</small></span>
+        </a>
+        <div class="menu-sep"></div>
+        <a class="menu-item" href="https://github.com/swimmingbrain" target="_blank" rel="noopener">GitHub <svg><use href="#i-external"/></svg></a>
+        <a class="menu-item" href="https://www.linkedin.com/in/braian-plaku" target="_blank" rel="noopener">LinkedIn <svg><use href="#i-external"/></svg></a>
+        <a class="menu-item" href="mailto:braian.plaku@gmail.com">Email</a>
+        <button class="menu-item" data-app="resume">Resume</button>
+        <div class="menu-sep"></div>
+        <button class="menu-item" data-app="cookies">Cookies</button>
+        <button class="menu-item" data-app="privacy">Privacy</button>
+        <button class="menu-item" data-app="terms">Terms</button>
+        <div class="menu-sep"></div>
+        <button class="menu-item" id="menu-restart"><svg><use href="#i-restart"/></svg> Restart</button>
+        <button class="menu-item" id="menu-poweroff"><svg><use href="#i-power"/></svg> Power Off…</button>
     </div>
-    
-    <!-- Desktop -->
-    <div class="desktop" id="desktop">
-        <div class="powered-off-overlay" id="powered-off">
-            <div class="message">System is powered off due to cookie rejection.
 
-Reason: Non-essential cookies are disabled. This site requires basic functionality cookies to render the desktop experience.
+    <!-- dock -->
+    <nav class="dock" aria-label="Dock">
+        <button class="dock-item" data-app="terminal" data-label="Terminal"><svg><use href="#i-terminal"/></svg></button>
+        <button class="dock-item" data-app="files" data-label="Files"><svg><use href="#i-files"/></svg></button>
+        <button class="dock-item" data-app="about" data-label="About"><svg><use href="#i-about"/></svg></button>
+        <button class="dock-item" data-app="linkedin" data-label="LinkedIn"><svg><use href="#i-linkedin"/></svg></button>
+        <a class="dock-item" href="https://github.com/swimmingbrain" target="_blank" rel="noopener" data-label="GitHub"><svg><use href="#i-github"/></svg></a>
+        <span class="dock-spacer"></span>
+        <button class="dock-item dock-apps" id="show-apps" data-label="Show Applications" aria-expanded="false"><svg><use href="#i-grid"/></svg></button>
+    </nav>
 
-What you can do:
-- Refresh the page to try again
-- Review our Cookies Policy from the top bar
+    <!-- activities overview -->
+    <div class="overview" id="overview" hidden>
+        <input class="overview-search" id="overview-search" type="search" placeholder="Type to search…" aria-label="Search applications" autocomplete="off">
+        <div class="app-grid" id="app-grid">
+            <button class="app" data-app="terminal"><svg><use href="#i-terminal"/></svg><span>Terminal</span></button>
+            <button class="app" data-app="files"><svg><use href="#i-files"/></svg><span>Files</span></button>
+            <button class="app" data-app="about"><svg><use href="#i-about"/></svg><span>About</span></button>
+            <button class="app" data-app="linkedin"><svg><use href="#i-linkedin"/></svg><span>LinkedIn</span></button>
+            <button class="app" data-app="resume"><svg><use href="#i-pdf"/></svg><span>Resume</span></button>
+            <a class="app" href="https://github.com/swimmingbrain" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg><span>GitHub</span></a>
+            <a class="app" href="wogsi-game.html" target="_blank" rel="noopener"><svg><use href="#i-web"/></svg><span>Wo gsi?</span></a>
+            <a class="app" href="https://home.vimaya.app" target="_blank" rel="noopener"><svg><use href="#i-web"/></svg><span>VIMAYA</span></a>
+        </div>
+        <p class="overview-empty" id="overview-empty" hidden>No results.</p>
+    </div>
 
-Powered off.
-            </div>
-        </div>
-        <!-- Dock -->
-        <div class="dock">
-            <div class="dock-item active" onclick="toggleWindow('terminal-window')">
-                &gt;_
-                <span class="dock-tooltip">Terminal</span>
-            </div>
-            <div class="dock-item" onclick="toggleWindow('about-window')">
-                👤
-                <span class="dock-tooltip">About</span>
-            </div>
-            <div class="dock-item" onclick="toggleWindow('projects-window')">
-                📁
-                <span class="dock-tooltip">Projects</span>
-            </div>
-            <div class="dock-item" onclick="toggleWindow('linkedin-window')">
-                in
-                <span class="dock-tooltip">LinkedIn</span>
-            </div>
-            <div style="flex: 1"></div>
-            <a href="https://github.com/swimmingbrain" target="_blank" rel="noopener noreferrer" class="dock-item" title="GitHub: swimmingbrain" style="cursor: pointer;">
-                <img src="assets/github.png" alt="swimmingbrain" class="dock-logo" />
-                <span class="dock-tooltip">GitHub</span>
-            </a>
-        </div>
-        
-        <!-- About Window -->
-        <div class="window" id="about-window">
-            <div class="window-header">
-                <span class="window-title">About - braian@swimmingbrain</span>
-                <div class="window-buttons">
-                    <div class="window-button window-minimize" onclick="minimizeWindow('about-window')">-</div>
-                    <div class="window-button window-close" onclick="closeWindow('about-window')">×</div>
-                </div>
-            </div>
-            <div class="window-content">
-                <div class="about-container">
-                    <div style="display: flex; align-items: flex-start; gap: 10px;">
-                        <img src="assets/profile.png" alt="Profile" class="about-portrait" />
-                        <img src="assets/swimmingbrain-icon.png" alt="swimmingbrain" style="height:100px;" />
-                    </div>
-                    <div class="system-info">
-                        <div class="info-line">
-                            <span class="info-label">USER:</span>
-                            <span class="info-value">Braian Plaku</span>
-                        </div>
-                        <div class="info-line">
-                            <span class="info-label">HOSTNAME:</span>
-                            <span class="info-value">swimmingbrain.dev</span>
-                        </div>
-                        <div class="info-line">
-                            <span class="info-label">OCCUPATION:</span>
-                            <span class="info-value">Software Developer @ Julius Blum GmbH</span>
-                        </div>
-                        <div class="info-line">
-                            <span class="info-label">LOCATION:</span>
-                            <span class="info-value">Vorarlberg, AT (from Albania)</span>
-                        </div>
-                        <div class="info-line">
-                            <span class="info-label">EDUCATION:</span>
-                            <span class="info-value">BSc Electrical Engineering | BSc Computer Science Digital Innovation (2026) | MSc Artificial Intelligence (2027)</span>
-                        </div>
-                        <div class="info-line">
-                            <span class="info-label">SPECIALIZATION:</span>
-                            <span class="info-value">Software, Automation, AI</span>
-                        </div>
-                        <div class="info-line">
-                            <span class="info-label">INTERESTS:</span>
-                            <span class="info-value">Cats, Coffee, Neural Networks</span>
-                        </div>
-                        <div class="info-line">
-                            <span class="info-label">KERNEL:</span>
-                            <span class="info-value">Human v1.0 (continuously learning)</span>
-                        </div>
-                    </div>
-                    <div style="margin-top: 20px; color: var(--ubuntu-orange); font-size: 12px;">
-                        $ echo "Building the future, one commit at a time"
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Cookie Opt-in Window (shown on first load) -->
-        <div class="window" id="cookies-window">
-            <div class="window-header">
-                <span class="window-title">Cookies on swimmingbrain.dev</span>
-                <div class="window-buttons">
-                    <div class="window-button window-minimize" onclick="minimizeWindow('cookies-window')">-</div>
-                    <div class="window-button window-close" onclick="closeWindow('cookies-window')">×</div>
-                </div>
-            </div>
-            <div class="window-content" style="padding:20px">
-                <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-                    <p style="color: var(--text-primary);">We use cookies on this site to enhance your experience, provide services and products, and display content from third parties.</p>
-                    <div style="margin-top: 12px;">
-                        <a onclick="openLegal('cookie-policy-window')" style="color: #ffb27a; cursor: pointer;">Show cookie policy</a>
-                    </div>
-                    <div style="margin-top: 16px; display: flex; gap: 10px;">
-                        <button id="cookies-accept" style="background: linear-gradient(135deg, #2c2c2c, #3a3a3a); color: #fff; border: 1px solid #555; padding: 8px 14px; cursor: pointer; border-radius: 3px; box-shadow: inset 0 0 0 1px #000;">Accept</button>
-                        <button id="cookies-reject" style="background: linear-gradient(135deg, #420000, #650000); color: #fff; border: 1px solid #7a1f1f; padding: 8px 14px; cursor: pointer; border-radius: 3px; box-shadow: inset 0 0 0 1px #000;">Reject</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- desktop -->
+    <main class="desktop" id="desktop">
 
-        <!-- Cookie Policy Window (full policy) -->
-        <div class="window" id="cookie-policy-window" style="display: none;">
-            <div class="window-header">
-                <span class="window-title">Cookie Policy - swimmingbrain.dev</span>
-                <div class="window-buttons">
-                    <div class="window-button window-minimize" onclick="minimizeWindow('cookie-policy-window')">-</div>
-                    <div class="window-button window-close" onclick="closeWindow('cookie-policy-window')">×</div>
+        <section class="window" id="win-terminal" data-app="terminal" data-name="Terminal">
+            <header class="titlebar">
+                <span class="title">braian@swimmingbrain: ~</span>
+                <div class="controls">
+                    <button class="wbtn" data-action="minimize" aria-label="Minimize"><svg><use href="#i-min"/></svg></button>
+                    <button class="wbtn" data-action="maximize" aria-label="Maximize"><svg><use href="#i-max"/></svg></button>
+                    <button class="wbtn close" data-action="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
                 </div>
-            </div>
-            <div class="window-content" style="padding:20px">
-                <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-                    <h3 style="color: var(--text-primary); margin-bottom: 10px;">1. Overview</h3>
-                    <p>We use cookies and similar technologies to provide and secure our website, understand usage, and improve features. You can control cookies through your browser settings.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">2. Types of cookies we use</h3>
-                    <ul style="margin-left: 18px;">
-                        <li><strong>Strictly necessary</strong>: Required for core functionality (e.g., window state, preferences).</li>
-                        <li><strong>Performance</strong>: Anonymous analytics to understand site usage.</li>
-                        <li><strong>Functional</strong>: Remember choices to personalize your experience.</li>
-                        <li><strong>Third‑party</strong>: Embedded content (e.g., LinkedIn Elfsight widget) may set cookies.</li>
-                    </ul>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">3. Managing cookies</h3>
-                    <p>You can block or delete cookies in your browser. This site will function with strictly necessary cookies only if you opt out of others.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">4. Third‑party services</h3>
-                    <p>We embed third‑party content. For LinkedIn feeds provided via Elfsight, refer to their policies: <a href="https://elfsight.com/privacy-policy/" target="_blank" style="color: #ffb27a;">Elfsight Privacy Policy</a> and <a href="https://www.linkedin.com/legal/cookie-policy" target="_blank" style="color: #ffb27a;">LinkedIn Cookie Policy</a>.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">5. Contact</h3>
-                    <p>Questions? Contact: <a href="mailto:legal@swimmingbrain.dev" style="color: #ffb27a;">legal@swimmingbrain.dev</a>.</p>
-                    <p style="margin-top: 12px; font-size: 12px;">Effective date: 2025‑10‑19</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Privacy Window -->
-        <div class="window" id="privacy-window">
-            <div class="window-header">
-                <span class="window-title">Privacy Policy - swimmingbrain.dev</span>
-                <div class="window-buttons">
-                    <div class="window-button window-minimize" onclick="minimizeWindow('privacy-window')">-</div>
-                    <div class="window-button window-close" onclick="closeWindow('privacy-window')">×</div>
-                </div>
-            </div>
-            <div class="window-content" style="padding:20px">
-                <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-                    <h3 style="color: var(--text-primary); margin-bottom: 10px;">1. Introduction</h3>
-                    <p>We respect your privacy. This site is a personal portfolio and does not sell or rent personal data.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">2. Data we process</h3>
-                    <ul style="margin-left: 18px;">
-                        <li><strong>Usage data</strong>: Non‑identifying analytics (pages viewed, device type) to improve the site.</li>
-                        <li><strong>Contact data</strong>: If you email us, we process your email to respond.</li>
-                        <li><strong>Embedded content</strong>: Third‑party widgets (e.g., LinkedIn via Elfsight) may collect data per their policies.</li>
-                    </ul>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">3. Legal bases</h3>
-                    <p>We process data based on legitimate interests (site functionality and security) and consent where required for non‑essential cookies.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">4. Data retention</h3>
-                    <p>We retain data only as long as needed for the purposes described or to comply with legal obligations.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">5. Your rights</h3>
-                    <p>Depending on your location, you may have rights to access, rectify, delete, or restrict processing of your data. Contact us to exercise these rights.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">6. Security</h3>
-                    <p>We use reasonable technical and organizational measures to protect data. No method is 100% secure.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">7. International transfers</h3>
-                    <p>Third‑party providers may process data in other countries; safeguards such as standard contractual clauses may apply.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">8. Updates</h3>
-                    <p>We may update this policy from time to time. Material changes will be noted here.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">9. Contact</h3>
-                    <p>Email: <a href="mailto:privacy@swimmingbrain.dev" style="color: #ffb27a;">privacy@swimmingbrain.dev</a>.</p>
-                    <p style="margin-top: 12px; font-size: 12px;">Effective date: 2025‑10‑19</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Terms of Service Window -->
-        <div class="window" id="terms-window">
-            <div class="window-header">
-                <span class="window-title">Terms of Service - swimmingbrain.dev</span>
-                <div class="window-buttons">
-                    <div class="window-button window-minimize" onclick="minimizeWindow('terms-window')">-</div>
-                    <div class="window-button window-close" onclick="closeWindow('terms-window')">×</div>
-                </div>
-            </div>
-            <div class="window-content" style="padding:20px">
-                <div style="font-family: 'Ubuntu', sans-serif; font-size: 13px; color: var(--text-secondary); line-height: 1.6;">
-                    <h3 style="color: var(--text-primary); margin-bottom: 10px;">1. Acceptance</h3>
-                    <p>By accessing this site, you agree to these Terms. If you do not agree, please do not use the site.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">2. Use of content</h3>
-                    <p>Content is for informational and portfolio purposes. You may not misuse the site or infringe intellectual property rights.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">3. No warranties</h3>
-                    <p>The site is provided “as is” without warranties of any kind. We disclaim liability for errors or omissions.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">4. Limitation of liability</h3>
-                    <p>To the extent permitted by law, we are not liable for any damages arising from your use of the site.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">5. Third‑party links</h3>
-                    <p>Links to third‑party sites are provided for convenience. We are not responsible for their content or practices.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">6. Governing law</h3>
-                    <p>These Terms are governed by the laws of Austria, without regard to conflict of laws. Venue: Vorarlberg, AT.</p>
-                    <h3 style="color: var(--text-primary); margin: 16px 0 10px;">7. Contact</h3>
-                    <p>Email: <a href="mailto:legal@swimmingbrain.dev" style="color: #ffb27a;">legal@swimmingbrain.dev</a>.</p>
-                    <p style="margin-top: 12px; font-size: 12px;">Effective date: 2025‑10‑19</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Coming Soon: Bubblupo -->
-        <div class="window" id="coming-soon-bubblupo" style="display: none;">
-            <div class="window-header">
-                <span class="window-title">Bubblupo - Coming Soon</span>
-                <div class="window-buttons">
-                    <div class="window-button window-minimize" onclick="minimizeWindow('coming-soon-bubblupo')">-</div>
-                    <div class="window-button window-close" onclick="closeWindow('coming-soon-bubblupo')">×</div>
-                </div>
-            </div>
-            <div class="window-content" style="padding:20px">
-                <div style="font-family: 'Ubuntu Mono', monospace; color: var(--text-secondary);">
-                    <div style="color: var(--ubuntu-orange); font-size: 12px; margin-bottom: 12px;">$ status bubblupo</div>
-                    <div style="background: rgba(0,0,0,0.2); border: 1px solid #444; padding: 14px;">
-                        <div style="font-size: 14px; color: var(--text-primary); margin-bottom: 8px;">This project will be available soon.</div>
-                        <div style="font-size: 13px;">
-                            We’re polishing features and preparing a public preview. Check back shortly, or follow updates on <a href="https://www.linkedin.com/in/braian-plaku" target="_blank" style="color: #ffb27a;">LinkedIn</a>.
-                        </div>
-                        <div style="margin-top: 12px; font-size: 12px; color: #aaa;">ETA: Q4 2025</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Projects Window -->
-        <div class="window" id="projects-window">
-            <div class="window-header">
-                <span class="window-title">~/Projects - File Manager</span>
-                <div class="window-buttons">
-                    <div class="window-button window-minimize" onclick="minimizeWindow('projects-window')">-</div>
-                    <div class="window-button window-close" onclick="closeWindow('projects-window')">×</div>
-                </div>
-            </div>
-            <div class="window-content">
-                <div class="file-manager">
-                    <div class="file-toolbar">
-                        <div class="file-path">/home/braian/projects</div>
-                    </div>
-                    <div class="file-grid">
-                        <a target="_blank" rel="noopener noreferrer" href="wogsi-game.html" class="file-item">
-                            <div class="file-icon folder-icon">🔗</div>
-                            <div class="file-name">Wo gsi?</div>
-                        </a>
-                        <a target="_blank" rel="noopener noreferrer" href="https://home.vimaya.app" class="file-item">
-                            <div class="file-icon folder-icon">🔗</div>
-                            <div class="file-name">VIMAYA</div>
-                        </a>
-                        <a href="#" class="file-item" onclick="toggleWindow('coming-soon-bubblupo')">
-                            <div class="file-icon folder-icon">🔗</div>
-                            <div class="file-name">Bubblupo</div>
-                        </a>
-                        <a target="_blank" rel="noopener noreferrer" href="https://github.com/swimmingbrain/chingumat-e" class="file-item">
-                            <div class="file-icon folder-icon">🔗</div>
-                            <div class="file-name">Chingumat-e</div>
-                        </a>
-                        <a target="_blank" rel="noopener noreferrer" href="https://github.com/swimmingbrain/decoding-diabetes" class="file-item">
-                            <div class="file-icon folder-icon">🔗</div>
-                            <div class="file-name">Decoding Diabetes</div>
-                        </a>
-                        <a target="_blank" rel="noopener noreferrer" href="https://klimatree.htl-projekt.com/" class="file-item">
-                            <div class="file-icon folder-icon">🔗</div>
-                            <div class="file-name">klimaTree</div>
-                        </a>
-                        <a href="#" class="file-item" onclick="toggleWindow('resume-window')">
-                            <div class="file-icon">CV</div>
-                            <div class="file-name">Resume.pdf</div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Resume Window -->
-        <div class="window" id="resume-window">
-            <div class="window-header">
-                <span class="window-title">Resume - assets/resume.pdf</span>
-                <div class="window-buttons">
-                    <div class="window-button window-minimize" onclick="minimizeWindow('resume-window')">-</div>
-                    <div class="window-button window-close" onclick="closeWindow('resume-window')">×</div>
-                </div>
-            </div>
-            <div class="window-content" style="padding: 0; overflow: hidden;">
-                <iframe id="resume-frame" src="assets/resume.pdf" title="Resume PDF"></iframe>
-            </div>
-        </div>
-        
-        <!-- Terminal Window -->
-        <div class="window active" id="terminal-window">
-            <div class="window-header">
-                <span class="window-title">Terminal - braian@swimmingbrain:~</span>
-                <div class="window-buttons">
-                    <div class="window-button window-minimize" onclick="minimizeWindow('terminal-window')">-</div>
-                    <div class="window-button window-close" onclick="closeWindow('terminal-window')">×</div>
-                </div>
-            </div>
-            <div class="window-content">
+            </header>
+            <div class="content">
                 <div class="terminal" id="terminal">
                     <div id="terminal-output"></div>
                     <div class="terminal-line" id="terminal-input-line">
-                        <span class="terminal-user">braian@swimmingbrain</span>:<span class="terminal-path">~</span>$ 
-                        <input id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" />
+                        <span class="terminal-user">braian@swimmingbrain</span>:<span class="terminal-path">~</span>$&nbsp;<input id="terminal-input" class="terminal-input" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Terminal input">
                     </div>
-                    </div>
-            </div>
-        </div>
-        
-        <!-- LinkedIn Window -->
-        <div class="window" id="linkedin-window">
-            <div class="window-header">
-                <span class="window-title">LinkedIn - braian-plaku</span>
-                <div class="window-buttons">
-                    <div class="window-button window-minimize" onclick="minimizeWindow('linkedin-window')">-</div>
-                    <div class="window-button window-close" onclick="closeWindow('linkedin-window')">×</div>
                 </div>
             </div>
-            <div class="window-content">
-                <!-- Elfsight LinkedIn Feed | Untitled LinkedIn Feed -->
+        </section>
+
+        <section class="window" id="win-files" data-app="files" data-name="Files">
+            <header class="titlebar">
+                <span class="title">projects</span>
+                <div class="controls">
+                    <button class="wbtn" data-action="minimize" aria-label="Minimize"><svg><use href="#i-min"/></svg></button>
+                    <button class="wbtn" data-action="maximize" aria-label="Maximize"><svg><use href="#i-max"/></svg></button>
+                    <button class="wbtn close" data-action="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+                </div>
+            </header>
+            <div class="content files">
+                <div class="files-bar">
+                    <span class="crumbs"><span class="crumb">Home</span><span class="crumb on">projects</span></span>
+                </div>
+                <div class="files-view">
+                    <a class="file" href="wogsi-game.html" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>Wo gsi?</span></a>
+                    <a class="file" href="https://home.vimaya.app" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>VIMAYA</span></a>
+                    <a class="file" href="https://github.com/swimmingbrain/braincut" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>braincut</span></a>
+                    <a class="file" href="https://github.com/swimmingbrain/fmtless" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>fmtless</span></a>
+                    <a class="file" href="https://github.com/swimmingbrain/arctos-arm" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>arctos-arm</span></a>
+                    <a class="file" href="https://github.com/swimmingbrain/chingumat-e" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>chingumat-e</span></a>
+                    <button class="file" data-app="resume"><svg><use href="#i-pdf"/></svg><span>resume.pdf</span></button>
+                </div>
+                <footer class="files-status">7 items</footer>
+            </div>
+        </section>
+
+        <section class="window" id="win-about" data-app="about" data-name="About">
+            <header class="titlebar">
+                <span class="title">About</span>
+                <div class="controls">
+                    <button class="wbtn" data-action="minimize" aria-label="Minimize"><svg><use href="#i-min"/></svg></button>
+                    <button class="wbtn" data-action="maximize" aria-label="Maximize"><svg><use href="#i-max"/></svg></button>
+                    <button class="wbtn close" data-action="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+                </div>
+            </header>
+            <div class="content about">
+                <div class="about-hero">
+                    <img class="avatar" src="assets/profile.png" alt="Braian Plaku" width="96" height="96">
+                    <h1>Braian Plaku</h1>
+                    <p class="muted">swimmingbrain</p>
+                </div>
+                <div class="group">
+                    <div class="row"><span>Location</span><span>Dornbirn, Vorarlberg, Austria</span></div>
+                    <div class="row"><span>Work</span><span>Software Developer, Julius Blum GmbH</span></div>
+                    <div class="row"><span>Education</span><span>BSc Electrical Engineering, BSc Computer Science (2026), MSc Artificial Intelligence (2027)</span></div>
+                    <div class="row"><span>Focus</span><span>Software, Automation, AI</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="window" id="win-linkedin" data-app="linkedin" data-name="LinkedIn">
+            <header class="titlebar">
+                <span class="title">LinkedIn</span>
+                <div class="controls">
+                    <button class="wbtn" data-action="minimize" aria-label="Minimize"><svg><use href="#i-min"/></svg></button>
+                    <button class="wbtn" data-action="maximize" aria-label="Maximize"><svg><use href="#i-max"/></svg></button>
+                    <button class="wbtn close" data-action="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+                </div>
+            </header>
+            <div class="content linkedin">
+                <!-- Elfsight LinkedIn Feed -->
                 <script src="https://elfsightcdn.com/platform.js" async></script>
                 <div class="elfsight-app-bf7bde62-d1ed-4505-897a-68a34c844df5" data-elfsight-app-lazy></div>
-                            </div>
-                        </div>
-                        </div>
+            </div>
+        </section>
+
+        <section class="window" id="win-resume" data-app="resume" data-name="Document Viewer">
+            <header class="titlebar">
+                <span class="title">resume.pdf</span>
+                <div class="controls">
+                    <button class="wbtn" data-action="minimize" aria-label="Minimize"><svg><use href="#i-min"/></svg></button>
+                    <button class="wbtn" data-action="maximize" aria-label="Maximize"><svg><use href="#i-max"/></svg></button>
+                    <button class="wbtn close" data-action="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+                </div>
+            </header>
+            <div class="content viewer">
+                <div class="viewer-bar">
+                    <a href="assets/resume.pdf" target="_blank" rel="noopener">Open in new tab</a>
+                    <a href="assets/resume.pdf" download="braian-plaku-resume.pdf">Download</a>
+                </div>
+                <iframe id="resume-frame" src="assets/resume.pdf" title="Resume PDF"></iframe>
+            </div>
+        </section>
+
+        <section class="window legal" id="win-cookies" data-app="cookies" data-name="Cookies">
+            <header class="titlebar">
+                <span class="title">Cookie Policy</span>
+                <div class="controls">
+                    <button class="wbtn" data-action="minimize" aria-label="Minimize"><svg><use href="#i-min"/></svg></button>
+                    <button class="wbtn" data-action="maximize" aria-label="Maximize"><svg><use href="#i-max"/></svg></button>
+                    <button class="wbtn close" data-action="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+                </div>
+            </header>
+            <div class="content text">
+                <h3>1. Overview</h3>
+                <p>We use cookies and similar technologies to provide and secure our website, understand usage, and improve features. You can control cookies through your browser settings.</p>
+                <h3>2. Types of cookies we use</h3>
+                <ul>
+                    <li><strong>Strictly necessary</strong>: Required for core functionality (e.g., window state, preferences).</li>
+                    <li><strong>Performance</strong>: Anonymous analytics to understand site usage.</li>
+                    <li><strong>Functional</strong>: Remember choices to personalize your experience.</li>
+                    <li><strong>Third‑party</strong>: Embedded content (e.g., LinkedIn Elfsight widget) may set cookies.</li>
+                </ul>
+                <h3>3. Managing cookies</h3>
+                <p>You can block or delete cookies in your browser. This site will function with strictly necessary cookies only if you opt out of others.</p>
+                <h3>4. Third‑party services</h3>
+                <p>We embed third‑party content. For LinkedIn feeds provided via Elfsight, refer to their policies: <a href="https://elfsight.com/privacy-policy/" target="_blank" rel="noopener">Elfsight Privacy Policy</a> and <a href="https://www.linkedin.com/legal/cookie-policy" target="_blank" rel="noopener">LinkedIn Cookie Policy</a>.</p>
+                <h3>5. Contact</h3>
+                <p>Questions? Contact: <a href="mailto:legal@swimmingbrain.dev">legal@swimmingbrain.dev</a>.</p>
+                <p class="muted">Effective date: 2025‑10‑19</p>
+            </div>
+        </section>
+
+        <section class="window legal" id="win-privacy" data-app="privacy" data-name="Privacy">
+            <header class="titlebar">
+                <span class="title">Privacy Policy</span>
+                <div class="controls">
+                    <button class="wbtn" data-action="minimize" aria-label="Minimize"><svg><use href="#i-min"/></svg></button>
+                    <button class="wbtn" data-action="maximize" aria-label="Maximize"><svg><use href="#i-max"/></svg></button>
+                    <button class="wbtn close" data-action="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+                </div>
+            </header>
+            <div class="content text">
+                <h3>1. Introduction</h3>
+                <p>We respect your privacy. This site is a personal portfolio and does not sell or rent personal data.</p>
+                <h3>2. Data we process</h3>
+                <ul>
+                    <li><strong>Usage data</strong>: Non‑identifying analytics (pages viewed, device type) to improve the site.</li>
+                    <li><strong>Contact data</strong>: If you email us, we process your email to respond.</li>
+                    <li><strong>Embedded content</strong>: Third‑party widgets (e.g., LinkedIn via Elfsight) may collect data per their policies.</li>
+                </ul>
+                <h3>3. Legal bases</h3>
+                <p>We process data based on legitimate interests (site functionality and security) and consent where required for non‑essential cookies.</p>
+                <h3>4. Data retention</h3>
+                <p>We retain data only as long as needed for the purposes described or to comply with legal obligations.</p>
+                <h3>5. Your rights</h3>
+                <p>Depending on your location, you may have rights to access, rectify, delete, or restrict processing of your data. Contact us to exercise these rights.</p>
+                <h3>6. Security</h3>
+                <p>We use reasonable technical and organizational measures to protect data. No method is 100% secure.</p>
+                <h3>7. International transfers</h3>
+                <p>Third‑party providers may process data in other countries; safeguards such as standard contractual clauses may apply.</p>
+                <h3>8. Updates</h3>
+                <p>We may update this policy from time to time. Material changes will be noted here.</p>
+                <h3>9. Contact</h3>
+                <p>Email: <a href="mailto:privacy@swimmingbrain.dev">privacy@swimmingbrain.dev</a>.</p>
+                <p class="muted">Effective date: 2025‑10‑19</p>
+            </div>
+        </section>
+
+        <section class="window legal" id="win-terms" data-app="terms" data-name="Terms">
+            <header class="titlebar">
+                <span class="title">Terms of Service</span>
+                <div class="controls">
+                    <button class="wbtn" data-action="minimize" aria-label="Minimize"><svg><use href="#i-min"/></svg></button>
+                    <button class="wbtn" data-action="maximize" aria-label="Maximize"><svg><use href="#i-max"/></svg></button>
+                    <button class="wbtn close" data-action="close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+                </div>
+            </header>
+            <div class="content text">
+                <h3>1. Acceptance</h3>
+                <p>By accessing this site, you agree to these Terms. If you do not agree, please do not use the site.</p>
+                <h3>2. Use of content</h3>
+                <p>Content is for informational and portfolio purposes. You may not misuse the site or infringe intellectual property rights.</p>
+                <h3>3. No warranties</h3>
+                <p>The site is provided “as is” without warranties of any kind. We disclaim liability for errors or omissions.</p>
+                <h3>4. Limitation of liability</h3>
+                <p>To the extent permitted by law, we are not liable for any damages arising from your use of the site.</p>
+                <h3>5. Third‑party links</h3>
+                <p>Links to third‑party sites are provided for convenience. We are not responsible for their content or practices.</p>
+                <h3>6. Governing law</h3>
+                <p>These Terms are governed by the laws of Austria, without regard to conflict of laws. Venue: Vorarlberg, AT.</p>
+                <h3>7. Contact</h3>
+                <p>Email: <a href="mailto:legal@swimmingbrain.dev">legal@swimmingbrain.dev</a>.</p>
+                <p class="muted">Effective date: 2025‑10‑19</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- power off -->
+    <div class="poweroff" id="poweroff" hidden>
+        <pre class="poweroff-log" id="poweroff-log"></pre>
+        <div class="poweroff-boot" id="poweroff-boot" hidden>
+            <img src="assets/swimmingbrain-icon.png" alt="" width="72" height="72">
+            <p>swimmingbrain.dev is powered off.</p>
+            <p class="muted">Press any key or click to boot.</p>
+        </div>
+    </div>
+
     <script src="assets/js/desktop.js"></script>
 </body>
 </html>

@@ -1,824 +1,923 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* swimmingbrain.dev desktop
+   colours follow the Yaru dark palette: jet #181818, bg lighten(jet, 8%),
+   headerbar darken(bg, 3%), menus lighten(jet, 2%), accent #e95420 */
 
 :root {
-    --ubuntu-orange: #dd4814;
-    --ubuntu-dark: #2c001e;
-    --panel-bg: #2c2c2c;
-    --window-bg: #3c3c3c;
-    --window-header: #404040;
-    --text-primary: #ffffff;
-    --text-secondary: #cccccc;
-    --border: #1a1a1a;
-    --hover: #505050;
-    --terminal-green: #4cff00;
+    --jet: #181818;
+    --bg: #2c2c2c;
+    --base: #272727;
+    --headerbar: #242424;
+    --menu: #1d1d1d;
+    --hairline: rgba(255, 255, 255, 0.08);
+    --fg: #f7f7f7;
+    --fg-dim: #b0b0b0;
+    --accent: #e95420;
+    --accent-hover: #f0673a;
     --terminal-bg: #300a24;
-    --linkedin-blue: #0077b5;
+    --t-green: #8ae234;
+    --t-blue: #729fcf;
+    --t-cyan: #34e2e2;
+    --t-yellow: #fce94f;
+    --t-red: #ef2929;
+    --t-magenta: #ad7fa8;
+    --t-white: #eeeeec;
+    --t-gray: #555753;
+    --panel-h: 28px;
+    --dock-w: 64px;
+    --radius: 8px;
+    --font: 'Ubuntu', system-ui, sans-serif;
+    --mono: 'Ubuntu Mono', 'DejaVu Sans Mono', monospace;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
 }
 
 body {
-    font-family: 'Ubuntu', sans-serif;
-    overflow: hidden;
-    height: 100vh;
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--fg);
     background: #2c001e;
-    color: var(--text-primary);
-    position: relative;
-    user-select: none;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+a {
+    color: #ffb27a;
+}
+
+svg {
+    display: block;
+}
+
+.sprite {
+    display: none;
+}
+
+.muted {
+    color: var(--fg-dim);
+}
+
+::selection {
+    background: var(--accent);
+    color: #fff;
+}
+
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }
 
 .wallpaper {
     position: fixed;
-    top: 0;
+    inset: 0;
+    background: #2c001e url('../bg.jpg') center / cover no-repeat;
+    z-index: 0;
+}
+
+.noscript {
+    position: fixed;
+    top: var(--panel-h);
     left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('assets/bg.jpg');
-    background-position: left top;
-    background-size: cover;
-    background-repeat: no-repeat;
-    z-index: -1;
+    right: 0;
+    padding: 12px 16px;
+    background: var(--bg);
+    z-index: 2000;
 }
 
-.desktop {
-    width: 100%;
-    height: calc(100vh);
-    position: relative;
-    overflow: hidden;
-}
+/* ---------- top panel ---------- */
 
-/* Top Panel */
-.panel-top {
+.panel {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 28px;
-    background: var(--panel-bg);
+    height: var(--panel-h);
+    background: var(--jet);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 10px;
-    z-index: 10000;
+    padding: 0 6px;
     font-size: 13px;
+    font-weight: 700;
+    z-index: 1000;
+    user-select: none;
 }
 
-.panel-left {
+.panel-left, .panel-right {
     display: flex;
     align-items: center;
-    gap: 15px;
-}
-
-.panel-logo {
-    width: 20px;
-    height: 20px;
-    display: block;
-    object-fit: contain;
-}
-
-.dock-logo {
-    width: 100%;
     height: 100%;
-    padding: 5px;
-    display: block;
-    object-fit: contain;
-    margin: 0;
+    gap: 2px;
 }
 
-.activities {
-    cursor: pointer;
-    padding: 0 8px;
-    height: 28px;
+.panel-btn {
+    height: 22px;
+    padding: 0 10px;
+    border-radius: 11px;
     display: flex;
     align-items: center;
-    font-weight: 500;
+    gap: 7px;
+    white-space: nowrap;
 }
 
-.activities:hover {
-    background: var(--hover);
+.panel-btn:hover, .panel-btn.on {
+    background: rgba(255, 255, 255, 0.12);
 }
 
-/* Panel links (About, Cookies, Privacy, Terms) */
-.panel-left a.panel-link {
-    color: var(--text-primary);
-    text-decoration: none;
-}
-.panel-left span,
-.panel-left a.panel-link {
-    cursor: pointer;
-    padding: 0 8px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-}
-.panel-left span:hover,
-.panel-left a.panel-link:hover {
-    background: var(--hover);
+.panel-app {
+    padding: 0 10px;
+    font-weight: 700;
+    color: var(--fg);
 }
 
-.panel-center {
+.panel-app:empty {
+    display: none;
+}
+
+.panel-clock {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    font-family: 'Ubuntu Mono', monospace;
+    white-space: pre;
+    font-weight: 700;
 }
 
-.panel-right {
+.tray svg {
+    width: 16px;
+    height: 16px;
+}
+
+.tray .chev {
+    width: 12px;
+    height: 12px;
+    margin-left: -2px;
+}
+
+/* ---------- system menu ---------- */
+
+.popover {
+    position: fixed;
+    top: calc(var(--panel-h) + 6px);
+    right: 6px;
+    width: 300px;
+    background: var(--menu);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+    padding: 8px;
+    z-index: 1100;
+}
+
+.popover[hidden] {
+    display: none;
+}
+
+.menu-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    color: var(--fg);
+    text-decoration: none;
+}
+
+.menu-user:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.menu-user img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.menu-user span {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+}
+
+.menu-user small {
+    color: var(--fg-dim);
+    font-family: var(--mono);
+    font-size: 12px;
+}
+
+.menu-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-family: 'Ubuntu Mono', monospace;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: var(--fg);
+    text-decoration: none;
+    text-align: left;
+    font-size: 14px;
 }
 
-.system-tray {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    padding: 0 5px;
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.08);
 }
 
-.tray-icon {
-    width: 16px;
-    height: 16px;
-    background: var(--text-secondary);
-    cursor: pointer;
+.menu-item svg {
+    width: 14px;
+    height: 14px;
+    color: var(--fg-dim);
 }
 
-/* Dock */
+.menu-sep {
+    height: 1px;
+    background: var(--hairline);
+    margin: 6px 4px;
+}
+
+/* ---------- dock ---------- */
+
 .dock {
     position: fixed;
+    top: var(--panel-h);
     bottom: 0;
     left: 0;
-    width: 60px;
-    height: calc(100vh - 28px);
-    top: 28px;
-    background: rgba(28, 28, 28, 0.95);
+    width: var(--dock-w);
+    background: rgba(24, 24, 24, 0.86);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px 0;
-    gap: 10px;
-    z-index: 9998;
+    padding: 6px 0;
+    gap: 4px;
+    z-index: 900;
 }
 
 .dock-item {
-    width: 48px;
-    height: 48px;
-    background: var(--window-header);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s;
     position: relative;
-    font-family: 'Ubuntu Mono', monospace;
-    font-size: 20px;
-    color: var(--ubuntu-orange);
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 10px;
+    color: var(--fg);
+    transition: background 0.12s;
+}
+
+.dock-item svg {
+    width: 44px;
+    height: 44px;
 }
 
 .dock-item:hover {
-    background: var(--hover);
-    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.12);
 }
 
-.dock-item.active::before {
+.dock-item.running::before {
     content: '';
     position: absolute;
-    left: -5px;
+    left: -3px;
     top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 20px;
-    background: var(--ubuntu-orange);
-}
-
-.dock-tooltip {
-    position: absolute;
-    left: 60px;
-    background: var(--panel-bg);
-    padding: 4px 8px;
-    border: 1px solid var(--border);
-    font-size: 12px;
-    white-space: nowrap;
-    display: none;
-    pointer-events: none;
-}
-
-.dock-item:hover .dock-tooltip {
-    display: block;
-}
-
-/* Windows */
-.window {
-    position: absolute;
-    background: var(--window-bg);
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    min-width: 300px;
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
-}
-
-.window.active {
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
-}
-
-.window.minimized {
-    display: none;
-}
-
-.window-header {
-    height: 30px;
-    background: var(--window-header);
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    cursor: move;
-    border-bottom: 1px solid var(--border);
-}
-
-.window-title {
-    flex: 1;
-    font-size: 13px;
-    font-weight: 500;
-    font-family: 'Ubuntu', sans-serif;
-}
-
-.window-buttons {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-}
-
-.window-button {
-    width: 18px;
-    height: 18px;
+    width: 4px;
+    height: 4px;
+    margin-top: -2px;
     border-radius: 50%;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 14px;
-    font-weight: bold;
+    background: var(--fg);
 }
 
-.window-minimize {
-    background: #949494;
-}
-
-.window-maximize {
-    background: #949494;
-}
-
-.window-close {
-    background: #f25056;
-}
-
-.window-button:hover {
-    opacity: 0.8;
-}
-
-.window-content {
-    flex: 1;
-    overflow: auto;
-    background: var(--window-bg);
-}
-
-/* Resume Window (top-most among app windows) */
-#resume-window {
-    top: 100px;
-    left: 160px;
-    width: 720px;
-    height: 560px;
-    display: none;
-    z-index: 14000; /* ensure PDF window sits above other app windows */
-}
-#resume-frame {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-}
-
-/* About Window */
-#about-window {
-    top: 80px;
-    left: 100px;
-    width: 420px;
-    height: 520px;
-}
-
-/* Legal Windows (always on top layer over app windows) */
-#cookies-window, #privacy-window, #terms-window, #cookie-policy-window, #coming-soon-bubblupo {
-    top: 90px;
-    left: 140px;
-    width: 640px;
-    height: 500px;
-    display: none;
-    z-index: 15000;
-}
-
-#cookies-window {
-    height: 200px
-}
-
-/* Coming soon window: lower height */
-#coming-soon-bubblupo {
-    height: 300px;
-}
-
-.about-container {
-    color: var(--text-secondary);
-    font-family: 'Ubuntu Mono', monospace;
-    padding: 10px;
-}
-
-.about-portrait {
-    display: block;
-    width: 180px;
-    height: auto;
-    margin: 0; /* left-aligned, no space above system-info */
-    filter: none;
-}
-
-.system-info {
-    border: 1px solid #555;
-    padding: 15px;
-    margin: 0 0 15px 0; /* no top space so it sits over the portrait */
-    background: rgba(0, 0, 0, 0.3);
-}
-
-.info-line {
-    display: flex;
-    margin: 8px 0;
-    font-size: 13px;
-}
-
-.info-label {
-    color: var(--ubuntu-orange);
-    min-width: 120px;
-}
-
-.info-value {
-    color: var(--text-primary);
-}
-
-/* Projects Window */
-#projects-window {
-    top: 80px;
-    left: 560px;
-    width: 500px;
-    height: 400px;
-}
-
-.file-manager {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.file-toolbar {
-    display: flex;
-    gap: 10px;
-    padding: 10px;
-    background: #353535;
-    border-bottom: 1px solid var(--border);
-}
-
-.file-path {
-    flex: 1;
-    background: var(--terminal-bg);
-    border: 1px solid var(--border);
-    padding: 4px 8px;
-    color: var(--text-primary);
-    font-family: 'Ubuntu Mono', monospace;
-    font-size: 12px;
-}
-
-.file-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 15px;
-    padding: 15px;
-}
-
-.file-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 4px;
-    text-decoration: none;
-    color: var(--text-primary);
-}
-
-.file-item:hover {
+.dock-item.focused {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.file-icon {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, var(--ubuntu-orange), #ff6b35);
+.dock-item::after {
+    content: attr(data-label);
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: var(--menu);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s;
+}
+
+.dock-item:hover::after {
+    opacity: 1;
+}
+
+.dock-spacer {
+    flex: 1;
+}
+
+.dock-apps svg {
+    width: 24px;
+    height: 24px;
+    color: var(--fg-dim);
+}
+
+.dock-apps:hover svg, .dock-apps.on svg {
+    color: var(--fg);
+}
+
+/* ---------- activities overview ---------- */
+
+.overview {
+    position: fixed;
+    inset: var(--panel-h) 0 0 var(--dock-w);
+    background: rgba(0, 0, 0, 0.72);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 6vh;
+    gap: 40px;
+    z-index: 950;
+}
+
+.overview[hidden] {
+    display: none;
+}
+
+.overview-search {
+    width: min(360px, 80%);
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--fg);
+    font: inherit;
+    text-align: center;
+    outline: none;
+}
+
+.overview-search:focus {
+    border-color: var(--accent);
+}
+
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 118px);
+    gap: 18px;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 6px 12px;
+    border-radius: 14px;
+    color: var(--fg);
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.app:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.app svg {
+    width: 64px;
+    height: 64px;
+}
+
+.app[hidden] {
+    display: none;
+}
+
+.overview-empty {
+    color: var(--fg-dim);
+}
+
+/* ---------- desktop and windows ---------- */
+
+.desktop {
+    position: fixed;
+    inset: var(--panel-h) 0 0 var(--dock-w);
+    overflow: hidden;
+    z-index: 1;
+}
+
+.window {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    min-width: 320px;
+    min-height: 180px;
+    width: 640px;
+    height: 400px;
+    background: var(--bg);
+    border: 1px solid rgba(0, 0, 0, 0.7);
+    border-radius: var(--radius);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 10px 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    resize: both;
+}
+
+.window.open {
+    display: flex;
+}
+
+.window.focused {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 20px 50px rgba(0, 0, 0, 0.65);
+}
+
+.window.maximized {
+    inset: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    border-radius: 0;
+    resize: none;
+}
+
+.titlebar {
+    flex: none;
+    height: 38px;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Ubuntu Mono', monospace;
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
+    background: var(--headerbar);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.55);
+    font-size: 13px;
+    font-weight: 700;
+    user-select: none;
+    touch-action: none;
 }
 
-.folder-icon {
-    background: #656565;
-    position: relative;
+.window:not(.focused) .titlebar {
+    color: var(--fg-dim);
 }
 
-.folder-icon::before {
-    content: '';
+.title {
+    max-width: calc(100% - 200px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.controls {
     position: absolute;
-    top: -3px;
-    left: 0;
-    width: 20px;
-    height: 5px;
-    background: #757575;
-    border-radius: 2px 2px 0 0;
+    right: 7px;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
-.file-name {
-    font-size: 11px;
-    text-align: center;
-    word-break: break-word;
+.wbtn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: var(--fg);
 }
 
-/* Terminal Window */
-#terminal-window {
-    bottom: 60px;
-    left: 100px;
-    width: 600px;
-    height: 400px;
+.wbtn svg {
+    width: 14px;
+    height: 14px;
 }
+
+.wbtn:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.wbtn.close {
+    background: rgba(255, 255, 255, 0.13);
+}
+
+.wbtn.close:hover {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.window:not(.focused) .wbtn {
+    color: var(--fg-dim);
+}
+
+.content {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* window sizes */
+#win-terminal { width: 680px; height: 420px; }
+#win-files { width: 640px; height: 420px; }
+#win-about { width: 440px; height: 580px; }
+#win-linkedin { width: 480px; height: 600px; }
+#win-resume { width: 760px; height: 620px; }
+.window.legal { width: 620px; height: 480px; }
+
+/* ---------- terminal ---------- */
 
 .terminal {
+    flex: 1;
     background: var(--terminal-bg);
-    color: var(--text-primary);
-    font-family: 'Ubuntu Mono', monospace;
-    font-size: 13px;
-    padding: 10px;
-    height: 100%;
+    color: var(--fg);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.35;
+    padding: 8px 10px;
     overflow-y: auto;
-    line-height: 1.4;
+    cursor: text;
 }
 
 #terminal-output {
     white-space: pre-wrap;
-}
-
-.terminal-input {
-    background: transparent;
-    color: var(--text-primary);
-    border: none;
-    outline: none;
-    font-family: 'Ubuntu Mono', monospace;
-    font-size: 13px;
-    width: 70%;
-    padding: 0;
-    margin: 0;
+    word-break: break-word;
 }
 
 .terminal-line {
-    margin: 2px 0;
+    display: flex;
+    align-items: baseline;
+    white-space: pre;
 }
 
-.terminal-prompt {
-    color: var(--terminal-green);
+.terminal-input {
+    flex: 1;
+    min-width: 40px;
+    background: transparent;
+    color: var(--fg);
+    border: 0;
+    outline: none;
+    font: inherit;
+    caret-color: var(--fg);
 }
 
 .terminal-user {
-    color: var(--terminal-green);
-}
-
-.terminal-host {
-    color: var(--text-primary);
+    color: var(--t-green);
+    font-weight: 700;
 }
 
 .terminal-path {
-    color: #729fcf;
+    color: var(--t-blue);
+    font-weight: 700;
 }
 
-.terminal-command {
-    color: var(--text-primary);
+/* ---------- files ---------- */
+
+.files-bar {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    background: var(--headerbar);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
 }
 
-.terminal-output {
-    color: var(--text-secondary);
-    margin-left: 0;
+.crumbs {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 28px;
+    padding: 0 4px;
+    border-radius: 6px;
+    background: var(--base);
+    border: 1px solid var(--hairline);
+    font-size: 13px;
 }
 
-.terminal-cursor {
-    display: inline-block;
-    width: 8px;
-    height: 14px;
-    background: var(--text-primary);
-    animation: blink 1s infinite;
+.crumb {
+    padding: 0 10px;
+    height: 24px;
+    line-height: 24px;
+    border-radius: 5px;
+    color: var(--fg-dim);
 }
 
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
+.crumb.on {
+    color: var(--fg);
+    font-weight: 700;
 }
 
-/* Powered-off overlay */
-.powered-off-overlay {
+.files-view {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    align-content: start;
+    gap: 6px;
+    padding: 12px;
+    overflow-y: auto;
+}
+
+.file {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 4px;
+    border-radius: 8px;
+    color: var(--fg);
+    text-decoration: none;
+    font-size: 12.5px;
+    text-align: center;
+    word-break: break-word;
+}
+
+.file:hover, .file:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    outline: none;
+}
+
+.file svg {
+    width: 56px;
+    height: 56px;
+}
+
+.files-status {
+    flex: none;
+    padding: 5px 12px;
+    border-top: 1px solid var(--hairline);
+    color: var(--fg-dim);
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---------- about ---------- */
+
+.about {
+    padding: 8px 14px 16px;
+}
+
+.about-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 18px 0 16px;
+    text-align: center;
+}
+
+.avatar {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: 50% 20%;
+    background: #3d3d3d;
+    margin-bottom: 12px;
+}
+
+.about h1 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.about-hero .muted {
+    font-family: var(--mono);
+    font-size: 13px;
+}
+
+.group {
+    background: var(--base);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 13px;
+    color: var(--fg);
+    text-decoration: none;
+}
+
+.row:last-child {
+    border-bottom: 0;
+}
+
+.row > span:first-child {
+    flex: none;
+    color: var(--fg-dim);
+}
+
+.row > span:last-child {
+    text-align: right;
+}
+
+a.row:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* ---------- linkedin ---------- */
+
+.linkedin {
+    background: #1b1f23;
+}
+
+/* ---------- document viewer ---------- */
+
+.viewer-bar {
+    flex: none;
+    display: flex;
+    gap: 16px;
+    padding: 6px 12px;
+    background: var(--headerbar);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+    font-size: 12.5px;
+}
+
+.viewer-bar a {
+    color: var(--fg-dim);
+    text-decoration: none;
+}
+
+.viewer-bar a:hover {
+    color: var(--fg);
+}
+
+#resume-frame {
+    flex: 1;
+    width: 100%;
+    border: 0;
+    background: #525659;
+}
+
+/* ---------- legal text ---------- */
+
+.text {
+    padding: 16px 20px 24px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--fg-dim);
+}
+
+.text h3 {
+    color: var(--fg);
+    font-size: 14px;
+    margin: 14px 0 6px;
+}
+
+.text h3:first-child {
+    margin-top: 0;
+}
+
+.text ul {
+    margin-left: 18px;
+}
+
+.text .muted {
+    margin-top: 14px;
+    font-size: 12px;
+}
+
+/* ---------- power off ---------- */
+
+.poweroff {
     position: fixed;
     inset: 0;
     background: #000;
-    color: #0f0;
-    font-family: 'Ubuntu Mono', monospace;
-    z-index: 20000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-}
-.powered-off-overlay .message {
-    max-width: 800px;
-    line-height: 1.6;
+    color: #ccc;
+    font-family: var(--mono);
     font-size: 14px;
+    line-height: 1.5;
+    padding: 20px 24px;
+    z-index: 3000;
+    cursor: pointer;
+}
+
+.poweroff[hidden] {
+    display: none;
+}
+
+.poweroff-log {
+    font: inherit;
     white-space: pre-wrap;
 }
 
-/* LinkedIn Window */
-#linkedin-window {
-    top: 80px;
-    left: calc(560px + 500px + 20px); /* next to projects window */
-    width: 520px;
-    height: 600px;
+.poweroff-log .ok {
+    color: var(--t-green);
 }
 
-.linkedin-container {
+.poweroff-boot {
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    height: 100%;
-}
-
-.linkedin-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid #444;
-}
-
-.linkedin-profile-img {
-    width: 60px;
-    height: 60px;
-    background: var(--linkedin-blue);
-    color: white;
-    display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
-    border-radius: 4px;
+    gap: 8px;
+    text-align: center;
 }
 
-.linkedin-profile-info {
-    flex: 1;
+.poweroff-boot[hidden] {
+    display: none;
 }
 
-.linkedin-name {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 4px;
-}
-
-.linkedin-title {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-}
-
-.linkedin-connect-btn {
-    background: var(--linkedin-blue);
-    color: white;
-    border: none;
-    padding: 6px 16px;
-    border-radius: 2px;
-    cursor: pointer;
-    font-size: 13px;
-    text-decoration: none;
-    display: inline-block;
-    transition: background 0.2s;
-}
-
-.linkedin-connect-btn:hover {
-    background: #005885;
-}
-
-.linkedin-tabs {
-    display: flex;
-    gap: 20px;
-    padding: 0 15px;
-    border-bottom: 1px solid #444;
-}
-
-.linkedin-tab {
-    padding: 10px 0;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    font-size: 14px;
-    color: var(--text-secondary);
-}
-
-.linkedin-tab.active {
-    color: var(--text-primary);
-    border-bottom-color: var(--ubuntu-orange);
-}
-
-.linkedin-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 15px;
-}
-
-.feed-post {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid #444;
-    padding: 12px;
+.poweroff-boot img {
     margin-bottom: 12px;
+    opacity: 0.9;
 }
 
-.feed-header {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    align-items: center;
-}
+/* ---------- small screens ---------- */
 
-.feed-avatar {
-    width: 36px;
-    height: 36px;
-    background: var(--linkedin-blue);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-    color: white;
-}
-
-.feed-meta {
-    flex: 1;
-}
-
-.feed-author {
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.feed-time {
-    font-size: 11px;
-    color: var(--text-secondary);
-    font-family: 'Ubuntu Mono', monospace;
-}
-
-.feed-content {
-    font-size: 13px;
-    line-height: 1.5;
-    color: var(--text-secondary);
-    margin-bottom: 10px;
-}
-
-.feed-actions {
-    display: flex;
-    gap: 20px;
-    padding-top: 8px;
-    border-top: 1px solid #333;
-}
-
-.feed-action {
-    font-size: 12px;
-    color: var(--text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.feed-action:hover {
-    color: var(--ubuntu-orange);
-}
-
-.skills-grid {
-    display: grid;
-    gap: 10px;
-}
-
-.skill-item {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid #444;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.skill-name {
-    font-size: 13px;
-}
-
-.skill-endorsements {
-    background: var(--ubuntu-orange);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 2px;
-    font-size: 11px;
-}
-
-.experience-item {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid #444;
-    padding: 12px;
-    margin-bottom: 12px;
-}
-
-.experience-title {
-    font-weight: 500;
-    font-size: 14px;
-    margin-bottom: 4px;
-}
-
-.experience-company {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin-bottom: 2px;
-}
-
-.experience-duration {
-    font-size: 11px;
-    color: var(--text-secondary);
-    font-family: 'Ubuntu Mono', monospace;
-    margin-bottom: 8px;
-}
-
-.experience-description {
-    font-size: 12px;
-    line-height: 1.4;
-    color: var(--text-secondary);
-}
-
-/* Responsive */
 @media (max-width: 768px) {
+    :root {
+        --dock-w: 0px;
+    }
+
+    .panel-clock {
+        font-size: 12px;
+    }
+
     .dock {
-        width: 100%;
-        height: 48px;
-        flex-direction: row;
-        bottom: 0;
         top: auto;
-        padding: 0 10px;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 60px;
+        flex-direction: row;
         justify-content: center;
+        padding: 0 8px;
+        gap: 8px;
     }
-    
-    .dock-item {
-        width: 40px;
-        height: 40px;
+
+    .dock-spacer {
+        display: none;
     }
-    
-    .dock-tooltip {
-        display: none !important;
+
+    .dock-item::after,
+    .dock-item.running::before {
+        display: none;
     }
-    
-    .window {
-        position: fixed !important;
-        top: 28px !important;
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 48px !important;
-        width: 100% !important;
-        height: auto !important;
-        max-width: 100% !important;
+
+    .dock-item.focused {
+        background: rgba(255, 255, 255, 0.14);
     }
-    
+
     .desktop {
-        height: calc(100vh - 28px - 48px);
+        inset: var(--panel-h) 0 60px 0;
+    }
+
+    .overview {
+        inset: var(--panel-h) 0 60px 0;
+        gap: 24px;
+    }
+
+    .app-grid {
+        grid-template-columns: repeat(3, 96px);
+        gap: 8px;
+    }
+
+    .app svg {
+        width: 52px;
+        height: 52px;
+    }
+
+    .window,
+    .window.maximized {
+        inset: 0 !important;
+        width: auto !important;
+        height: auto !important;
+        min-width: 0;
+        border-radius: 0;
+        border: 0;
+        resize: none;
+    }
+
+    .wbtn[data-action="maximize"] {
+        display: none;
+    }
+
+    .popover {
+        right: 0;
+        left: 0;
+        width: auto;
+        margin: 0 6px;
     }
 }
 
-/* Hide date/time on very small screens */
-@media (max-width: 600px) {
-    .panel-center { display: none; }
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
 }
