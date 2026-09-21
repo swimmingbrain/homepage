@@ -3,162 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WoGsi? - Entdecke Vorarlberg</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/wogsi-game.css">
+    <title>Wo gsi? | Vorarlberg erraten</title>
+    <meta name="description" content="Wo gsi? ist ein Ratespiel mit Google Street View. Fünf zufällige Orte in Vorarlberg, schau dich um und tipp auf die Karte, wo du bist.">
+    <link rel="canonical" href="https://swimmingbrain.dev/wogsi-game.html">
+    <meta name="theme-color" content="#111113">
+    <link rel="icon" href="assets/icon-64.png" type="image/png" sizes="64x64">
+    <link rel="apple-touch-icon" href="assets/icon-180.png">
+    <meta property="og:title" content="Wo gsi?">
+    <meta property="og:description" content="Fünf zufällige Orte in Vorarlberg. Schau dich um und rate, wo du bist.">
+    <meta property="og:image" content="https://swimmingbrain.dev/assets/sb-pfp.png">
+    <meta property="og:url" content="https://swimmingbrain.dev/wogsi-game.html">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/wogsi-game.css">
 </head>
 <body>
-    <div class="ocean-bg">
-        <div class="wave"></div>
-        <div class="wave"></div>
-        <div class="wave"></div>
+    <header class="topbar">
+        <a class="brand" href="/">
+            <img src="assets/icon-64.png" alt="" width="22" height="22">
+            <span>Wo gsi?</span>
+        </a>
+        <div class="topbar-right">
+            <button class="chip mono" id="name-chip" type="button" hidden title="Name ändern"></button>
+            <button class="tlink side-toggle" id="side-toggle" type="button" aria-controls="sidebar" aria-expanded="false">Bestenliste</button>
+            <a class="tlink" href="https://github.com/swimmingbrain/homepage" target="_blank" rel="noopener">GitHub</a>
+            <a class="tlink" href="/">swimmingbrain.dev</a>
+        </div>
+    </header>
+
+    <div class="body">
+        <aside class="sidebar" id="sidebar">
+            <div class="side-head">
+                <span>Bestenliste</span>
+                <span class="muted mono" id="lb-count"></span>
+                <button class="tbtn" id="lb-refresh" type="button">neu laden</button>
+            </div>
+            <ol class="lb" id="lb"><li class="lb-note">lädt</li></ol>
+            <div class="side-foot muted">ein Eintrag pro Name, nur der beste Lauf</div>
+        </aside>
+
+        <main class="main" id="main">
+            <section class="pane pano-pane">
+                <div class="pane-head">
+                    <span class="pane-title">Street View</span>
+                    <span class="timer mono" id="timer">2:00</span>
+                    <button class="tbtn" id="pano-reset" type="button">zum Start</button>
+                </div>
+                <div class="timebar"><div class="timebar-fill" id="timebar"></div></div>
+                <div class="pano" id="pano"></div>
+                <div class="pano-note mono" id="pano-note" hidden></div>
+            </section>
+
+            <section class="pane map-pane">
+                <div class="pane-head">
+                    <span class="pane-title">Karte</span>
+                    <button class="tbtn" id="map-size" type="button">größer</button>
+                </div>
+                <div id="map"></div>
+                <div class="map-foot">
+                    <span class="muted" id="map-hint">Tipp auf die Karte, wo du bist</span>
+                    <button class="btn primary" id="guess" type="button" disabled>Schätzen</button>
+                </div>
+            </section>
+
+            <div class="overlay" id="ov-start">
+                <div class="card">
+                    <div class="card-head"><span class="dots"><i></i><i></i><i></i></span><span class="mono">start</span></div>
+                    <div class="card-body">
+                        <h1>Wo gsi?</h1>
+                        <p>Fünf zufällige Orte in Vorarlberg. Schau dich um, tipp auf die Karte und sag, wo du bist.</p>
+                        <ul class="rules">
+                            <li>Zwei Minuten pro Runde. Wer schnell ist, bekommt mehr Punkte.</li>
+                            <li>Bis zu 5000 Punkte pro Runde. Je näher, desto mehr.</li>
+                            <li>Die Bestenliste merkt sich deinen besten Lauf.</li>
+                        </ul>
+                        <label class="field"><span>Dein Name</span><input id="name" type="text" maxlength="20" autocomplete="nickname" spellcheck="false" placeholder="steht dann in der Bestenliste"></label>
+                        <div class="row">
+                            <button class="btn primary" id="start" type="button">Los</button>
+                            <span class="muted" id="start-note"></span>
+                        </div>
+                        <div class="history" id="history" hidden></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overlay" id="ov-result" hidden>
+                <div class="card">
+                    <div class="card-head"><span class="dots"><i></i><i></i><i></i></span><span class="mono" id="result-tab">runde 1</span></div>
+                    <div class="card-body">
+                        <h2 id="result-title"></h2>
+                        <p class="muted" id="result-place"></p>
+                        <div class="stats mono">
+                            <span id="result-dist"></span>
+                            <span id="result-time"></span>
+                            <span id="result-points"></span>
+                        </div>
+                        <div id="result-map"></div>
+                        <div class="row">
+                            <button class="btn primary" id="next" type="button">Weiter</button>
+                            <span class="muted">oder Enter</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overlay" id="ov-end" hidden>
+                <div class="card wide">
+                    <div class="card-head"><span class="dots"><i></i><i></i><i></i></span><span class="mono">ergebnis</span></div>
+                    <div class="card-body">
+                        <h2 id="end-points"></h2>
+                        <p class="muted" id="end-sub"></p>
+                        <table class="rounds mono" id="end-rounds"></table>
+                        <div class="save" id="save">
+                            <label class="field"><span>Name für die Bestenliste</span><input id="save-name" type="text" maxlength="20" autocomplete="nickname" spellcheck="false"></label>
+                            <div class="row">
+                                <button class="btn primary" id="save-btn" type="button">Eintragen</button>
+                                <span class="muted" id="save-note"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <button class="btn" id="again" type="button">Nochmal</button>
+                            <button class="btn" id="share" type="button">Ergebnis kopieren</button>
+                            <span class="muted" id="share-note"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <div class="container">
-        <header class="header game-header">
-            <div class="welcome-text">
-                <h1>entdecke <span class="highlight">vorarlberg</span></h1>
-                <span class="domain">Wo gsi?</span>
-            </div>
-            <div class="divider"></div>
-        </header>
+    <footer class="statusbar mono">
+        <span id="st-round">bereit</span>
+        <span id="st-points">0 Punkte</span>
+        <span id="st-best"></span>
+        <span class="grow"></span>
+        <span id="st-name"></span>
+        <span class="muted">Vorarlberg, zufällige Orte</span>
+    </footer>
 
-        <!-- Game Stats -->
-        <div class="game-stats">
-            <div class="stat-card">
-                <i class="fas fa-map-marker-alt"></i>
-                <span class="stat-value" id="round-number">1/5</span>
-                <span class="stat-label">Runde</span>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-trophy"></i>
-                <span class="stat-value" id="total-score">0</span>
-                <span class="stat-label">Punkte</span>
-            </div>
-            <div class="stat-card">
-                <i class="fas fa-bullseye"></i>
-                <span class="stat-value" id="best-guess">-</span>
-                <span class="stat-label">Beste Schätzung</span>
-            </div>
-        </div>
-
-        <!-- Main Game Area -->
-        <div class="game-container">
-            <!-- Google Street View -->
-            <div class="panorama-container" id="panorama-container">
-                <div id="street-view-container" class="street-view-container">
-                    <div class="loading-spinner" id="loading-spinner">
-                        <div class="spinner"></div>
-                        <p>Lade Straßenansicht...</p>
-                    </div>
-                </div>
-                <div class="panorama-controls">
-                    <button class="control-btn" id="fullscreen" title="Vollbild">
-                        <i class="fas fa-expand"></i>
-                    </button>
-                    <button class="control-btn" id="reset-view" title="Ansicht zurücksetzen">
-                        <i class="fas fa-undo"></i>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Map for Guessing -->
-            <div class="map-container" id="map-container">
-                <div id="guess-map"></div>
-                <button class="guess-btn" id="make-guess" disabled>
-                    <i class="fas fa-check"></i> Schätzen
-                </button>
-            </div>
-        </div>
-
-        <!-- Leaderboard Section -->
-        <div class="leaderboard-section">
-            <h2><i class="fas fa-crown"></i> Bestenliste</h2>
-            <div class="leaderboard-container" id="leaderboard-container">
-                <div class="loading-spinner">
-                    <div class="spinner"></div>
-                    <p>Lade Bestenliste...</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Results Modal -->
-        <div class="modal" id="results-modal">
-            <div class="modal-content">
-                <h2>Rundenergebnis</h2>
-                <div class="result-info">
-                    <div class="distance-result">
-                        <i class="fas fa-route"></i>
-                        <span id="distance-text">0 km entfernt</span>
-                    </div>
-                    <div class="score-result">
-                        <i class="fas fa-star"></i>
-                        <span id="score-text">0 Punkte</span>
-                    </div>
-                </div>
-                <div id="result-map"></div>
-                <button class="next-round-btn" id="next-round">
-                    <i class="fas fa-arrow-right"></i> Nächste Runde
-                </button>
-            </div>
-        </div>
-
-        <!-- Game Over Modal -->
-        <div class="modal" id="game-over-modal">
-            <div class="modal-content">
-                <h2>Spiel beendet!</h2>
-                <div class="final-score">
-                    <i class="fas fa-trophy"></i>
-                    <span id="final-score-text">0</span>
-                    <span>Gesamtpunkte</span>
-                </div>
-                <div class="score-breakdown" id="score-breakdown"></div>
-                <div class="player-name-section" id="player-name-section">
-                    <h3>Trage dich in die Bestenliste ein!</h3>
-                    <div class="name-input-group">
-                        <input type="text" id="player-name" placeholder="Dein Name" maxlength="20">
-                        <button class="submit-score-btn" id="submit-score">
-                            <i class="fas fa-paper-plane"></i> Eintragen
-                        </button>
-                    </div>
-                    <p class="name-hint">Nur dein bester Score wird gespeichert</p>
-                </div>
-                <button class="play-again-btn" id="play-again">
-                    <i class="fas fa-redo"></i> Nochmal spielen
-                </button>
-            </div>
-        </div>
-
-        <!-- Start Screen -->
-        <div class="modal show" id="start-modal">
-            <div class="modal-content start-content">
-                <div class="brain-jar small">
-                    <div class="jar">
-                        <div class="water-fill"></div>
-                        <div class="water-surface"></div>
-                        <div class="brain">🗺️</div>
-                    </div>
-                </div>
-                <h2>Willkommen beim 'WoGsi?'!</h2>
-                <p>Entdecke Vorarlberg durch Google Street View. Schaue dich um und rate, wo du dich befindest!</p>
-                <div class="game-rules">
-                    <h3>So spielst du:</h3>
-                    <ul>
-                        <li>Erkunde die Umgebung mit Street View</li>
-                        <li>Klicke auf die Karte, um deine Schätzung abzugeben</li>
-                        <li>Je näher deine Schätzung, desto mehr Punkte!</li>
-                    </ul>
-                </div>
-                <button class="start-game-btn" id="start-game">
-                    <i class="fas fa-play"></i> Spiel starten
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="assets/js/wogsi-game.js"></script>
 </body>
