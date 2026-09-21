@@ -175,8 +175,9 @@
 
     /* ---------- leaflet maps ---------- */
 
-    const TILES = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-    const TILE_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
+    /* plain osm tiles, darkened in css. carto basemaps want an api key now */
+    const TILES = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+    const TILE_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
     const pin = cls => L.divIcon({ className: `pin ${cls || ''}`, iconSize: [14, 14], iconAnchor: [7, 7] });
     let guessMap = null;
     let guessMarker = null;
@@ -184,7 +185,7 @@
 
     function initGuessMap() {
         guessMap = L.map('map', { zoomControl: true, attributionControl: true, minZoom: 8, maxZoom: 17 });
-        L.tileLayer(TILES, { attribution: TILE_ATTR, subdomains: 'abcd', maxZoom: 19 }).addTo(guessMap);
+        L.tileLayer(TILES, { attribution: TILE_ATTR, maxZoom: 19, className: 'dark-tiles' }).addTo(guessMap);
         L.polygon(VBG, { color: '#d19a66', weight: 1.2, opacity: 0.55, fill: false, interactive: false }).addTo(guessMap);
         guessMap.fitBounds(VBG, { padding: [10, 10] });
         guessMap.setMaxBounds(L.latLngBounds([46.6, 9.1], [47.85, 10.6]));
@@ -212,7 +213,7 @@
     function showResultMap(place, guess) {
         if (!resultMap) {
             resultMap = L.map('result-map', { zoomControl: false, attributionControl: false, minZoom: 7, maxZoom: 17 });
-            L.tileLayer(TILES, { subdomains: 'abcd', maxZoom: 19 }).addTo(resultMap);
+            L.tileLayer(TILES, { maxZoom: 19, className: 'dark-tiles' }).addTo(resultMap);
         }
         resultMap.eachLayer(l => { if (!(l instanceof L.TileLayer)) resultMap.removeLayer(l); });
         const actual = L.marker([place.lat, place.lng], { icon: pin('actual') }).addTo(resultMap);

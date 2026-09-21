@@ -701,6 +701,10 @@ a {
     font-family: var(--font-ui);
 }
 
+.dark-tiles {
+    filter: invert(1) hue-rotate(180deg) brightness(0.82) contrast(0.92) saturate(0.55);
+}
+
 .leaflet-bar a {
     background: var(--bg-elevated);
     color: var(--text);
