@@ -610,6 +610,10 @@ a {
     color: var(--text-2);
 }
 
+.stats span:empty {
+    display: none;
+}
+
 .stats span:last-child {
     border-color: var(--accent);
     color: var(--accent);

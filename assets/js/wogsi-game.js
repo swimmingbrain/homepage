@@ -10,6 +10,8 @@
     };
     const ROUNDS = 5;
     const MAX_POINTS = 5000;
+    const LIMIT = 120;      /* seconds per round */
+    const FREE = 30;        /* seconds without any deduction */
 
     /* rough outline of Vorarlberg, lat/lng, clockwise from the Old Rhine mouth */
     const VBG = [
@@ -36,6 +38,7 @@
     const fmtKm = d => d < 1
         ? `${Math.round(d * 1000)} m`
         : `${d.toLocaleString('de-AT', { maximumFractionDigits: 1 })} km`;
+    const fmtTime = t => `${Math.floor(t / 60)}:${String(Math.floor(t % 60)).padStart(2, '0')}`;
     const esc = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
     function dist(a, b) {
@@ -69,10 +72,16 @@
         return [s[0] + (Math.random() - 0.5) * 0.02, s[1] + (Math.random() - 0.5) * 0.03];
     }
 
-    function pointsFor(d) {
+    /* full points inside the first 30 seconds, then down to half at the limit */
+    function timeFactor(t) {
+        if (t <= FREE) return 1;
+        return Math.max(0.5, 1 - 0.5 * (t - FREE) / (LIMIT - FREE));
+    }
+
+    function pointsFor(d, t) {
         if (d === null) return 0;
-        if (d < 0.15) return MAX_POINTS;
-        return Math.round(MAX_POINTS * Math.exp(-d / 10));
+        const base = d < 0.15 ? MAX_POINTS : MAX_POINTS * Math.exp(-d / 10);
+        return Math.round(base * timeFactor(t));
     }
 
     /* ---------- street view lookup ---------- */
@@ -244,7 +253,45 @@
         next: null,
         rounds: [],
         name: '',
+        t0: 0,
+        tick: null,
+        elapsed: 0,
+        done: false,
     };
+
+    /* ---------- round timer ---------- */
+
+    const timerEl = $('#timer');
+    const barEl = $('#timebar');
+
+    function drawTimer(left) {
+        timerEl.textContent = fmtTime(Math.max(0, Math.ceil(left)));
+        barEl.style.width = `${Math.max(0, left / LIMIT * 100)}%`;
+        const low = left <= 15;
+        timerEl.classList.toggle('low', low);
+        barEl.classList.toggle('low', low);
+    }
+
+    function startTimer() {
+        stopTimer();
+        state.t0 = Date.now();
+        state.elapsed = 0;
+        drawTimer(LIMIT);
+        state.tick = setInterval(() => {
+            const left = LIMIT - (Date.now() - state.t0) / 1000;
+            drawTimer(left);
+            if (left <= 0) {
+                stopTimer();
+                finishRound();
+            }
+        }, 250);
+    }
+
+    function stopTimer() {
+        if (state.tick) clearInterval(state.tick);
+        state.tick = null;
+        if (state.t0) state.elapsed = Math.min(LIMIT, (Date.now() - state.t0) / 1000);
+    }
 
     const ov = { start: $('#ov-start'), result: $('#ov-result'), end: $('#ov-end') };
     const show = which => Object.entries(ov).forEach(([k, el]) => { el.hidden = k !== which; });
@@ -275,6 +322,7 @@
     async function nextRound() {
         state.round += 1;
         state.locked = true;
+        state.done = false;
         clearGuess();
         note('Ort wird gesucht');
         let place = await state.next;
@@ -293,6 +341,7 @@
         status();
         await showPano(place);
         state.locked = false;
+        startTimer();
     }
 
     function guess() {
@@ -301,20 +350,25 @@
     }
 
     function finishRound() {
+        if (!state.playing || state.done) return;
+        state.done = true;
         state.locked = true;
+        stopTimer();
+        const t = state.elapsed;
         const d = state.guess ? dist(state.guess, state.place) : null;
-        const points = pointsFor(d);
+        const points = pointsFor(d, t);
         state.total += points;
         if (d !== null && (state.best === null || d < state.best)) state.best = d;
-        const rec = { round: state.round, place: state.place, guess: state.guess, dist: d, points };
+        const rec = { round: state.round, place: state.place, guess: state.guess, dist: d, time: t, points };
         state.rounds.push(rec);
         status();
 
         $('#result-tab').textContent = `runde ${state.round}`;
-        $('#result-title').textContent = d === null ? 'Keine Schätzung' : d < 0.15 ? 'Volltreffer' : `${fmtKm(d)} daneben`;
+        $('#result-title').textContent = d === null ? 'Zeit um, keine Schätzung' : d < 0.15 ? 'Volltreffer' : `${fmtKm(d)} daneben`;
         $('#result-place').textContent = '';
-        $('#result-dist').textContent = d === null ? 'keine Schätzung' : `Entfernung ${fmtKm(d)}`;
-        $('#result-time').textContent = '';
+        $('#result-dist').textContent = d === null ? '' : `Entfernung ${fmtKm(d)}`;
+        const f = timeFactor(t);
+        $('#result-time').textContent = `Zeit ${fmtTime(t)}` + (f < 1 ? `, ${Math.round(f * 100)}% der Punkte` : '');
         $('#result-points').textContent = `${fmtNum(points)} Punkte`;
         $('#next').textContent = state.round >= ROUNDS ? 'Ergebnis' : 'Weiter';
         show('result');
@@ -331,11 +385,12 @@
         state.playing = false;
         show('end');
         $('#end-points').textContent = `${fmtNum(state.total)} Punkte`;
+        const total = state.rounds.reduce((a, r) => a + r.time, 0);
         $('#end-sub').textContent = state.best === null
-            ? `${ROUNDS} Runden, keine Schätzung getroffen`
-            : `${ROUNDS} Runden, beste Schätzung ${fmtKm(state.best)}`;
-        const rows = state.rounds.map(r => `<tr><td>${r.round}</td><td class="num">${r.dist === null ? '' : fmtKm(r.dist)}</td><td class="num">${fmtNum(r.points)}</td></tr>`).join('');
-        $('#end-rounds').innerHTML = `<tr><th>Runde</th><th class="num">Entfernung</th><th class="num">Punkte</th></tr>${rows}`;
+            ? `${ROUNDS} Runden in ${fmtTime(total)}, keine Schätzung getroffen`
+            : `${ROUNDS} Runden in ${fmtTime(total)}, beste Schätzung ${fmtKm(state.best)}`;
+        const rows = state.rounds.map(r => `<tr><td>${r.round}</td><td class="num">${r.dist === null ? '' : fmtKm(r.dist)}</td><td class="num">${fmtTime(r.time)}</td><td class="num">${fmtNum(r.points)}</td></tr>`).join('');
+        $('#end-rounds').innerHTML = `<tr><th>Runde</th><th class="num">Entfernung</th><th class="num">Zeit</th><th class="num">Punkte</th></tr>${rows}`;
         $('#save').hidden = false;
         $('#save-name').value = state.name;
         $('#save-btn').disabled = false;
@@ -347,6 +402,7 @@
         show('start');
         $('#st-round').textContent = 'bereit';
         clearGuess();
+        drawTimer(LIMIT);
     }
 
     /* ---------- leaderboard (jsonbin) ---------- */
@@ -371,9 +427,10 @@
             if (state.name && e.name.toLowerCase() === state.name.toLowerCase()) li.className = 'me';
             const when = e.date ? new Date(e.date).toLocaleDateString('de-AT', { day: 'numeric', month: 'numeric', year: '2-digit' }) : '';
             const best = typeof e.bestGuess === 'number' ? `beste ${fmtKm(e.bestGuess)}` : '';
+            const took = typeof e.time === 'number' ? fmtTime(e.time) : '';
             li.innerHTML = `<span class="rank">${i + 1}</span><span class="who"><span class="nm"></span><span class="meta"></span></span><span class="pts">${fmtNum(e.score)}</span>`;
             $('.nm', li).textContent = e.name;
-            $('.meta', li).textContent = [best, when].filter(Boolean).join(' · ');
+            $('.meta', li).textContent = [best, took, when].filter(Boolean).join(' · ');
             return li;
         }));
     }
@@ -403,7 +460,7 @@
         noteEl.textContent = 'speichert';
         try {
             const list = await fetchBoard();
-            const entry = { name, score: state.total, date: new Date().toISOString(), bestGuess: state.best, rounds: ROUNDS };
+            const entry = { name, score: state.total, date: new Date().toISOString(), bestGuess: state.best, rounds: ROUNDS, time: Math.round(state.rounds.reduce((a, r) => a + r.time, 0)) };
             const i = list.findIndex(e => e.name.toLowerCase() === name.toLowerCase());
             if (i !== -1 && list[i].score >= state.total) {
                 noteEl.textContent = `dein bester Lauf bleibt bei ${fmtNum(list[i].score)}`;
