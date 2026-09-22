@@ -69,7 +69,8 @@ location  Dornbirn, Vorarlberg, Austria` },
 
     /* path helpers: paths are arrays of segments below ~ */
     function resolvePath(cwd, str) {
-        if (!str || str === '~' || str === '~/') return [];
+        if (!str) return cwd.slice();
+        if (str === '~' || str === '~/') return [];
         const segs = (str.startsWith('~/') || str.startsWith('/')) ? [] : cwd.slice();
         for (const part of str.replace(/^~\//, '').replace(/^\//, '').split('/')) {
             if (!part || part === '.') continue;
@@ -539,149 +540,337 @@ location  Dornbirn, Vorarlberg, Austria` },
 
     /* ---------- terminal ---------- */
 
-    (function initTerminal() {
-        const terminalEl = $('#terminal');
-        const outputEl = $('#terminal-output');
-        const inputEl = $('#terminal-input');
-        if (!terminalEl || !outputEl || !inputEl) return;
-
-        const user = 'braian';
-        const host = 'swimmingbrain';
-        let cwd = '~';
+    const Terminal = (() => {
+        const el = $('#terminal');
+        const out = $('#terminal-output');
+        const input = $('#terminal-input');
+        const pathEl = $('.terminal-path', el);
+        const USER = 'braian';
+        const HOST = 'swimmingbrain';
+        const SITE_BIRTH = new Date('2024-05-20T01:34:51+02:00');
+        const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let cwd = [];
         const history = [];
-        let historyIndex = -1;
+        let hi = 0;
+        let booted = false;
 
-        function prompt() {
-            return `${user}@${host}:${cwd}$`;
+        const esc = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+        const span = (cls, text) => `<span class="${cls}">${esc(text)}</span>`;
+        const promptHtml = () => `${span('t-green b', `${USER}@${HOST}`)}:${span('t-blue b', pathString(cwd))}$ `;
+
+        function print(html = '') {
+            const line = document.createElement('div');
+            line.className = 'tline';
+            line.innerHTML = html;
+            out.append(line);
+        }
+        const printText = text => print(esc(text));
+        const scroll = () => { el.scrollTop = el.scrollHeight; };
+
+        function setCwd(segs) {
+            cwd = segs;
+            pathEl.textContent = pathString(cwd);
+            WM.setTitle('terminal', `${USER}@${HOST}: ${pathString(cwd)}`);
         }
 
-        function scrollToBottom() {
-            terminalEl.scrollTop = terminalEl.scrollHeight;
+        function fmtName(n, suffix = true) {
+            if (n.type === 'dir') return span('t-blue b', n.name + (suffix ? '/' : ''));
+            if (n.type === 'link' || n.type === 'repo') return span('t-cyan b', n.name);
+            return esc(n.name);
         }
 
-        function write(text = '') {
-            outputEl.textContent += (outputEl.textContent ? '\n' : '') + text;
-            scrollToBottom();
+        function findByName(name) {
+            const walk = (node, segs) => {
+                for (const c of node.children || []) {
+                    const here = [...segs, c.name];
+                    if (c.name === name || c.name === name.replace(/\/$/, '')) return { node: c, segs: here };
+                    if (c.type === 'dir') { const hit = walk(c, here); if (hit) return hit; }
+                }
+                return null;
+            };
+            return walk(FS, []);
         }
 
-        function handleCommand(line) {
-            const trimmed = line.trim();
-            if (!trimmed) return;
-            write(`${prompt()} ${line}`);
-            const [cmd, ...args] = trimmed.split(' ');
-            switch (cmd) {
-                case 'help':
-                    write('Available commands: help, clear, neofetch, ls, cat, echo, date, whoami, linkedin');
-                    break;
-                case 'clear':
-                    outputEl.textContent = '';
-                    break;
-                case 'linkedin':
-                    write('Opening LinkedIn profile...');
-                    WM.open('linkedin');
-                    break;
-                case 'neofetch':
-                    write(`       _,met$$$$$gg.           ${user}@${host}
-    ,g$$$$$$$$$$$$$$$P.        --------------------
-  ,g$$P"     """Y$$.".         OS: Ubuntu 24.04 LTS x86_64
- ,$$P'              \`$$$.      Shell: bash 5.1.16
-',$$P       ,ggs.     \`$$b:    Uptime: ∞ (always learning)
-\`d$$'     ,$P"'   .    $$$     Packages: npm, pip, cargo
- $$P      d$'     ,    $$P     Resolution: 4K (seeing clearly)
- $$:      $$.   -    ,d$$'     DE: GNOME 45
- $$;      Y$b._   _,d$P'       Terminal: gnome-terminal
- Y$$.    \`.\`"Y$$$$P"'          CPU: Neural Network @ 100%
- \`$$b      "-.__               Memory: Unlimited potential
-  \`Y$$
-   \`Y$$.                       Languages: Python, JS, C++, Rust
-     \`$$b.                     Frameworks: TensorFlow, React, ROS
-       \`Y$$b.                  Tools: Docker, K8s, Git
-          \`"Y$b._              Status: Caffeinated
-              \`"""             LinkedIn: Connected ✓`);
-                    break;
-                case 'ls':
-                    if (args.join(' ') === '-la skills/' || args.join(' ') === '-la skills') {
-                        write(`drwxr-xr-x  8 ${user} ${user} 4096 Oct 19 14:22 .
-drwxr-xr-x 12 ${user} ${user} 4096 Oct 19 14:22 ..
-drwxr-xr-x  3 ${user} ${user} 4096 Oct 19 14:22 automation/
-drwxr-xr-x  5 ${user} ${user} 4096 Oct 19 14:22 ai-ml/
-drwxr-xr-x  4 ${user} ${user} 4096 Oct 19 14:22 electrical-engineering/
-drwxr-xr-x  6 ${user} ${user} 4096 Oct 19 14:22 app-development/
-drwxr-xr-x  2 ${user} ${user} 4096 Oct 19 14:22 embedded-systems/
-drwxr-xr-x  3 ${user} ${user} 4096 Oct 19 14:22 robotics/`);
-                    } else {
-                        write('about  projects  linkedin  skills  docs');
-                    }
-                    break;
-                case 'cat':
-                    if (args[0] === '/etc/motd') {
-                        write(`╔══════════════════════════════════════════════════╗
-║  Welcome to SwimmingBrain Development Environment     ║
-║  "Where neurons meet silicon"                         ║
-║                                                       ║
-║  Current Focus: Industrial AI & Automation            ║
-║  Coffee Level: ████████░░ 80%                        ║
-║  Cat Status: Purring                                  ║
-║  LinkedIn: https://linkedin.com/in/braian-plaku       ║
-╚══════════════════════════════════════════════════╝`);
-                    } else {
-                        write(`cat: ${args[0] || ''}: No such file or directory`);
-                    }
-                    break;
-                case 'echo':
-                    write(args.join(' '));
-                    break;
-                case 'date':
-                    write(new Date().toString());
-                    break;
-                case 'whoami':
-                    write(user);
-                    break;
-                default:
-                    write(`${cmd}: command not found`);
+        function browser() {
+            const ua = navigator.userAgent;
+            const m = ua.match(/(Edg|Firefox|OPR|Chrome|Safari)\/(\d+)/);
+            const names = { Edg: 'Edge', OPR: 'Opera' };
+            return m ? `${names[m[1]] || m[1]} ${m[2]}` : 'a browser';
+        }
+
+        const LOGO = [
+            '            .-/+oossssoo+/-.',
+            '        `:+ssssssssssssssssss+:`',
+            '      -+ssssssssssssssssssyyssss+-',
+            '    .ossssssssssssssssssdMMMNysssso.',
+            '   /ssssssssssshdmmNNmmyNMMMMhssssss/',
+            '  +ssssssssshmydMMMMMMMNddddyssssssss+',
+            ' /sssssssshNMMMyhhyyyyhmNMMMNhssssssss/',
+            '.ssssssssdMMMNhsssssssssshNMMMdssssssss.',
+            '+sssshhhyNMMNyssssssssssssyNMMMysssssss+',
+            'ossyNMMMNyMMhsssssssssssssshmmmhssssssso',
+            'ossyNMMMNyMMhsssssssssssssshmmmhssssssso',
+            '+sssshhhyNMMNyssssssssssssyNMMMysssssss+',
+            '.ssssssssdMMMNhsssssssssshNMMMdssssssss.',
+            ' /sssssssshNMMMyhhyyyyhdNMMMNhssssssss/',
+            '  +sssssssssdmydMMMMMMMMddddyssssssss+',
+            '   /ssssssssssshdmNNNNmyNMMMMhssssss/',
+            '    .ossssssssssssssssssdMMMNysssso.',
+            '      -+sssssssssssssssssyyyssss+-',
+            '        `:+ssssssssssssssssss+:`',
+            '            .-/+oossssoo+/-.',
+        ];
+
+        function neofetch() {
+            const days = Math.floor((Date.now() - SITE_BIRTH) / 864e5);
+            const title = `${USER}@${HOST}`;
+            const rows = [
+                ['OS', 'Ubuntu 24.04 LTS x86_64'],
+                ['Host', 'Dornbirn, Vorarlberg, AT'],
+                ['Uptime', `${days} days`],
+                ['Shell', 'bash 5.2'],
+                ['Resolution', `${screen.width}x${screen.height}`],
+                ['DE', 'GNOME 46'],
+                ['Terminal', browser()],
+                ['CPU', `${navigator.hardwareConcurrency || '?'} cores`],
+                navigator.deviceMemory ? ['Memory', `${navigator.deviceMemory} GiB`] : null,
+                ['Work', 'Robotics & Machine Vision, Julius Blum'],
+                ['Study', 'MSc Artificial Intelligence, JKU Linz'],
+                ['Languages', 'Python, C/C++, TypeScript, Bash'],
+                ['Tools', 'PyTorch, OpenCV, Docker, Linux'],
+            ].filter(Boolean);
+            const dark = ['#2e3436', '#cc0000', '#4e9a06', '#c4a000', '#3465a4', '#75507b', '#06989a', '#d3d7cf'];
+            const bright = ['#555753', '#ef2929', '#8ae234', '#fce94f', '#729fcf', '#ad7fa8', '#34e2e2', '#eeeeec'];
+            const blocks = cols => cols.map(c => `<span class="t-block" style="background:${c}"></span>`).join('');
+            const info = [
+                span('t-green b', title),
+                esc('-'.repeat(title.length)),
+                ...rows.map(([k, v]) => `${span('t-key', k)}: ${esc(v)}`),
+                '',
+                blocks(dark),
+                blocks(bright),
+            ];
+            const wide = el.clientWidth >= 640;
+            const lines = wide ? LOGO.length : info.length;
+            for (let i = 0; i < lines; i++) {
+                const logo = wide ? span('t-orange', LOGO[i].padEnd(41)) : '';
+                print(logo + (wide && info[i] !== undefined ? '  ' : '') + (info[i] || ''));
             }
         }
 
-        inputEl.addEventListener('keydown', (e) => {
+        function ls(args) {
+            const long = args.some(a => /^-\w*l/.test(a));
+            const target = args.find(a => !a.startsWith('-'));
+            const node = getNode(resolvePath(cwd, target || ''));
+            if (!node) return printText(`ls: cannot access '${target}': No such file or directory`);
+            if (node.type !== 'dir') return print(fmtName(node));
+            if (node.github && !node.children) {
+                printText('loading from api.github.com…');
+                return loadRepos().then(r => { node.children = r; ls(args); scroll(); }, e => { printText(`ls: ${e.message}`); scroll(); });
+            }
+            if (!node.children.length) return;
+            if (long) node.children.forEach(n => print(`${fmtName(n)}${' '.repeat(Math.max(1, 18 - n.name.length))}${esc(n.desc || '')}`));
+            else print(node.children.map(n => fmtName(n)).join('  '));
+        }
+
+        function cd(args) {
+            const segs = args[0] === undefined ? [] : resolvePath(cwd, args[0]);
+            const node = getNode(segs);
+            if (!node) return printText(`bash: cd: ${args[0]}: No such file or directory`);
+            if (node.type !== 'dir') return printText(`bash: cd: ${args[0]}: Not a directory`);
+            setCwd(segs);
+            if (node.github && !node.children) loadRepos().then(r => { node.children = r; }).catch(() => {});
+        }
+
+        function cat(args) {
+            if (!args.length) return printText('cat: missing file operand');
+            for (const a of args) {
+                const segs = resolvePath(cwd, a);
+                const node = getNode(segs);
+                if (!node) printText(`cat: ${a}: No such file or directory`);
+                else if (node.type === 'dir') printText(`cat: ${a}: Is a directory`);
+                else if (node.type === 'text') printText(node.text);
+                else if (node.type === 'pdf') { printText(`${a}: PDF document, opening in Document Viewer`); WM.open('resume'); }
+                else printText(`${a}: symbolic link to ${node.href}`);
+            }
+        }
+
+        const APPS = { about: 'about', files: 'files', linkedin: 'linkedin', resume: 'resume', terminal: 'terminal', cookies: 'cookies', privacy: 'privacy', terms: 'terms' };
+
+        function open(args) {
+            const name = args[0];
+            if (!name) return printText('open: what? try: open braincut, open about, open resume.pdf');
+            if (APPS[name]) return WM.open(APPS[name]);
+            if (name === '.') return openNode(getNode(cwd), cwd);
+            const segs = resolvePath(cwd, name);
+            let node = getNode(segs);
+            let where = segs;
+            if (!node) { const hit = findByName(name); if (hit) { node = hit.node; where = hit.segs; } }
+            if (!node) return printText(`open: ${name}: not found`);
+            if (node.href) printText(`opening ${node.href}`);
+            openNode(node, where);
+        }
+
+        function history_() {
+            history.forEach((h, i) => printText(`${String(i + 1).padStart(5)}  ${h}`));
+        }
+
+        function uptime() {
+            const days = Math.floor((Date.now() - SITE_BIRTH) / 864e5);
+            const t = new Date().toTimeString().slice(0, 8);
+            printText(` ${t} up ${days} days,  1 user`);
+        }
+
+        function echo(args) {
+            const vars = { USER, HOME: '/home/braian', SHELL: '/bin/bash', HOSTNAME: HOST, PWD: pathString(cwd).replace('~', '/home/braian') };
+            printText(args.join(' ').replace(/\$(\w+)/g, (m, k) => (k in vars ? vars[k] : '')).replace(/^"(.*)"$/, '$1'));
+        }
+
+        function rm(args) {
+            if (args.includes('/') || args.includes('/*')) {
+                printText("rm: it is dangerous to operate recursively on '/'");
+                printText('rm: use --no-preserve-root to override this failsafe');
+            } else if (args.length) printText(`rm: cannot remove '${args.filter(a => !a.startsWith('-'))[0] || ''}': Read-only file system`);
+            else printText('rm: missing operand');
+        }
+
+        function apt() {
+            printText('E: Could not open lock file /var/lib/dpkg/lock-frontend - open (13: Permission denied)');
+            printText('E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are you root?');
+        }
+
+        const HELP = [
+            ['ls [-l] [path]', 'list a directory'],
+            ['cd <dir>', 'change directory'],
+            ['cat <file>', 'print a file'],
+            ['open <name>', 'open a project, file or app'],
+            ['neofetch', 'system summary'],
+            ['github, linkedin, resume, email', 'shortcuts'],
+            ['pwd, echo, date, uptime, whoami, uname', 'the usual'],
+            ['history, clear, exit', ''],
+        ];
+
+        const COMMANDS = {
+            help: () => HELP.forEach(([c, d]) => print(`  ${span('t-green', c.padEnd(40))}${esc(d)}`)),
+            ls, dir: ls, cd, cat, open, 'xdg-open': open, neofetch,
+            pwd: () => printText(pathString(cwd).replace('~', '/home/braian')),
+            clear: () => { out.replaceChildren(); },
+            history: history_,
+            date: () => printText(new Date().toString()),
+            uptime,
+            whoami: () => printText(USER),
+            hostname: () => printText(HOST),
+            uname: args => printText(args.includes('-a') ? `Linux ${HOST} 6.8.0 #1 SMP x86_64 GNU/Linux` : 'Linux'),
+            echo,
+            exit: () => WM.close('terminal'),
+            github: () => window.open('https://github.com/swimmingbrain', '_blank', 'noopener'),
+            linkedin: () => WM.open('linkedin'),
+            resume: () => WM.open('resume'),
+            email: () => { location.href = 'mailto:braian.plaku@gmail.com'; },
+            about: () => cat(['~/about.txt']),
+            skills: () => cat(['~/skills.txt']),
+            contact: () => cat(['~/contact.txt']),
+            projects: () => ls(['-l', '~/projects']),
+            sudo: () => printText(`${USER} is not in the sudoers file.  This incident will be reported.`),
+            su: () => printText('su: Authentication failure'),
+            rm, apt, 'apt-get': apt, snap: apt,
+            vim: () => printText('vim: no tty here. cat <file> works.'),
+            vi: () => printText('vi: no tty here. cat <file> works.'),
+            nano: () => printText('nano: no tty here. cat <file> works.'),
+            emacs: () => printText('emacs: no tty here, and no time either.'),
+            poweroff: powerOff, shutdown: powerOff, halt: powerOff,
+            reboot: () => location.reload(),
+        };
+
+        function run(raw) {
+            print(promptHtml() + esc(raw));
+            const line = raw.trim();
+            if (line) {
+                history.push(line);
+                hi = history.length;
+                const [cmd, ...args] = line.split(/\s+/);
+                if (COMMANDS[cmd]) COMMANDS[cmd](args, line);
+                else printText(`${cmd}: command not found`);
+            }
+            scroll();
+        }
+
+        function complete() {
+            const val = input.value;
+            const parts = val.split(/\s+/);
+            const last = parts[parts.length - 1];
+            let cands;
+            if (parts.length === 1) {
+                cands = Object.keys(COMMANDS).filter(c => c.startsWith(last));
+            } else {
+                const slash = last.lastIndexOf('/');
+                const dirStr = slash >= 0 ? last.slice(0, slash + 1) : '';
+                const base = slash >= 0 ? last.slice(slash + 1) : last;
+                const node = getNode(resolvePath(cwd, dirStr));
+                if (!node || !node.children) return;
+                cands = node.children.filter(c => c.name.startsWith(base)).map(c => dirStr + c.name + (c.type === 'dir' ? '/' : ''));
+            }
+            if (cands.length === 1) {
+                parts[parts.length - 1] = cands[0];
+                input.value = parts.join(' ') + (cands[0].endsWith('/') ? '' : ' ');
+            } else if (cands.length > 1) {
+                print(promptHtml() + esc(val));
+                printText(cands.join('  '));
+                scroll();
+            }
+        }
+
+        input.addEventListener('keydown', e => {
             if (e.key === 'Enter') {
-                const value = inputEl.value;
-                if (value.trim()) history.push(value);
-                historyIndex = history.length;
-                handleCommand(value);
-                inputEl.value = '';
-                e.preventDefault();
+                const v = input.value;
+                input.value = '';
+                run(v);
             } else if (e.key === 'ArrowUp') {
-                if (history.length && historyIndex > 0) {
-                    historyIndex--;
-                    inputEl.value = history[historyIndex];
-                    setTimeout(() => inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length), 0);
-                }
-                e.preventDefault();
+                if (hi > 0) input.value = history[--hi];
+                setTimeout(() => input.setSelectionRange(input.value.length, input.value.length));
             } else if (e.key === 'ArrowDown') {
-                if (history.length && historyIndex < history.length - 1) {
-                    historyIndex++;
-                    inputEl.value = history[historyIndex];
-                } else {
-                    historyIndex = history.length;
-                    inputEl.value = '';
+                input.value = hi < history.length - 1 ? history[++hi] : (hi = history.length, '');
+            } else if (e.key === 'Tab') {
+                complete();
+            } else if (e.ctrlKey && e.key === 'l') {
+                out.replaceChildren();
+            } else if (e.ctrlKey && e.key === 'c') {
+                print(promptHtml() + esc(input.value) + '^C');
+                input.value = '';
+                scroll();
+            } else if (e.ctrlKey && e.key === 'u') {
+                input.value = '';
+            } else return;
+            e.preventDefault();
+        });
+
+        el.addEventListener('mouseup', () => {
+            if (!getSelection().toString()) input.focus();
+        });
+
+        function typeAndRun(cmd) {
+            if (reduced) return run(cmd);
+            let i = 0;
+            input.value = '';
+            const t = setInterval(() => {
+                input.value = cmd.slice(0, ++i);
+                if (i >= cmd.length) {
+                    clearInterval(t);
+                    setTimeout(() => { input.value = ''; run(cmd); }, 220);
                 }
-                e.preventDefault();
-            } else if (e.key === 'Escape') {
-                inputEl.value = '';
-            }
-        });
+            }, 55);
+        }
 
-        terminalEl.addEventListener('mouseup', () => {
-            if (!getSelection().toString()) inputEl.focus();
-        });
-        WM.get('terminal').addEventListener('window:open', () => inputEl.focus());
+        function boot() {
+            if (booted) return;
+            booted = true;
+            typeAndRun('neofetch');
+        }
 
-        write(`${prompt()} neofetch`);
-        handleCommand('neofetch');
-        write(`${prompt()} ls -la skills/`);
-        handleCommand('ls -la skills/');
-        write(`${prompt()} cat /etc/motd`);
-        handleCommand('cat /etc/motd');
+        WM.get('terminal').addEventListener('window:open', () => { input.focus(); boot(); });
+        document.addEventListener('terminal:run', e => { run(e.detail); input.focus(); });
+
+        return { run, boot };
     })();
 
     /* ---------- boot layout ---------- */
@@ -699,7 +888,7 @@ drwxr-xr-x  3 ${user} ${user} 4096 Oct 19 14:22 robotics/`);
         }
         WM.set(WM.open('about'), 48, 32, 440, Math.min(580, dh - 70));
         WM.set(WM.open('files'), 520, 32, Math.min(640, dw - 560), 420);
-        WM.set(WM.open('terminal'), 380, Math.max(150, dh - 440), Math.min(680, dw - 420), 400);
+        WM.set(WM.open('terminal'), 380, Math.max(150, dh - 500), Math.min(760, dw - 420), Math.min(470, dh - 160));
         $('#terminal-input').focus();
     }
 

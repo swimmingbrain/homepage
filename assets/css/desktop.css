@@ -522,7 +522,7 @@ svg {
 }
 
 /* window sizes */
-#win-terminal { width: 680px; height: 420px; }
+#win-terminal { width: 760px; height: 440px; }
 #win-files { width: 640px; height: 420px; }
 #win-about { width: 440px; height: 580px; }
 #win-linkedin { width: 480px; height: 600px; }
@@ -543,9 +543,24 @@ svg {
     cursor: text;
 }
 
-#terminal-output {
+.tline {
     white-space: pre-wrap;
     word-break: break-word;
+    min-height: 1.35em;
+}
+
+.t-green { color: var(--t-green); }
+.t-blue { color: var(--t-blue); }
+.t-cyan { color: var(--t-cyan); }
+.t-orange { color: var(--accent); }
+.t-key { color: var(--accent); font-weight: 700; }
+.b { font-weight: 700; }
+
+.t-block {
+    display: inline-block;
+    width: 3ch;
+    height: 1.25em;
+    vertical-align: text-bottom;
 }
 
 .terminal-line {
