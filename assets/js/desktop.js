@@ -7,6 +7,122 @@
     const isSmall = () => window.matchMedia('(max-width: 768px)').matches;
     const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
 
+    /* ---------- data ---------- */
+
+    const GITHUB = 'swimmingbrain';
+
+    const FS = {
+        name: '~', type: 'dir', children: [
+            { name: 'projects', type: 'dir', desc: 'Things I built or help build', children: [
+                { name: 'braincut', type: 'link', lang: 'TypeScript', href: 'https://github.com/swimmingbrain/braincut',
+                  desc: 'Browser-based video editor with a multi-track timeline, transitions, effects and export. No accounts, no uploads, no installs.' },
+                { name: 'fmtless', type: 'link', lang: 'C, Python', href: 'https://github.com/swimmingbrain/fmtless',
+                  desc: 'Logging for C that leaves the words at home: format strings live in the ELF, never in flash, and the host puts the line back together.' },
+                { name: 'arctos-arm', type: 'link', lang: 'Python', href: 'https://github.com/swimmingbrain/arctos-arm',
+                  desc: 'Library and CLI for the Arctos robot arm over CAN bus, with kinematics, simulation and ROS 2 / MoveIt 2 integration.' },
+                { name: 'chingumat-e', type: 'link', lang: 'JavaScript', href: 'https://github.com/swimmingbrain/chingumat-e',
+                  desc: 'Open-source foot-controlled rhythm game: step, stomp and groove.' },
+                { name: 'vimaya', type: 'link', lang: 'web app', href: 'https://home.vimaya.app',
+                  desc: 'Digital wellness app for healthier screen habits. I am the lead developer.' },
+                { name: 'wo-gsi', type: 'link', lang: 'JavaScript', href: 'wogsi-game.html',
+                  desc: 'Street View guessing game about Vorarlberg, in German.' },
+                { name: 'github', type: 'dir', github: true, children: null,
+                  desc: 'Public repositories, fetched live from api.github.com' },
+            ] },
+            { name: 'about.txt', type: 'text', desc: 'Who I am and what I do', text:
+`Braian Plaku, online as swimmingbrain.
+
+I work on robotics and machine vision at Julius Blum GmbH in
+Vorarlberg, Austria: Python-based inspection software for
+production lines, line scan cameras on embedded Linux, deep
+learning models and the dashboards around them.
+
+Next to that I study for an MSc in Artificial Intelligence at
+JKU Linz and finish a BSc in Computer Science at FH Vorarlberg,
+after a BSc in Electrical Engineering. I went to school in
+Shkodër, Albania, and have lived in Vorarlberg since 2022.` },
+            { name: 'skills.txt', type: 'text', desc: 'Languages and tools', text:
+`languages    Python, C/C++, Java, Bash, SQL, TypeScript
+ml / vision  PyTorch, OpenCV, CNNs, LSTMs, 6D pose estimation,
+             camera calibration, industrial image processing
+data         data pipelines, Grafana dashboards, KPI monitoring
+infra        Linux administration, embedded Linux, Docker, Git, CI/CD
+hardware     ESP32, Raspberry Pi, industrial cameras, 3D printing
+spoken       Albanian, German, English, some Italian and Korean` },
+            { name: 'education.txt', type: 'text', desc: 'Degrees and schools', text:
+`2025 -       MSc Artificial Intelligence, JKU Linz
+2024         exchange semester, Seoul National University of
+             Science and Technology (GKS scholarship)
+2023 - 2026  BSc Computer Science & Digital Innovation, FH Vorarlberg
+             thesis: PLON3R, model-based 6D pose estimation in manufacturing
+2022 - 2025  BSc Electrical Engineering (dual), FH Vorarlberg
+             thesis: integrating a line scan camera on embedded Linux
+2016 - 2022  HTL Peter Mahringer, Shkodër` },
+            { name: 'contact.txt', type: 'text', desc: 'Where to find me', text:
+`email     braian.plaku@gmail.com
+github    github.com/swimmingbrain
+linkedin  linkedin.com/in/braian-plaku
+location  Dornbirn, Vorarlberg, Austria` },
+            { name: 'resume.pdf', type: 'pdf', desc: 'Resume, in German (PDF)' },
+        ],
+    };
+
+    /* path helpers: paths are arrays of segments below ~ */
+    function resolvePath(cwd, str) {
+        if (!str || str === '~' || str === '~/') return [];
+        const segs = (str.startsWith('~/') || str.startsWith('/')) ? [] : cwd.slice();
+        for (const part of str.replace(/^~\//, '').replace(/^\//, '').split('/')) {
+            if (!part || part === '.') continue;
+            if (part === '..') segs.pop();
+            else segs.push(part);
+        }
+        return segs;
+    }
+
+    function getNode(segs) {
+        let node = FS;
+        for (const seg of segs) {
+            if (node.type !== 'dir' || !node.children) return null;
+            node = node.children.find(c => c.name === seg);
+            if (!node) return null;
+        }
+        return node;
+    }
+
+    const pathString = segs => '~' + (segs.length ? '/' + segs.join('/') : '');
+
+    let repoCache = null;
+    async function loadRepos() {
+        if (repoCache) return repoCache;
+        try {
+            const cached = sessionStorage.getItem('sb_repos');
+            if (cached) return (repoCache = JSON.parse(cached));
+        } catch (e) { /* storage blocked */ }
+        const res = await fetch(`https://api.github.com/users/${GITHUB}/repos?type=owner&sort=pushed&per_page=100`);
+        if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+        const repos = (await res.json()).filter(r => !r.fork).map(r => ({
+            name: r.name, type: 'repo', href: r.html_url, lang: r.language,
+            desc: r.description || 'No description', stars: r.stargazers_count,
+            pushed: r.pushed_at.slice(0, 10),
+        }));
+        repoCache = repos;
+        try { sessionStorage.setItem('sb_repos', JSON.stringify(repos)); } catch (e) { /* ignore */ }
+        return repos;
+    }
+
+    function openNode(node, segs) {
+        if (!node) return false;
+        if (node.type === 'pdf') WM.open('resume');
+        else if (node.type === 'text') {
+            WM.open('terminal');
+            document.dispatchEvent(new CustomEvent('terminal:run', { detail: `cat ${pathString(segs)}` }));
+        } else if (node.type === 'dir') {
+            WM.open('files');
+            Files.go(segs);
+        } else if (node.href) window.open(node.href, '_blank', 'noopener');
+        return true;
+    }
+
     /* ---------- window manager ---------- */
 
     const WM = (() => {
@@ -296,6 +412,116 @@
     }
 
     poweroff.addEventListener('click', () => location.reload());
+
+    /* ---------- files ---------- */
+
+    const Files = (() => {
+        const view = $('#files-view');
+        const crumbs = $('#files-crumbs');
+        const status = $('#files-status');
+        const back = $('.fbtn[data-nav="back"]');
+        const forward = $('.fbtn[data-nav="forward"]');
+        let cwd = ['projects'];
+        const hist = [];
+        const fwd = [];
+        let count = 0;
+
+        const icon = n => ({ dir: 'i-files', link: 'i-folder-link', text: 'i-txt', pdf: 'i-pdf', repo: 'i-github' })[n.type];
+
+        function describe(n) {
+            const bits = [n.desc];
+            if (n.lang) bits.push(n.lang);
+            if (n.type === 'repo') bits.push(`★ ${n.stars}`, `pushed ${n.pushed}`);
+            return bits.filter(Boolean).join('  ·  ');
+        }
+
+        function setStatus(text) {
+            status.textContent = text;
+        }
+
+        function idle() {
+            setStatus(`${count} item${count === 1 ? '' : 's'}`);
+        }
+
+        function renderCrumbs() {
+            crumbs.replaceChildren();
+            const all = [[], ...cwd.map((_, i) => cwd.slice(0, i + 1))];
+            all.forEach(segs => {
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'crumb' + (segs.length === cwd.length ? ' on' : '');
+                b.textContent = segs.length ? segs[segs.length - 1] : 'Home';
+                b.addEventListener('click', () => go(segs));
+                crumbs.append(b);
+            });
+        }
+
+        function item(n) {
+            const external = n.type === 'link' || n.type === 'repo';
+            const el = document.createElement(external ? 'a' : 'button');
+            el.className = `file ${n.type}`;
+            if (external) {
+                el.href = n.href;
+                el.target = '_blank';
+                el.rel = 'noopener';
+            } else {
+                el.type = 'button';
+                el.addEventListener('click', () => openNode(n, [...cwd, n.name]));
+            }
+            el.innerHTML = `<svg><use href="#${icon(n)}"/></svg><span></span>`;
+            $('span', el).textContent = n.name;
+            el.addEventListener('mouseenter', () => setStatus(describe(n)));
+            el.addEventListener('focus', () => setStatus(describe(n)));
+            el.addEventListener('mouseleave', idle);
+            el.addEventListener('blur', idle);
+            return el;
+        }
+
+        function render(node) {
+            view.replaceChildren(...node.children.map(item));
+            count = node.children.length;
+            idle();
+        }
+
+        async function show() {
+            const node = getNode(cwd);
+            renderCrumbs();
+            WM.setTitle('files', cwd.length ? cwd[cwd.length - 1] : 'Home');
+            back.disabled = !hist.length;
+            forward.disabled = !fwd.length;
+            if (node.github && !node.children) {
+                view.replaceChildren();
+                setStatus('Loading repositories from api.github.com…');
+                try {
+                    node.children = await loadRepos();
+                } catch (e) {
+                    view.innerHTML = '<p class="files-empty">Could not reach api.github.com. <a href="https://github.com/swimmingbrain" target="_blank" rel="noopener">Open GitHub instead.</a></p>';
+                    setStatus(e.message);
+                    return;
+                }
+                if (getNode(cwd) !== node) return;
+            }
+            render(node);
+        }
+
+        function go(segs, nav) {
+            const node = getNode(segs);
+            if (!node || node.type !== 'dir') return;
+            if (!nav) {
+                if (segs.join('/') === cwd.join('/')) return show();
+                hist.push(cwd);
+                fwd.length = 0;
+            }
+            cwd = segs;
+            show();
+        }
+
+        back.addEventListener('click', () => { if (hist.length) { fwd.push(cwd); go(hist.pop(), true); } });
+        forward.addEventListener('click', () => { if (fwd.length) { hist.push(cwd); go(fwd.pop(), true); } });
+
+        show();
+        return { go };
+    })();
 
     /* ---------- keyboard ---------- */
 

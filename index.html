@@ -258,18 +258,12 @@
             </header>
             <div class="content files">
                 <div class="files-bar">
-                    <span class="crumbs"><span class="crumb">Home</span><span class="crumb on">projects</span></span>
+                    <button class="fbtn" data-nav="back" aria-label="Back" disabled><svg><use href="#i-back"/></svg></button>
+                    <button class="fbtn" data-nav="forward" aria-label="Forward" disabled><svg><use href="#i-forward"/></svg></button>
+                    <nav class="crumbs" id="files-crumbs" aria-label="Path"></nav>
                 </div>
-                <div class="files-view">
-                    <a class="file" href="wogsi-game.html" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>Wo gsi?</span></a>
-                    <a class="file" href="https://home.vimaya.app" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>VIMAYA</span></a>
-                    <a class="file" href="https://github.com/swimmingbrain/braincut" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>braincut</span></a>
-                    <a class="file" href="https://github.com/swimmingbrain/fmtless" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>fmtless</span></a>
-                    <a class="file" href="https://github.com/swimmingbrain/arctos-arm" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>arctos-arm</span></a>
-                    <a class="file" href="https://github.com/swimmingbrain/chingumat-e" target="_blank" rel="noopener"><svg><use href="#i-folder-link"/></svg><span>chingumat-e</span></a>
-                    <button class="file" data-app="resume"><svg><use href="#i-pdf"/></svg><span>resume.pdf</span></button>
-                </div>
-                <footer class="files-status">7 items</footer>
+                <div class="files-view" id="files-view"></div>
+                <footer class="files-status" id="files-status"></footer>
             </div>
         </section>
 
