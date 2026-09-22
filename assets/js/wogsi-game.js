@@ -238,6 +238,45 @@
         }, 60);
     }
 
+    /* ---------- what the browser remembers ---------- */
+
+    const store = {
+        get(k, fallback) {
+            try { const v = localStorage.getItem(k); return v === null ? fallback : JSON.parse(v); } catch (e) { return fallback; }
+        },
+        set(k, v) {
+            try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode, fine */ }
+        },
+    };
+
+    function rememberName(name) {
+        store.set('wogsi_name', name);
+        const chip = $('#name-chip');
+        chip.hidden = !name;
+        chip.textContent = name;
+        $('#start-note').textContent = name ? 'Name bleibt im Browser gespeichert' : '';
+    }
+
+    function rememberGame(score, best) {
+        const games = store.get('wogsi_games', []);
+        games.unshift({ date: new Date().toISOString(), score, best });
+        store.set('wogsi_games', games.slice(0, 20));
+        renderHistory();
+    }
+
+    function renderHistory() {
+        const games = store.get('wogsi_games', []);
+        const box = $('#history');
+        box.hidden = !games.length;
+        if (!games.length) return;
+        const top = Math.max(...games.map(g => g.score));
+        const items = games.slice(0, 6).map(g => {
+            const when = new Date(g.date).toLocaleDateString('de-AT', { day: 'numeric', month: 'numeric' });
+            return `<li class="${g.score === top ? 'best' : ''}">${when} · ${fmtNum(g.score)}</li>`;
+        }).join('');
+        box.innerHTML = `<h3>Deine letzten Spiele, ${games.length} gespielt, Rekord ${fmtNum(top)}</h3><ul>${items}</ul>`;
+    }
+
     /* ---------- game state ---------- */
 
     const state = {
@@ -307,6 +346,7 @@
     function start() {
         const name = $('#name').value.trim();
         state.name = name;
+        rememberName(name);
         state.playing = true;
         state.round = 0;
         state.total = 0;
@@ -391,6 +431,7 @@
             : `${ROUNDS} Runden in ${fmtTime(total)}, beste Schätzung ${fmtKm(state.best)}`;
         const rows = state.rounds.map(r => `<tr><td>${r.round}</td><td class="num">${r.dist === null ? '' : fmtKm(r.dist)}</td><td class="num">${fmtTime(r.time)}</td><td class="num">${fmtNum(r.points)}</td></tr>`).join('');
         $('#end-rounds').innerHTML = `<tr><th>Runde</th><th class="num">Entfernung</th><th class="num">Zeit</th><th class="num">Punkte</th></tr>${rows}`;
+        rememberGame(state.total, state.best);
         $('#save').hidden = false;
         $('#save-name').value = state.name;
         $('#save-btn').disabled = false;
@@ -455,6 +496,7 @@
             return;
         }
         state.name = name;
+        rememberName(name);
         $('#save-btn').disabled = true;
         noteEl.className = 'muted';
         noteEl.textContent = 'speichert';
@@ -499,6 +541,12 @@
     $('#save-name').addEventListener('keydown', e => { if (e.key === 'Enter') saveScore(); });
     $('#lb-refresh').addEventListener('click', loadBoard);
     $('#pano-reset').addEventListener('click', resetPano);
+    $('#name-chip').addEventListener('click', () => {
+        if (state.playing) return;
+        show('start');
+        $('#name').focus();
+        $('#name').select();
+    });
 
     $('#map-size').addEventListener('click', () => {
         const big = $('#main').classList.toggle('map-big');
@@ -523,6 +571,10 @@
     window.addEventListener('resize', () => { if (guessMap) guessMap.invalidateSize(); });
 
     initGuessMap();
+    state.name = store.get('wogsi_name', '') || '';
+    $('#name').value = state.name;
+    rememberName(state.name);
+    renderHistory();
     loadBoard();
     status();
     show('start');
