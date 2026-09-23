@@ -107,6 +107,20 @@
         return null;
     }
 
+    /* ---------- place names from osm, shown after the guess ---------- */
+
+    async function placeName(p) {
+        if (p.name !== undefined) return p.name;
+        p.name = '';
+        try {
+            const url = `https://nominatim.openstreetmap.org/reverse?lat=${p.lat}&lon=${p.lng}&format=json&zoom=10&accept-language=de`;
+            const d = await (await fetch(url)).json();
+            const a = d.address || {};
+            p.name = a.village || a.town || a.city || a.municipality || d.name || '';
+        } catch (e) { /* no name then */ }
+        return p.name;
+    }
+
     /* ---------- google maps js (labels off) with embed fallback ---------- */
 
     let mapsOk = null;
@@ -413,6 +427,10 @@
         $('#next').textContent = state.round >= ROUNDS ? 'Ergebnis' : 'Weiter';
         show('result');
         showResultMap(state.place, state.guess);
+        const p = state.place;
+        placeName(p).then(name => {
+            if (state.place === p && name) $('#result-place').textContent = `Das war in ${name}.`;
+        });
     }
 
     function next() {
@@ -429,8 +447,8 @@
         $('#end-sub').textContent = state.best === null
             ? `${ROUNDS} Runden in ${fmtTime(total)}, keine Schätzung getroffen`
             : `${ROUNDS} Runden in ${fmtTime(total)}, beste Schätzung ${fmtKm(state.best)}`;
-        const rows = state.rounds.map(r => `<tr><td>${r.round}</td><td class="num">${r.dist === null ? '' : fmtKm(r.dist)}</td><td class="num">${fmtTime(r.time)}</td><td class="num">${fmtNum(r.points)}</td></tr>`).join('');
-        $('#end-rounds').innerHTML = `<tr><th>Runde</th><th class="num">Entfernung</th><th class="num">Zeit</th><th class="num">Punkte</th></tr>${rows}`;
+        const rows = state.rounds.map(r => `<tr><td>${r.round}</td><td class="place">${esc(r.place.name || '')}</td><td class="num">${r.dist === null ? '' : fmtKm(r.dist)}</td><td class="num">${fmtTime(r.time)}</td><td class="num">${fmtNum(r.points)}</td></tr>`).join('');
+        $('#end-rounds').innerHTML = `<tr><th>Runde</th><th>Ort</th><th class="num">Entfernung</th><th class="num">Zeit</th><th class="num">Punkte</th></tr>${rows}`;
         rememberGame(state.total, state.best);
         $('#save').hidden = false;
         $('#save-name').value = state.name;
