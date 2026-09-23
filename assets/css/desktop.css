@@ -773,8 +773,28 @@ svg {
     text-align: right;
 }
 
-a.row:hover {
-    background: rgba(255, 255, 255, 0.05);
+a.row, button.row {
+    width: 100%;
+    cursor: pointer;
+}
+
+a.row:hover, button.row:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+a.row > span:last-child::after, button.row > span:last-child::after {
+    content: '›';
+    margin-left: 10px;
+    color: var(--fg-dim);
+}
+
+.about-foot {
+    font-size: 12px;
+    text-align: center;
+}
+
+.about-foot a {
+    color: var(--fg-dim);
 }
 
 /* ---------- linkedin ---------- */
