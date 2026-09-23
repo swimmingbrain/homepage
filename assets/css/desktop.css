@@ -800,7 +800,75 @@ a.row > span:last-child::after, button.row > span:last-child::after {
 /* ---------- linkedin ---------- */
 
 .linkedin {
-    background: #1b1f23;
+    background: var(--base);
+}
+
+.li-card {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--hairline);
+}
+
+.avatar.small {
+    width: 56px;
+    height: 56px;
+    margin: 0;
+}
+
+.li-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 13px;
+    line-height: 1.35;
+}
+
+.btn {
+    flex: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--fg);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.btn.primary {
+    background: var(--accent);
+    color: #fff;
+}
+
+.btn.primary:hover {
+    background: var(--accent-hover);
+}
+
+.li-feed {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+.li-feed p {
+    padding: 20px 16px 12px;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 48ch;
+}
+
+.li-feed .btn {
+    margin: 0 16px;
 }
 
 /* ---------- document viewer ---------- */

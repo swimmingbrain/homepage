@@ -311,9 +311,19 @@
                 </div>
             </header>
             <div class="content linkedin">
-                <!-- Elfsight LinkedIn Feed -->
-                <script src="https://elfsightcdn.com/platform.js" async></script>
-                <div class="elfsight-app-bf7bde62-d1ed-4505-897a-68a34c844df5" data-elfsight-app-lazy></div>
+                <div class="li-card">
+                    <img class="avatar small" src="assets/profile.png" alt="" width="56" height="56">
+                    <div class="li-text">
+                        <strong>Braian Plaku</strong>
+                        <span class="muted">Robotics &amp; Machine Vision at Julius Blum GmbH · MSc AI student at JKU Linz</span>
+                        <span class="muted">Dornbirn, Vorarlberg, Austria</span>
+                    </div>
+                    <a class="btn primary" href="https://www.linkedin.com/in/braian-plaku" target="_blank" rel="noopener">Open profile</a>
+                </div>
+                <div class="li-feed" id="li-feed">
+                    <p class="muted">The activity feed is embedded from Elfsight, a third party that may set cookies once it loads. Nothing loads until you ask.</p>
+                    <button class="btn" type="button" id="li-load">Load feed</button>
+                </div>
             </div>
         </section>
 
@@ -345,22 +355,19 @@
                 </div>
             </header>
             <div class="content text">
-                <h3>1. Overview</h3>
-                <p>We use cookies and similar technologies to provide and secure our website, understand usage, and improve features. You can control cookies through your browser settings.</p>
-                <h3>2. Types of cookies we use</h3>
+                <h3>1. What this site stores</h3>
+                <p>swimmingbrain.dev sets no cookies of its own. It keeps two small preferences in your browser's local storage: whether you asked for the LinkedIn feed, and a per-tab cache of the public GitHub repository list. Neither leaves your browser.</p>
+                <h3>2. Third parties</h3>
                 <ul>
-                    <li><strong>Strictly necessary</strong>: Required for core functionality (e.g., window state, preferences).</li>
-                    <li><strong>Performance</strong>: Anonymous analytics to understand site usage.</li>
-                    <li><strong>Functional</strong>: Remember choices to personalize your experience.</li>
-                    <li><strong>Third‑party</strong>: Embedded content (e.g., LinkedIn Elfsight widget) may set cookies.</li>
+                    <li><strong>LinkedIn feed</strong>: The LinkedIn window embeds a feed from Elfsight only after you press "Load feed". From then on Elfsight and LinkedIn may set their own cookies under the <a href="https://elfsight.com/privacy-policy/" target="_blank" rel="noopener">Elfsight Privacy Policy</a> and the <a href="https://www.linkedin.com/legal/cookie-policy" target="_blank" rel="noopener">LinkedIn Cookie Policy</a>.</li>
+                    <li><strong>GitHub</strong>: The Files window asks api.github.com for the repository list when you open the github folder.</li>
+                    <li><strong>Fonts</strong>: Ubuntu and Ubuntu Mono are served by Google Fonts, which sees your IP address when it delivers them.</li>
                 </ul>
-                <h3>3. Managing cookies</h3>
-                <p>You can block or delete cookies in your browser. This site will function with strictly necessary cookies only if you opt out of others.</p>
-                <h3>4. Third‑party services</h3>
-                <p>We embed third‑party content. For LinkedIn feeds provided via Elfsight, refer to their policies: <a href="https://elfsight.com/privacy-policy/" target="_blank" rel="noopener">Elfsight Privacy Policy</a> and <a href="https://www.linkedin.com/legal/cookie-policy" target="_blank" rel="noopener">LinkedIn Cookie Policy</a>.</p>
-                <h3>5. Contact</h3>
-                <p>Questions? Contact: <a href="mailto:legal@swimmingbrain.dev">legal@swimmingbrain.dev</a>.</p>
-                <p class="muted">Effective date: 2025‑10‑19</p>
+                <h3>3. Managing this</h3>
+                <p>Clearing site data for swimmingbrain.dev in your browser resets the preferences above. Blocking third-party cookies does not break anything here.</p>
+                <h3>4. Contact</h3>
+                <p>Questions? <a href="mailto:legal@swimmingbrain.dev">legal@swimmingbrain.dev</a>.</p>
+                <p class="muted">Effective date: 2026‑09‑23</p>
             </div>
         </section>
 
@@ -378,12 +385,12 @@
                 <p>We respect your privacy. This site is a personal portfolio and does not sell or rent personal data.</p>
                 <h3>2. Data we process</h3>
                 <ul>
-                    <li><strong>Usage data</strong>: Non‑identifying analytics (pages viewed, device type) to improve the site.</li>
+                    <li><strong>Server logs</strong>: The site is hosted on GitHub Pages. GitHub may log requests, including IP addresses, as described in the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">GitHub Privacy Statement</a>. There are no analytics scripts on this site.</li>
                     <li><strong>Contact data</strong>: If you email us, we process your email to respond.</li>
-                    <li><strong>Embedded content</strong>: Third‑party widgets (e.g., LinkedIn via Elfsight) may collect data per their policies.</li>
+                    <li><strong>Embedded content</strong>: The LinkedIn feed (Elfsight) loads only on request and may collect data per its policies. See the Cookie Policy.</li>
                 </ul>
                 <h3>3. Legal bases</h3>
-                <p>We process data based on legitimate interests (site functionality and security) and consent where required for non‑essential cookies.</p>
+                <p>We process data based on legitimate interests (site functionality and security) and on your consent for the optional LinkedIn feed.</p>
                 <h3>4. Data retention</h3>
                 <p>We retain data only as long as needed for the purposes described or to comply with legal obligations.</p>
                 <h3>5. Your rights</h3>
@@ -396,7 +403,7 @@
                 <p>We may update this policy from time to time. Material changes will be noted here.</p>
                 <h3>9. Contact</h3>
                 <p>Email: <a href="mailto:privacy@swimmingbrain.dev">privacy@swimmingbrain.dev</a>.</p>
-                <p class="muted">Effective date: 2025‑10‑19</p>
+                <p class="muted">Effective date: 2026‑09‑23</p>
             </div>
         </section>
 
@@ -424,7 +431,7 @@
                 <p>These Terms are governed by the laws of Austria, without regard to conflict of laws. Venue: Vorarlberg, AT.</p>
                 <h3>7. Contact</h3>
                 <p>Email: <a href="mailto:legal@swimmingbrain.dev">legal@swimmingbrain.dev</a>.</p>
-                <p class="muted">Effective date: 2025‑10‑19</p>
+                <p class="muted">Effective date: 2026‑09‑23</p>
             </div>
         </section>
 

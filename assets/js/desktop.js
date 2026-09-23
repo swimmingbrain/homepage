@@ -524,6 +524,30 @@ location  Dornbirn, Vorarlberg, Austria` },
         return { go };
     })();
 
+    /* ---------- linkedin feed (third party, loads on request) ---------- */
+
+    (() => {
+        const box = $('#li-feed');
+        const KEY = 'sb_linkedin_feed';
+        let loaded = false;
+
+        function load() {
+            if (loaded) return;
+            loaded = true;
+            box.innerHTML = '<div class="elfsight-app-bf7bde62-d1ed-4505-897a-68a34c844df5" data-elfsight-app-lazy></div>';
+            const script = document.createElement('script');
+            script.src = 'https://elfsightcdn.com/platform.js';
+            script.async = true;
+            document.head.append(script);
+            try { localStorage.setItem(KEY, '1'); } catch (e) { /* ignore */ }
+        }
+
+        $('#li-load').addEventListener('click', load);
+        WM.get('linkedin').addEventListener('window:open', () => {
+            try { if (localStorage.getItem(KEY)) load(); } catch (e) { /* ignore */ }
+        });
+    })();
+
     /* ---------- keyboard ---------- */
 
     document.addEventListener('keydown', e => {
