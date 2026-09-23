@@ -295,6 +295,7 @@ a {
     display: flex;
     flex-direction: column;
     position: relative;
+    isolation: isolate; /* keeps leaflet's own z-index inside the pane */
 }
 
 .map-pane {
