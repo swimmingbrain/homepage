@@ -341,7 +341,7 @@ svg {
 .overview {
     position: fixed;
     inset: var(--panel-h) 0 0 var(--dock-w);
-    background: rgba(0, 0, 0, 0.72);
+    background: rgba(0, 0, 0, 0.86);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1018,7 +1018,9 @@ a.row > span:last-child::after, button.row > span:last-child::after {
 
     .overview {
         inset: var(--panel-h) 0 60px 0;
-        gap: 24px;
+        padding-top: 20px;
+        gap: 28px;
+        background: rgba(0, 0, 0, 0.92);
     }
 
     .app-grid {
@@ -1051,6 +1053,32 @@ a.row > span:last-child::after, button.row > span:last-child::after {
         left: 0;
         width: auto;
         margin: 0 6px;
+    }
+}
+
+@media (max-width: 420px) {
+    .panel-app {
+        display: none;
+    }
+}
+
+@media (max-height: 500px) and (max-width: 768px) {
+    .dock {
+        height: 48px;
+    }
+
+    .dock-item {
+        width: 40px;
+        height: 40px;
+    }
+
+    .dock-item svg {
+        width: 34px;
+        height: 34px;
+    }
+
+    .desktop, .overview {
+        inset: var(--panel-h) 0 48px 0;
     }
 }
 
