@@ -464,6 +464,21 @@
         drawTimer(LIMIT);
     }
 
+    /* ---------- result as text, for chats ---------- */
+
+    async function share() {
+        const lines = state.rounds.map(r => `${r.round}. ${r.place.name ? r.place.name + ', ' : ''}${r.dist === null ? 'keine Schätzung' : fmtKm(r.dist)}, ${fmtNum(r.points)} Punkte`);
+        const text = [`Wo gsi? ${fmtNum(state.total)} Punkte in ${ROUNDS} Runden`, ...lines, 'https://swimmingbrain.dev/wogsi-game.html'].join('\n');
+        const noteEl = $('#share-note');
+        try {
+            await navigator.clipboard.writeText(text);
+            noteEl.textContent = 'kopiert';
+        } catch (e) {
+            noteEl.textContent = 'kopieren ging nicht';
+        }
+        setTimeout(() => { noteEl.textContent = ''; }, 2500);
+    }
+
     /* ---------- leaderboard (jsonbin) ---------- */
 
     async function fetchBoard() {
@@ -555,6 +570,7 @@
     $('#guess').addEventListener('click', guess);
     $('#next').addEventListener('click', next);
     $('#again').addEventListener('click', again);
+    $('#share').addEventListener('click', share);
     $('#save-btn').addEventListener('click', saveScore);
     $('#save-name').addEventListener('keydown', e => { if (e.key === 'Enter') saveScore(); });
     $('#lb-refresh').addEventListener('click', loadBoard);
