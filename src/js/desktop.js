@@ -15,6 +15,8 @@
     const LOGOS = {
         braincut: 'img/projects/braincut.svg',
         texbrain: 'img/projects/texbrain.svg',
+        fmtless: 'img/projects/fmtless.svg',
+        'arctos-arm': 'img/projects/arctos-arm.svg',
         plakuplus: 'img/projects/plakuplus.png',
         'chingumat-e': 'img/projects/chingumat-e.png',
         vimaya: 'img/projects/vimaya.png',

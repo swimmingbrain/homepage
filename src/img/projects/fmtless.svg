@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <mask id="m"><rect width="64" height="64" fill="#fff"/><circle cx="25.5" cy="25.5" r="4.2"/><circle cx="38.5" cy="38.5" r="4.2"/><rect x="30.4" y="19.5" width="3.2" height="25" rx="1.6" transform="rotate(38 32 32)"/></mask>
+  <g fill="#d19a66" mask="url(#m)">
+    <rect x="14" y="14" width="36" height="36" rx="6"/>
+    <rect x="20.4" y="7" width="3.2" height="8" rx="1"/><rect x="30.4" y="7" width="3.2" height="8" rx="1"/><rect x="40.4" y="7" width="3.2" height="8" rx="1"/>
+    <rect x="20.4" y="49" width="3.2" height="8" rx="1"/><rect x="30.4" y="49" width="3.2" height="8" rx="1"/><rect x="40.4" y="49" width="3.2" height="8" rx="1"/>
+    <rect x="7" y="20.4" width="8" height="3.2" rx="1"/><rect x="7" y="30.4" width="8" height="3.2" rx="1"/><rect x="7" y="40.4" width="8" height="3.2" rx="1"/>
+    <rect x="49" y="20.4" width="8" height="3.2" rx="1"/><rect x="49" y="30.4" width="8" height="3.2" rx="1"/><rect x="49" y="40.4" width="8" height="3.2" rx="1"/>
+  </g>
+</svg>
