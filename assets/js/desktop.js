@@ -148,12 +148,11 @@ location  Dornbirn, Vorarlberg, Austria` },
         function keepOnScreen(win) {
             if (isSmall() || win.classList.contains('maximized')) return;
             const dw = desktop.clientWidth, dh = desktop.clientHeight;
-            const w = win.offsetWidth, h = win.offsetHeight;
+            const w = win.offsetWidth;
             const left = clamp(parseFloat(win.style.left) || 0, -(w - 80), Math.max(0, dw - 80));
             const top = clamp(parseFloat(win.style.top) || 0, 0, Math.max(0, dh - 38));
             win.style.left = `${left}px`;
             win.style.top = `${top}px`;
-            void h;
         }
 
         function set(win, left, top, width, height) {
