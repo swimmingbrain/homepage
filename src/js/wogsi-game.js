@@ -350,7 +350,6 @@
         $('#st-round').textContent = state.playing ? `Runde ${state.round}/${ROUNDS}` : 'bereit';
         $('#st-points').textContent = `${fmtNum(state.total)} Punkte`;
         $('#st-best').textContent = state.best === null ? '' : `beste ${fmtKm(state.best)}`;
-        $('#st-name').textContent = state.name;
     }
 
     function start() {

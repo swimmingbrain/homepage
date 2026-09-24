@@ -699,6 +699,15 @@ a {
     flex: 1;
 }
 
+.statusbar .sep {
+    color: var(--border);
+    margin: 0 -8px;
+}
+
+.statusbar .heart {
+    color: var(--error);
+}
+
 /* ---------- leaflet on dark ---------- */
 
 .leaflet-container {
@@ -834,7 +843,8 @@ a {
         gap: 12px;
     }
 
-    .statusbar > .muted:last-child {
+    .statusbar .sep,
+    .statusbar .sep + .muted {
         display: none;
     }
 }
