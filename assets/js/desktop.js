@@ -524,6 +524,13 @@ location  Dornbirn, Vorarlberg, Austria` },
         return { go };
     })();
 
+    /* ---------- document viewer: load the pdf on first open ---------- */
+
+    WM.get('resume').addEventListener('window:open', () => {
+        const frame = $('#resume-frame');
+        if (!frame.src) frame.src = frame.dataset.src;
+    });
+
     /* ---------- linkedin feed (third party, loads on request) ---------- */
 
     (() => {
