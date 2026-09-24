@@ -135,6 +135,12 @@ svg {
     white-space: nowrap;
 }
 
+.panel-btn img {
+    width: 18px;
+    height: 18px;
+    margin-left: -3px;
+}
+
 .panel-btn:hover, .panel-btn.on {
     background: rgba(255, 255, 255, 0.12);
 }

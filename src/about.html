@@ -154,7 +154,14 @@
             border-radius: 11px;
             display: flex;
             align-items: center;
+            gap: 7px;
             font-weight: 700;
+        }
+
+        .panel-top a img {
+            width: 18px;
+            height: 18px;
+            margin-left: -3px;
         }
 
         .panel-top a:hover {
@@ -366,7 +373,7 @@
 <body>
     <nav class="panel-top" aria-label="Site">
         <div style="display:flex; align-items:center;">
-            <a href="/">Desktop</a>
+            <a href="/"><img src="img/icon-64.png" alt="" width="18" height="18">Desktop</a>
             <a href="/about" aria-current="page">About</a>
         </div>
         <span class="panel-clock">~/about</span>
