@@ -520,7 +520,7 @@ svg {
 /* window sizes */
 #win-terminal { width: 720px; height: 320px; }
 #win-files { width: 640px; height: 420px; }
-#win-about { width: 440px; height: 580px; }
+#win-about { width: 460px; height: 600px; }
 #win-linkedin { width: 480px; height: 600px; }
 #win-resume { width: 760px; height: 620px; }
 .window.legal { width: 620px; height: 480px; }
@@ -718,6 +718,7 @@ svg {
 }
 
 .about-hero {
+    flex: none;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -746,6 +747,7 @@ svg {
 }
 
 .group {
+    flex: none; /* a flex child with overflow hidden would shrink and clip its last rows */
     background: var(--base);
     border: 1px solid var(--hairline);
     border-radius: 12px;
@@ -754,12 +756,13 @@ svg {
 }
 
 .row {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: 88px 1fr;
+    gap: 14px;
     padding: 10px 14px;
     border-bottom: 1px solid var(--hairline);
     font-size: 13px;
+    line-height: 1.4;
     color: var(--fg);
     text-decoration: none;
 }
@@ -769,12 +772,12 @@ svg {
 }
 
 .row > span:first-child {
-    flex: none;
     color: var(--fg-dim);
 }
 
 .row > span:last-child {
-    text-align: right;
+    min-width: 0;
+    overflow-wrap: anywhere;
 }
 
 a.row, button.row {
@@ -788,7 +791,7 @@ a.row:hover, button.row:hover {
 
 a.row > span:last-child::after, button.row > span:last-child::after {
     content: '›';
-    margin-left: 10px;
+    margin-left: 8px;
     color: var(--fg-dim);
 }
 

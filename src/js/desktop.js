@@ -913,7 +913,7 @@ location  Dornbirn, Vorarlberg, Austria` },
         }
         const m = 16, gap = 16;
         const about = WM.open('about');
-        const aboutW = dw < 1000 ? 400 : 420;
+        const aboutW = dw < 1000 ? 400 : 460;
         const aboutH = Math.min(dh - 2 * m, $('.content', about).scrollHeight + 40);
         WM.set(about, m, m, aboutW, aboutH);
         const colX = m + aboutW + gap;
@@ -929,4 +929,6 @@ location  Dornbirn, Vorarlberg, Austria` },
     }
 
     layout();
+    /* the about window is sized from its text, so measure again once the fonts are in */
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (!isSmall()) layout(); });
 })();
