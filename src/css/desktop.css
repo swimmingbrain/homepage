@@ -389,7 +389,7 @@ svg {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.app svg {
+.app svg, .app img {
     width: 64px;
     height: 64px;
 }
@@ -688,10 +688,35 @@ svg {
     outline: none;
 }
 
-.file svg, .file img.logo {
+.file-icon {
+    position: relative;
+    width: 56px;
+    height: 56px;
+}
+
+.file-icon > svg, .file-icon > img.logo {
     width: 56px;
     height: 56px;
     object-fit: contain;
+}
+
+.badge {
+    position: absolute;
+    right: -7px;
+    bottom: -5px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #1b1f23;
+    border: 2px solid var(--bg);
+    display: grid;
+    place-items: center;
+    color: #fff;
+}
+
+.badge svg {
+    width: 12px;
+    height: 12px;
 }
 
 .files-empty {

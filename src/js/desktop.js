@@ -19,8 +19,19 @@
         'chingumat-e': 'img/projects/chingumat-e.png',
         vimaya: 'img/projects/vimaya.png',
         'thefoodhexagon-homepage': 'img/projects/thefoodhexagon.png',
+        'wo-gsi': 'img/wogsi.svg',
         homepage: 'img/icon-64.png',
     };
+
+    /* small badge in the corner of a project icon: where the link goes */
+    function badgeOf(n) {
+        const h = n.href || '';
+        if (!h) return null;
+        if (/github\.com/.test(h)) return { kind: 'github', label: 'github.com' };
+        if (/youtube\.com|youtu\.be/.test(h)) return { kind: 'youtube', label: 'youtube.com' };
+        if (!/^https?:/.test(h)) return { kind: 'page', label: 'swimmingbrain.dev' };
+        return { kind: 'web', label: new URL(h).host.replace(/^www\./, '') };
+    }
 
     const FS = {
         name: '~', type: 'dir', children: [
@@ -462,6 +473,8 @@ location  Dornbirn, Vorarlberg, Austria` },
             const bits = [n.desc];
             if (n.lang) bits.push(n.lang);
             if (n.type === 'repo') bits.push(`★ ${n.stars}`, `pushed ${n.pushed}`);
+            const b = badgeOf(n);
+            if (b) bits.push(b.label);
             return bits.filter(Boolean).join('  ·  ');
         }
 
@@ -499,8 +512,13 @@ location  Dornbirn, Vorarlberg, Austria` },
                 el.addEventListener('click', () => openNode(n, [...cwd, n.name]));
             }
             const logo = logoOf(n);
-            el.innerHTML = (logo ? `<img class="logo" src="${logo}" alt="" width="56" height="56">` : `<svg><use href="#${icon(n)}"/></svg>`) + '<span></span>';
-            $('span', el).textContent = n.name;
+            let b = badgeOf(n);
+            if (b && b.kind === 'github' && !logo) b = null; /* the icon is the github mark already */
+            el.innerHTML = '<span class="file-icon">'
+                + (logo ? `<img class="logo" src="${logo}" alt="" width="56" height="56">` : `<svg><use href="#${icon(n)}"/></svg>`)
+                + (b ? `<span class="badge" title="${b.label}"><svg><use href="#b-${b.kind}"/></svg></span>` : '')
+                + '</span><span class="file-name"></span>';
+            $('.file-name', el).textContent = n.name;
             el.addEventListener('mouseenter', () => setStatus(describe(n)));
             el.addEventListener('focus', () => setStatus(describe(n)));
             el.addEventListener('mouseleave', idle);
