@@ -522,7 +522,7 @@ svg {
 }
 
 /* window sizes */
-#win-terminal { width: 760px; height: 440px; }
+#win-terminal { width: 720px; height: 320px; }
 #win-files { width: 640px; height: 420px; }
 #win-about { width: 440px; height: 580px; }
 #win-linkedin { width: 480px; height: 600px; }
@@ -578,6 +578,14 @@ svg {
     outline: none;
     font: inherit;
     caret-color: var(--fg);
+}
+
+.terminal-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.terminal-input:focus::placeholder {
+    color: rgba(255, 255, 255, 0.22);
 }
 
 .terminal-user {

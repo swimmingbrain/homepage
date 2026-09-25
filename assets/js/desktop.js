@@ -894,7 +894,7 @@ location  Dornbirn, Vorarlberg, Austria` },
         function boot() {
             if (booted) return;
             booted = true;
-            typeAndRun('neofetch');
+            typeAndRun('ls');
         }
 
         WM.get('terminal').addEventListener('window:open', () => { input.focus(); boot(); });
@@ -911,14 +911,20 @@ location  Dornbirn, Vorarlberg, Austria` },
             WM.open('about');
             return;
         }
+        const m = 16, gap = 16;
+        const about = WM.open('about');
+        const aboutW = dw < 1000 ? 400 : 420;
+        const aboutH = Math.min(dh - 2 * m, $('.content', about).scrollHeight + 40);
+        WM.set(about, m, m, aboutW, aboutH);
+        const colX = m + aboutW + gap;
+        const colW = Math.min(860, dw - colX - m);
         if (dw < 1000) {
-            WM.set(WM.open('about'), 24, 24, 420, Math.min(560, dh - 60));
-            WM.set(WM.open('terminal'), 200, Math.max(60, dh - 400), Math.min(640, dw - 230), 360);
-            return;
+            WM.set(WM.open('terminal'), colX, m, colW, Math.min(360, aboutH));
+        } else {
+            const filesH = Math.round(aboutH * 0.55);
+            WM.set(WM.open('files'), colX, m, colW, filesH);
+            WM.set(WM.open('terminal'), colX, m + filesH + gap, colW, aboutH - filesH - gap);
         }
-        WM.set(WM.open('about'), 48, 32, 440, Math.min(580, dh - 70));
-        WM.set(WM.open('files'), 520, 32, Math.min(640, dw - 560), 420);
-        WM.set(WM.open('terminal'), 380, Math.max(150, dh - 500), Math.min(760, dw - 420), Math.min(470, dh - 160));
         $('#terminal-input').focus();
     }
 
