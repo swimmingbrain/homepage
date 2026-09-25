@@ -21,7 +21,6 @@
         'chingumat-e': 'img/projects/chingumat-e.png',
         vimaya: 'img/projects/vimaya.png',
         'wo-gsi': 'img/wogsi.svg',
-        homepage: 'img/icon-64.png',
     };
 
     /* small badge in the corner of a project icon: where the link goes */
@@ -36,25 +35,25 @@
 
     const FS = {
         name: '~', type: 'dir', children: [
-            { name: 'projects', type: 'dir', github: true, desc: 'Things I built or help build, the rest of my public repos get added from api.github.com', children: [
-                { name: 'braincut', type: 'link', repo: 'braincut', lang: 'TypeScript', href: 'https://github.com/swimmingbrain/braincut',
-                  desc: 'Browser-based video editor with a multi-track timeline, transitions, effects and export. No accounts, no uploads, no installs.' },
+            { name: 'projects', type: 'dir', github: true, desc: 'Things I built or help build, new public repos get added from api.github.com', children: [
                 { name: 'texbrain', type: 'link', repo: 'texbrain', lang: 'Svelte', href: 'https://tex.swimmingbrain.dev',
                   desc: 'LaTeX editor that compiles to PDF in the browser, with live preview, packages on demand and git built in. No accounts, no installs, no servers.' },
-                { name: 'plakuplus', type: 'link', lang: 'YouTube', href: 'https://www.youtube.com/@PlakuPlus',
-                  desc: 'My YouTube channel: animated explainer videos in Albanian, maths for the Matura and AI from zero.' },
-                { name: 'fmtless', type: 'link', repo: 'fmtless', lang: 'C, Python', href: 'https://github.com/swimmingbrain/fmtless',
-                  desc: 'Logging for C that leaves the words at home: format strings live in the ELF, never in flash, and the host puts the line back together.' },
+                { name: 'braincut', type: 'link', repo: 'braincut', lang: 'TypeScript', href: 'https://github.com/swimmingbrain/braincut',
+                  desc: 'Browser-based video editor with a multi-track timeline, transitions, effects and export. No accounts, no uploads, no installs.' },
                 { name: 'arctos-arm', type: 'link', repo: 'arctos-arm', lang: 'Python', href: 'https://github.com/swimmingbrain/arctos-arm',
                   desc: 'Library and CLI for the Arctos robot arm over CAN bus, with kinematics, simulation and ROS 2 / MoveIt 2 integration.' },
+                { name: 'thesis-template', type: 'link', repo: 'thesis-template', lang: 'LaTeX', href: 'https://github.com/swimmingbrain/thesis-template',
+                  desc: 'A clean and ready to use thesis template in LaTeX.' },
+                { name: 'fmtless', type: 'link', repo: 'fmtless', lang: 'C, Python', href: 'https://github.com/swimmingbrain/fmtless',
+                  desc: 'Logging for C that leaves the words at home: format strings live in the ELF, never in flash, and the host puts the line back together.' },
                 { name: 'chingumat-e', type: 'link', repo: 'chingumat-e', lang: 'JavaScript', href: 'https://github.com/swimmingbrain/chingumat-e',
                   desc: 'Open-source foot-controlled rhythm game: step, stomp and groove.' },
-                { name: 'vimaya', type: 'link', lang: 'web app', href: 'https://home.vimaya.app',
-                  desc: 'Digital wellness app for healthier screen habits. I am the lead developer.' },
                 { name: 'wo-gsi', type: 'link', lang: 'JavaScript', href: 'wogsi-game.html',
                   desc: 'Street View guessing game about Vorarlberg, in German.' },
-                { name: 'homepage', type: 'link', repo: 'homepage', lang: 'JavaScript', href: 'https://github.com/swimmingbrain/homepage',
-                  desc: 'This site. A small Ubuntu desktop in plain HTML, CSS and JavaScript.' },
+                { name: 'vimaya', type: 'link', lang: 'web app', href: 'https://home.vimaya.app',
+                  desc: 'Digital wellness app for healthier screen habits. I am the lead developer.' },
+                { name: 'plakuplus', type: 'link', lang: 'YouTube', href: 'https://www.youtube.com/@PlakuPlus',
+                  desc: 'My YouTube channel: animated explainer videos in Albanian, maths for the Matura and AI from zero.' },
             ] },
             { name: 'about.txt', type: 'text', desc: 'Who I am and what I do', text:
 `Braian Plaku, online as swimmingbrain.
@@ -141,7 +140,7 @@ location  Dornbirn, Vorarlberg, Austria` },
     }
 
     /* repos that stay out of the folder: the profile readme and small side things */
-    const HIDDEN = new Set([GITHUB, 'thefoodhexagon-homepage']);
+    const HIDDEN = new Set([GITHUB, 'homepage', 'thefoodhexagon-homepage']);
 
     /* adds the public repos that are not in the hand written list yet */
     async function mergeRepos(node) {
