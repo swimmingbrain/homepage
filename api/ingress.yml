@@ -1,0 +1,5 @@
+# goes into the ingress list of /etc/cloudflared/config.yml, above the
+# closing "- service: http_status:404" rule, then: sudo systemctl restart cloudflared
+  # Wo gsi? leaderboard. Tiny python api, sqlite in /mnt/ssd/wogsi/data.
+  - hostname: wogsi.swimmingbrain.dev
+    service: http://localhost:8787

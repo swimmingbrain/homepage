@@ -1,0 +1,13 @@
+# wo gsi leaderboard. lives in /mnt/ssd/wogsi on the jetson, reached through
+# the cloudflared tunnel as wogsi.swimmingbrain.dev (see ingress.yml).
+services:
+  wogsi:
+    image: python:3.12-alpine
+    container_name: wogsi
+    restart: unless-stopped
+    command: python -u /app/server.py
+    volumes:
+      - ./server.py:/app/server.py:ro
+      - ./data:/data
+    ports:
+      - "127.0.0.1:8787:8787"
