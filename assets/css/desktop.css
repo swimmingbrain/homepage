@@ -197,10 +197,6 @@ svg {
     text-decoration: none;
 }
 
-.menu-user:hover {
-    background: rgba(255, 255, 255, 0.08);
-}
-
 .menu-user img {
     width: 40px;
     height: 40px;
@@ -796,14 +792,6 @@ a.row > span:last-child::after, button.row > span:last-child::after {
     color: var(--fg-dim);
 }
 
-.about-foot {
-    font-size: 12px;
-    text-align: center;
-}
-
-.about-foot a {
-    color: var(--fg-dim);
-}
 
 /* ---------- linkedin ---------- */
 
