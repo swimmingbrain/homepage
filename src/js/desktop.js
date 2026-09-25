@@ -20,7 +20,6 @@
         plakuplus: 'img/projects/plakuplus.png',
         'chingumat-e': 'img/projects/chingumat-e.png',
         vimaya: 'img/projects/vimaya.png',
-        'thefoodhexagon-homepage': 'img/projects/thefoodhexagon.png',
         'wo-gsi': 'img/wogsi.svg',
         homepage: 'img/icon-64.png',
     };
@@ -141,13 +140,16 @@ location  Dornbirn, Vorarlberg, Austria` },
         return repos;
     }
 
+    /* repos that stay out of the folder: the profile readme and small side things */
+    const HIDDEN = new Set([GITHUB, 'thefoodhexagon-homepage']);
+
     /* adds the public repos that are not in the hand written list yet */
     async function mergeRepos(node) {
         if (node.merged) return;
         const repos = await loadRepos();
         const have = new Set(node.children.map(c => c.repo || c.name));
         repos.forEach(r => {
-            if (!have.has(r.name) && r.name !== GITHUB) node.children.push(r);
+            if (!have.has(r.name) && !HIDDEN.has(r.name)) node.children.push(r);
         });
         node.merged = true;
     }
