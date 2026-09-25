@@ -1,16 +1,40 @@
 # swimmingbrain.dev
 
-Personal site of Braian Plaku, built as a small Ubuntu desktop in plain HTML, CSS and JavaScript. No build step, no framework.
+My personal site, built as a small Ubuntu desktop in plain HTML, CSS and JavaScript. No build step, no framework, no server.
 
-- `index.html` – the desktop: top panel, dock, activities overview and the windows (terminal, files, about, linkedin, resume, legal)
-- `about.html` – plain text version of the same facts, for search engines and visitors without JavaScript
-- `assets/css/desktop.css`, `assets/js/desktop.js` – shell, window manager, virtual filesystem, terminal
-- `wogsi-game.html` – Wo gsi?, a Street View guessing game about Vorarlberg
+## Pages
 
-Run it locally with any static server, for example
+| file | what it is |
+| --- | --- |
+| `index.html` | the desktop: top panel, dock, activities overview and windows for the terminal, files, about, linkedin, the resume and the legal texts |
+| `about.html` | the same facts as plain text, for search engines and browsers without JavaScript |
+| `wogsi-game.html` | Wo gsi?, a Street View guessing game about Vorarlberg |
 
-    python -m http.server 8000
+## Layout
 
-and open http://localhost:8000. The `github` folder in Files and `ls ~/projects/github` in the terminal fetch from api.github.com; everything else is static. The LinkedIn feed (Elfsight) only loads after you press the button in the LinkedIn window.
+```
+assets/css   one stylesheet per page
+assets/js    one script per page
+assets/      images, icons and the resume
+```
 
-Colours follow the Yaru dark palette, fonts are Ubuntu and Ubuntu Mono.
+## Run it
+
+Any static server works, for example
+
+```
+python -m http.server 8000
+```
+
+then open http://localhost:8000.
+
+## Outside services
+
+- The files window and `ls ~/projects/github` in the terminal read the public repo list from api.github.com.
+- The linkedin feed (Elfsight) loads only after you press the button in that window.
+- Wo gsi? finds random panoramas through the Street View metadata endpoint, shows them with the Maps JavaScript API, names the place through Nominatim and keeps the leaderboard in a jsonbin.io bin.
+- Fonts come from Google Fonts, map tiles from OpenStreetMap.
+
+## License
+
+The code is MIT. The photos, the resume and the texts about me are not, please leave them where they are.
