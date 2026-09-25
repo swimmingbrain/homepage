@@ -449,8 +449,15 @@
         $('#save').hidden = false;
         $('#save-name').value = state.name;
         $('#save-btn').disabled = false;
+        $('#save-btn').textContent = 'Eintragen';
+        $('#save-note').className = 'muted';
         $('#save-note').textContent = '';
         status();
+        /* a known name goes straight into the list, nobody should miss it over a button */
+        const known = !!state.name;
+        $('#save-field').hidden = known;
+        $('#save-btn').hidden = known;
+        if (known) saveScore(true);
     }
 
     function again() {
@@ -514,7 +521,7 @@
         }
     }
 
-    async function saveScore() {
+    async function saveScore(auto) {
         const input = $('#save-name');
         const name = input.value.trim();
         const noteEl = $('#save-note');
@@ -528,7 +535,7 @@
         rememberName(name);
         $('#save-btn').disabled = true;
         noteEl.className = 'muted';
-        noteEl.textContent = 'speichert';
+        noteEl.textContent = auto ? `${name} wird eingetragen` : 'speichert';
         try {
             const res = await fetch(`${API}/scores`, {
                 method: 'POST',
@@ -544,6 +551,8 @@
             if (res.status === 429) {
                 noteEl.textContent = 'zu viele Läufe auf einmal, kurz warten';
                 $('#save-btn').disabled = false;
+                $('#save-btn').hidden = false;
+                $('#save-btn').textContent = 'Nochmal eintragen';
                 return;
             }
             if (!res.ok) throw new Error(`Bestenliste ${res.status}`);
@@ -560,8 +569,10 @@
             status();
         } catch (e) {
             noteEl.className = 'bad-text';
-            noteEl.textContent = 'hat nicht geklappt';
+            noteEl.textContent = 'hat nicht geklappt, Bestenliste nicht erreichbar';
             $('#save-btn').disabled = false;
+            $('#save-btn').hidden = false;
+            $('#save-btn').textContent = 'Nochmal eintragen';
         }
     }
 
