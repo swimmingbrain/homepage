@@ -758,6 +758,13 @@ svg {
     text-align: center;
 }
 
+.avatars {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
 .avatar {
     width: 96px;
     height: 96px;
@@ -765,7 +772,11 @@ svg {
     object-fit: cover;
     object-position: 50% 20%;
     background: #3d3d3d;
-    margin-bottom: 12px;
+}
+
+.avatar.jar {
+    object-fit: contain;
+    padding: 12px;
 }
 
 .about h1 {
