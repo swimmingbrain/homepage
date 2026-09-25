@@ -3,11 +3,7 @@
 
     const $ = (s, r = document) => r.querySelector(s);
     const KEY = 'AIzaSyDyiDpg_8VvRn7QgjY48tKL470fAPvYees';
-    const LB = {
-        key: '$2a$10$I3aSVpUO8hTyGsHVeUgpTuH5r8NKvXcn0Ew/6k/VUs6KazVXd.r.a',
-        bin: '6844e14d8960c979a5a678c8',
-        url: 'https://api.jsonbin.io/v3/b/',
-    };
+    const API = 'https://wogsi.swimmingbrain.dev';
     const ROUNDS = 5;
     const MAX_POINTS = 5000;
     const LIMIT = 120;      /* seconds per round */
@@ -479,13 +475,13 @@
         setTimeout(() => { noteEl.textContent = ''; }, 2500);
     }
 
-    /* ---------- leaderboard (jsonbin) ---------- */
+    /* ---------- leaderboard, served by api/server.py on the jetson ---------- */
 
     async function fetchBoard() {
-        const res = await fetch(`${LB.url}${LB.bin}/latest`, { headers: { 'X-Master-Key': LB.key } });
+        const res = await fetch(`${API}/scores`);
         if (!res.ok) throw new Error(`Bestenliste ${res.status}`);
         const data = await res.json();
-        return Array.isArray(data.record) ? data.record : [];
+        return Array.isArray(data.scores) ? data.scores : [];
     }
 
     function renderBoard(list) {
@@ -534,27 +530,33 @@
         noteEl.className = 'muted';
         noteEl.textContent = 'speichert';
         try {
-            const list = await fetchBoard();
-            const entry = { name, score: state.total, date: new Date().toISOString(), bestGuess: state.best, rounds: ROUNDS, time: Math.round(state.rounds.reduce((a, r) => a + r.time, 0)) };
-            const i = list.findIndex(e => e.name.toLowerCase() === name.toLowerCase());
-            if (i !== -1 && list[i].score >= state.total) {
-                noteEl.textContent = `dein bester Lauf bleibt bei ${fmtNum(list[i].score)}`;
+            const res = await fetch(`${API}/scores`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    score: state.total,
+                    bestGuess: state.best,
+                    time: Math.round(state.rounds.reduce((a, r) => a + r.time, 0)),
+                    rounds: ROUNDS,
+                }),
+            });
+            if (res.status === 429) {
+                noteEl.textContent = 'zu viele Läufe auf einmal, kurz warten';
                 $('#save-btn').disabled = false;
-                renderBoard(list);
                 return;
             }
-            if (i !== -1) list[i] = entry; else list.push(entry);
-            const res = await fetch(`${LB.url}${LB.bin}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'X-Master-Key': LB.key },
-                body: JSON.stringify(list),
-            });
             if (!res.ok) throw new Error(`Bestenliste ${res.status}`);
-            list.sort((a, b) => b.score - a.score);
-            const rank = list.findIndex(e => e.name.toLowerCase() === name.toLowerCase()) + 1;
+            const data = await res.json();
+            renderBoard(data.scores || []);
+            if (!data.saved) {
+                const old = (data.scores || []).find(e => e.name.toLowerCase() === name.toLowerCase());
+                noteEl.textContent = `dein bester Lauf bleibt bei ${fmtNum(old ? old.score : 0)}`;
+                $('#save-btn').disabled = false;
+                return;
+            }
             noteEl.className = 'ok';
-            noteEl.textContent = `gespeichert, Platz ${rank}`;
-            renderBoard(list);
+            noteEl.textContent = `gespeichert, Platz ${data.rank}`;
             status();
         } catch (e) {
             noteEl.className = 'bad-text';
