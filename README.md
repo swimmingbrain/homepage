@@ -32,7 +32,7 @@ then open http://localhost:8000. Pushes to main deploy `src/` to GitHub Pages.
 
 ## Outside services
 
-- The files window and `ls ~/projects/github` in the terminal read the public repo list from api.github.com.
+- The files window and `ls ~/projects` in the terminal add the public repos that are not in the hand written list from api.github.com.
 - The linkedin feed (Elfsight) loads only after you press the button in that window.
 - Wo gsi? finds random panoramas through the Street View metadata endpoint, shows them with the Maps JavaScript API and names the place through Nominatim. Scores go to `api/server.py`, which runs in docker on my jetson behind a cloudflared tunnel as wogsi.swimmingbrain.dev. It keeps one entry per name, checks the numbers and rate limits by ip, so no key sits in the browser.
 - Fonts come from Google Fonts, map tiles from OpenStreetMap.

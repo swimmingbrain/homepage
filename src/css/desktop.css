@@ -688,9 +688,10 @@ svg {
     outline: none;
 }
 
-.file svg {
+.file svg, .file img.logo {
     width: 56px;
     height: 56px;
+    object-fit: contain;
 }
 
 .files-empty {
@@ -783,6 +784,7 @@ svg {
 a.row, button.row {
     width: 100%;
     cursor: pointer;
+    text-align: left;
 }
 
 a.row:hover, button.row:hover {

@@ -11,23 +11,38 @@
 
     const GITHUB = 'swimmingbrain';
 
+    /* projects with a logo of their own, everything else shows the github mark */
+    const LOGOS = {
+        braincut: 'img/projects/braincut.svg',
+        texbrain: 'img/projects/texbrain.svg',
+        plakuplus: 'img/projects/plakuplus.png',
+        'chingumat-e': 'img/projects/chingumat-e.png',
+        vimaya: 'img/projects/vimaya.png',
+        'thefoodhexagon-homepage': 'img/projects/thefoodhexagon.png',
+        homepage: 'img/icon-64.png',
+    };
+
     const FS = {
         name: '~', type: 'dir', children: [
-            { name: 'projects', type: 'dir', desc: 'Things I built or help build', children: [
-                { name: 'braincut', type: 'link', lang: 'TypeScript', href: 'https://github.com/swimmingbrain/braincut',
+            { name: 'projects', type: 'dir', github: true, desc: 'Things I built or help build, the rest of my public repos get added from api.github.com', children: [
+                { name: 'braincut', type: 'link', repo: 'braincut', lang: 'TypeScript', href: 'https://github.com/swimmingbrain/braincut',
                   desc: 'Browser-based video editor with a multi-track timeline, transitions, effects and export. No accounts, no uploads, no installs.' },
-                { name: 'fmtless', type: 'link', lang: 'C, Python', href: 'https://github.com/swimmingbrain/fmtless',
+                { name: 'texbrain', type: 'link', repo: 'texbrain', lang: 'Svelte', href: 'https://tex.swimmingbrain.dev',
+                  desc: 'LaTeX editor that compiles to PDF in the browser, with live preview, packages on demand and git built in. No accounts, no installs, no servers.' },
+                { name: 'plakuplus', type: 'link', lang: 'YouTube', href: 'https://www.youtube.com/@PlakuPlus',
+                  desc: 'My YouTube channel: animated explainer videos in Albanian, maths for the Matura and AI from zero.' },
+                { name: 'fmtless', type: 'link', repo: 'fmtless', lang: 'C, Python', href: 'https://github.com/swimmingbrain/fmtless',
                   desc: 'Logging for C that leaves the words at home: format strings live in the ELF, never in flash, and the host puts the line back together.' },
-                { name: 'arctos-arm', type: 'link', lang: 'Python', href: 'https://github.com/swimmingbrain/arctos-arm',
+                { name: 'arctos-arm', type: 'link', repo: 'arctos-arm', lang: 'Python', href: 'https://github.com/swimmingbrain/arctos-arm',
                   desc: 'Library and CLI for the Arctos robot arm over CAN bus, with kinematics, simulation and ROS 2 / MoveIt 2 integration.' },
-                { name: 'chingumat-e', type: 'link', lang: 'JavaScript', href: 'https://github.com/swimmingbrain/chingumat-e',
+                { name: 'chingumat-e', type: 'link', repo: 'chingumat-e', lang: 'JavaScript', href: 'https://github.com/swimmingbrain/chingumat-e',
                   desc: 'Open-source foot-controlled rhythm game: step, stomp and groove.' },
                 { name: 'vimaya', type: 'link', lang: 'web app', href: 'https://home.vimaya.app',
                   desc: 'Digital wellness app for healthier screen habits. I am the lead developer.' },
                 { name: 'wo-gsi', type: 'link', lang: 'JavaScript', href: 'wogsi-game.html',
                   desc: 'Street View guessing game about Vorarlberg, in German.' },
-                { name: 'github', type: 'dir', github: true, children: null,
-                  desc: 'Public repositories, fetched live from api.github.com' },
+                { name: 'homepage', type: 'link', repo: 'homepage', lang: 'JavaScript', href: 'https://github.com/swimmingbrain/homepage',
+                  desc: 'This site. A small Ubuntu desktop in plain HTML, CSS and JavaScript.' },
             ] },
             { name: 'about.txt', type: 'text', desc: 'Who I am and what I do', text:
 `Braian Plaku, online as swimmingbrain.
@@ -38,9 +53,10 @@ production lines, line scan cameras on embedded Linux, deep
 learning models and the dashboards around them.
 
 Next to that I study for an MSc in Artificial Intelligence at
-JKU Linz and finish a BSc in Computer Science at FH Vorarlberg,
-after a BSc in Electrical Engineering. I went to school in
-Shkodër, Albania, and have lived in Vorarlberg since 2022.` },
+JKU Linz and an MSc in Sustainable Energy Systems, and finish a
+BSc in Computer Science at FH Vorarlberg, after a BSc in
+Electrical Engineering in 2025. I went to school in Shkodër,
+Albania, and have lived in Vorarlberg since 2022.` },
             { name: 'skills.txt', type: 'text', desc: 'Languages and tools', text:
 `languages    Python, C/C++, Java, Bash, SQL, TypeScript
 ml / vision  PyTorch, OpenCV, CNNs, LSTMs, 6D pose estimation,
@@ -51,11 +67,12 @@ hardware     ESP32, Raspberry Pi, industrial cameras, 3D printing
 spoken       Albanian, German, English, some Italian and Korean` },
             { name: 'education.txt', type: 'text', desc: 'Degrees and schools', text:
 `2025 -       MSc Artificial Intelligence, JKU Linz
+2025 -       MSc Sustainable Energy Systems
 2024         exchange semester, Seoul National University of
              Science and Technology (GKS scholarship)
 2023 - 2026  BSc Computer Science & Digital Innovation, FH Vorarlberg
              thesis: PLON3R, model-based 6D pose estimation in manufacturing
-2022 - 2025  BSc Electrical Engineering (dual), FH Vorarlberg
+2022 - 2025  BSc Electrical Engineering (dual), FH Vorarlberg, degree 2025
              thesis: integrating a line scan camera on embedded Linux
 2016 - 2022  HTL Peter Mahringer, Shkodër` },
             { name: 'contact.txt', type: 'text', desc: 'Where to find me', text:
@@ -110,6 +127,19 @@ location  Dornbirn, Vorarlberg, Austria` },
         try { sessionStorage.setItem('sb_repos', JSON.stringify(repos)); } catch (e) { /* ignore */ }
         return repos;
     }
+
+    /* adds the public repos that are not in the hand written list yet */
+    async function mergeRepos(node) {
+        if (node.merged) return;
+        const repos = await loadRepos();
+        const have = new Set(node.children.map(c => c.repo || c.name));
+        repos.forEach(r => {
+            if (!have.has(r.name) && r.name !== GITHUB) node.children.push(r);
+        });
+        node.merged = true;
+    }
+
+    const logoOf = n => n.logo || LOGOS[n.repo] || LOGOS[n.name] || '';
 
     function openNode(node, segs) {
         if (!node) return false;
@@ -426,7 +456,7 @@ location  Dornbirn, Vorarlberg, Austria` },
         const fwd = [];
         let count = 0;
 
-        const icon = n => ({ dir: 'i-files', link: 'i-folder-link', text: 'i-txt', pdf: 'i-pdf', repo: 'i-github' })[n.type];
+        const icon = n => ({ dir: 'i-files', link: 'i-github', text: 'i-txt', pdf: 'i-pdf', repo: 'i-github' })[n.type];
 
         function describe(n) {
             const bits = [n.desc];
@@ -468,7 +498,8 @@ location  Dornbirn, Vorarlberg, Austria` },
                 el.type = 'button';
                 el.addEventListener('click', () => openNode(n, [...cwd, n.name]));
             }
-            el.innerHTML = `<svg><use href="#${icon(n)}"/></svg><span></span>`;
+            const logo = logoOf(n);
+            el.innerHTML = (logo ? `<img class="logo" src="${logo}" alt="" width="56" height="56">` : `<svg><use href="#${icon(n)}"/></svg>`) + '<span></span>';
             $('span', el).textContent = n.name;
             el.addEventListener('mouseenter', () => setStatus(describe(n)));
             el.addEventListener('focus', () => setStatus(describe(n)));
@@ -489,14 +520,13 @@ location  Dornbirn, Vorarlberg, Austria` },
             WM.setTitle('files', cwd.length ? cwd[cwd.length - 1] : 'Home');
             back.disabled = !hist.length;
             forward.disabled = !fwd.length;
-            if (node.github && !node.children) {
-                view.replaceChildren();
-                setStatus('Loading repositories from api.github.com…');
+            if (node.github && !node.merged) {
+                render(node);
+                setStatus('adding the rest from api.github.com');
                 try {
-                    node.children = await loadRepos();
+                    await mergeRepos(node);
                 } catch (e) {
-                    view.innerHTML = '<p class="files-empty">Could not reach api.github.com. <a href="https://github.com/swimmingbrain" target="_blank" rel="noopener">Open GitHub instead.</a></p>';
-                    setStatus(e.message);
+                    setStatus('api.github.com not reachable, this is the fixed list');
                     return;
                 }
                 if (getNode(cwd) !== node) return;
@@ -665,7 +695,7 @@ location  Dornbirn, Vorarlberg, Austria` },
                 ['CPU', `${navigator.hardwareConcurrency || '?'} cores`],
                 navigator.deviceMemory ? ['Memory', `${navigator.deviceMemory} GiB`] : null,
                 ['Work', 'Robotics & Machine Vision, Julius Blum'],
-                ['Study', 'MSc Artificial Intelligence, JKU Linz'],
+                ['Study', 'MSc AI, JKU Linz + MSc Sustainable Energy Systems'],
                 ['Languages', 'Python, C/C++, TypeScript, Bash'],
                 ['Tools', 'PyTorch, OpenCV, Docker, Linux'],
             ].filter(Boolean);
@@ -694,9 +724,8 @@ location  Dornbirn, Vorarlberg, Austria` },
             const node = getNode(resolvePath(cwd, target || ''));
             if (!node) return printText(`ls: cannot access '${target}': No such file or directory`);
             if (node.type !== 'dir') return print(fmtName(node));
-            if (node.github && !node.children) {
-                printText('loading from api.github.com…');
-                return loadRepos().then(r => { node.children = r; ls(args); scroll(); }, e => { printText(`ls: ${e.message}`); scroll(); });
+            if (node.github && !node.merged) {
+                return mergeRepos(node).then(() => { ls(args); scroll(); }, () => { node.merged = true; ls(args); scroll(); });
             }
             if (!node.children.length) return;
             if (long) node.children.forEach(n => print(`${fmtName(n)}${' '.repeat(Math.max(1, 18 - n.name.length))}${esc(n.desc || '')}`));
@@ -709,7 +738,7 @@ location  Dornbirn, Vorarlberg, Austria` },
             if (!node) return printText(`bash: cd: ${args[0]}: No such file or directory`);
             if (node.type !== 'dir') return printText(`bash: cd: ${args[0]}: Not a directory`);
             setCwd(segs);
-            if (node.github && !node.children) loadRepos().then(r => { node.children = r; }).catch(() => {});
+            if (node.github && !node.merged) mergeRepos(node).catch(() => {});
         }
 
         function cat(args) {
