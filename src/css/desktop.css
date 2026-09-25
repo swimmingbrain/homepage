@@ -85,7 +85,7 @@ svg {
 .wallpaper {
     position: fixed;
     inset: 0;
-    background: #2c001e url('../bg.jpg') center / cover no-repeat;
+    background: #2c001e url('../img/bg.jpg') center / cover no-repeat;
     z-index: 0;
 }
 
